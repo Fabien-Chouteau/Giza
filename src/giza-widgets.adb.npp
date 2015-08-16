@@ -1,0 +1,52 @@
+package body Giza.Widgets is
+
+   -----------
+   -- Dirty --
+   -----------
+
+   function Dirty (This : Widget) return Boolean is (This.Is_Dirty);
+
+   ---------------
+   -- Set_Dirty --
+   ---------------
+
+   procedure Set_Dirty (This : in out Widget; Dirty : Boolean) is
+   begin
+      This.Is_Dirty := Dirty;
+   end Set_Dirty;
+
+--     --------------
+--     -- Get_Next --
+--     --------------
+--
+--     function Get_Next (This : Widget) return access Widget'Class is
+--     begin
+--        return This.Next;
+--     end Get_Next;
+--
+--     --------------
+--     -- Set_Next --
+--     --------------
+--
+--     procedure Set_Next (This : in out Widget; Next : access Widget'Class) is
+--     begin
+--        This.Next := Next;
+--     end Set_Next;
+
+
+   --------------
+   -- Set_Size --
+   --------------
+
+   procedure Set_Size (This : in out Widget; Size : Size_T) is
+   begin
+      This.Size := Size;
+   end Set_Size;
+
+   --------------
+   -- Get_Size --
+   --------------
+
+   function Get_Size (This : Widget) return Size_T is (This.Size);
+
+end Giza.Widgets;
