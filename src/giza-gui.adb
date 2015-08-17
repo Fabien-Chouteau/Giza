@@ -34,6 +34,9 @@ package body Giza.GUI is
 
    procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
 
+   Drawing_Context : access Context'Class := null;
+   Drawing_Backend : access Backend'Class := null;
+
    --  Window stack
    Stack : Wrapper_Ref := null;
 
@@ -46,8 +49,9 @@ package body Giza.GUI is
       Stack := new Wrapper'(Win => Win,
                             Next => Stack);
 
-      --  TODO: Use default context
-      --  Stack.Win.Draw (Ctx);
+      if Drawing_Context /= null then
+         Stack.Win.Draw (Drawing_Context.all);
+      end if;
    end Push;
 
    ---------
@@ -62,6 +66,31 @@ package body Giza.GUI is
          Free (Tmp);
       end if;
    end Pop;
+
+   -----------------
+   -- Set_Context --
+   -----------------
+
+   procedure Set_Context (Ctx : access Context'Class) is
+   begin
+      Drawing_Context := Ctx;
+      if Drawing_Context /= null then
+         Drawing_Context.Set_Backend (Drawing_Backend);
+      end if;
+   end Set_Context;
+
+   -----------------
+   -- Set_Backend --
+   -----------------
+
+   procedure Set_Backend (Bck : access Backend'Class) is
+
+   begin
+      Drawing_Backend := Bck;
+      if Drawing_Context /= null then
+         Drawing_Context.Set_Backend (Bck);
+      end if;
+   end Set_Backend;
 
    ----------------
    -- Event_Sync --
@@ -131,10 +160,13 @@ package body Giza.GUI is
             end if;
          end if;
 
-         if Stack /= null and then Stack.Win.Dirty then
-            null;
-            --  TODO: Use default context
-            --  Stack.Win.Draw (Ctx);
+         if Stack /= null
+           and then
+            Drawing_Context /= null
+           and then
+            Stack.Win.Dirty
+         then
+            Stack.Win.Draw (Drawing_Context.all);
          end if;
       end loop;
    end Event_Loop;

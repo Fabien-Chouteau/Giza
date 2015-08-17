@@ -22,12 +22,25 @@
 
 with Giza.Events; use Giza.Events;
 with Giza.Windows; use Giza.Windows;
+with Giza.Graphics; use Giza.Graphics;
 
 package Giza.GUI is
 
    procedure Emit (Evt : not null access Event'Class);
-   procedure Event_Loop;
+   --  Put an event that will be processed by the Event_Loop
+
+   procedure Event_Loop with No_Return;
+   --  Non returning loop that will process GUI events
+
+   procedure Set_Context (Ctx : access Context'Class);
+   --  Set the context that will be used for widgets rendering
+
+   procedure Set_Backend (Bck : access Backend'Class);
+   --  Set the graphical backend that will be used for widgets rendering
 
    procedure Push (Win : not null Window_Ref);
+   --  Push a Window to the stack and display it
+
    procedure Pop;
+   --  Remove first Window from the stack and display the next one
 end Giza.GUI;
