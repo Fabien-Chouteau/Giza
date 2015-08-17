@@ -40,6 +40,7 @@ package Giza.Widgets.Frame is
    procedure Invert_Colors (This : in out Gframe);
 private
    type Gframe is new Widget with record
-      FG, BG : Color;
+      FG : Color := Black;
+      BG : Color := White;
    end record;
 end Giza.Widgets.Frame;
