@@ -38,6 +38,11 @@ package Giza.Widgets.Composite is
      (This  : in out Composite_Widget;
       Child : not null Widget_Ref;
       Pos   : Point_T);
+
+   procedure Remove_Child
+     (This  : in out Composite_Widget;
+      Child : not null Widget_Ref);
+
 private
 
    type Wrapper;

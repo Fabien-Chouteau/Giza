@@ -20,7 +20,11 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
+
 package body Giza.Widgets.Composite is
+
+   procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
 
    -----------
    -- Dirty --
@@ -126,4 +130,29 @@ package body Giza.Widgets.Composite is
                                 Next => This.List);
    end Add_Child;
 
+   ------------------
+   -- Remove_Child --
+   ------------------
+
+   procedure Remove_Child
+     (This  : in out Composite_Widget;
+      Child : not null Widget_Ref)
+   is
+      Curr, Prev : Wrapper_Ref := null;
+   begin
+      Curr := This.List;
+      while Curr /= null and then Curr.Widg /= Child loop
+         Prev := Curr;
+         Curr := Curr.Next;
+      end loop;
+
+      if Curr /= null then
+         if Prev = null then
+            This.List := Curr.Next;
+         else
+            Prev.Next := Curr.Next;
+         end if;
+         Free (Curr);
+      end if;
+   end Remove_Child;
 end Giza.Widgets.Composite;
