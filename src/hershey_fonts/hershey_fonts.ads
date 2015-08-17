@@ -18,6 +18,8 @@ package Hershey_Fonts is
 
    type Glyph_Access is not null access constant Glyph;
 
+   subtype Glyph_Index is Positive;
+
    type Glyph_Access_Array is array (Positive range <>) of Glyph_Access;
 
    type Font_Def (Number_Of_Glyphs : Natural) is record
@@ -26,10 +28,11 @@ package Hershey_Fonts is
 
    type Font_Access is not null access constant Font_Def;
 
+   Empty_Glyph : aliased constant Glyph;
    Empty_Font : aliased constant Font_Def;
 private
 
-   Empty_Glyhp : aliased constant Glyph :=
+   Empty_Glyph : aliased constant Glyph :=
      (Number_Of_Vectors => 0,
       Charcode => 0,
       Left => 0,
@@ -39,6 +42,6 @@ private
       Vects => (others => (Raise_Pen)));
 
    Empty_Font : aliased constant Font_Def :=
-     (Number_Of_Glyphs => 0, Glyphs => (others => Empty_Glyhp'Access));
+     (Number_Of_Glyphs => 0, Glyphs => (others => Empty_Glyph'Access));
 
 end Hershey_Fonts;

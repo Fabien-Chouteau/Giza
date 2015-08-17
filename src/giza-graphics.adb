@@ -22,7 +22,7 @@
 
 package body Giza.Graphics is
 
-   function Char_To_Glyph_Index (C : Character) return Dim;
+   function Char_To_Glyph_Index (C : Character) return Glyph_Index;
    function To_Scale (This : Context; A : Integer)
                       return Integer;
    procedure Draw_Glyph (This     : in out Context;
@@ -101,7 +101,9 @@ package body Giza.Graphics is
 
    procedure Set_Color (This : in out Context; C : Color) is
    begin
-      This.Bck.Set_Color (C);
+      if This.Bck /= null then
+         This.Bck.Set_Color (C);
+      end if;
    end Set_Color;
 
    ----------------
@@ -377,7 +379,7 @@ package body Giza.Graphics is
    -- Char_To_Glyph_Index --
    -------------------------
 
-   function Char_To_Glyph_Index (C : Character) return Dim is
+   function Char_To_Glyph_Index (C : Character) return Glyph_Index is
    begin
       return Character'Pos (C) - 31;
    end Char_To_Glyph_Index;
@@ -398,13 +400,20 @@ package body Giza.Graphics is
    ----------------
 
    procedure Draw_Glyph (This     : in out Context;
-                         Charcode : Positive)
+                         Charcode : Glyph_Index)
    is
       Last : Vect := Raise_Pen;
-      G : constant Glyph_Access := This.Font.Glyphs (Charcode);
-      Center : constant Point_T := (This.Pos.X + To_Scale (This, -G.Left),
-                                    This.Pos.Y);
+      G : Glyph_Access := Empty_Glyph'Access;
+      Center : Point_T;
    begin
+
+      if Charcode not in This.Font.Glyphs'Range then
+         return;
+      end if;
+
+      G := This.Font.Glyphs (Charcode);
+      Center := (This.Pos.X + To_Scale (This, -G.Left),
+                 This.Pos.Y);
 
       for Vect of G.Vects loop
          if Vect /= Raise_Pen then
@@ -453,23 +462,28 @@ package body Giza.Graphics is
                   Top, Bottom, Left, Right : out Integer)
    is
       T, B, L, R : Integer := 0;
-      G : Glyph_Access :=
-        This.Font.Glyphs (Char_To_Glyph_Index (Str (Str'First)));
+      G : Glyph_Access := Empty_Glyph'Access;
+      Index : Glyph_Index;
    begin
+
       L := 0;
       R := L;
 
       for C of Str loop
-         G := This.Font.Glyphs (Char_To_Glyph_Index (C));
-         if G.Top < T then
-            T := G.Top;
-         end if;
+         Index := Char_To_Glyph_Index (C);
 
-         if G.Bottom > B then
-            B := G.Bottom;
-         end if;
+         if Index in This.Font.Glyphs'Range then
+            G := This.Font.Glyphs (Index);
+            if G.Top < T then
+               T := G.Top;
+            end if;
 
-         R := R + (G.Right - G.Left) + This.Font_Spacing;
+            if G.Bottom > B then
+               B := G.Bottom;
+            end if;
+
+            R := R + (G.Right - G.Left) + This.Font_Spacing;
+         end if;
       end loop;
 
       Top := This.Pos.Y + To_Scale (This, T);
