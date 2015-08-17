@@ -26,11 +26,6 @@ package Giza.Widgets.Frame is
    type Gframe is new Widget with private;
 
    overriding
-   procedure On_Builtin_Event
-     (This : in out Gframe;
-      Evt : Event_Not_Null_Access) is null;
-
-   overriding
    procedure Draw (This : in out Gframe; Ctx : in out Context'Class);
 
    procedure Set_Foreground (This : in out Gframe; FG : Color);

@@ -34,13 +34,13 @@ package Giza.Events is
       CType : Click_Type := Click_None;
       Pos   : Point_T := (0, 0);
    end record;
-   type Click_Event_Access is access all Click_Event;
+   type Click_Event_Ref is not null access constant Click_Event'Class;
 
    type Basic_Timer_Callback is access procedure;
    type Timer_Event is new Event with record
       Callback : Basic_Timer_Callback;
    end record;
-   type Timer_Event_Not_Null_Access is not null access all Timer_Event'Class;
+   type Timer_Event_Ref is not null access constant Timer_Event'Class;
 
    procedure Triggered (Timer : in out Timer_Event);
 end Giza.Events;

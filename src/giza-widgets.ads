@@ -28,15 +28,24 @@ package Giza.Widgets is
    type Widget_Ref is access all Widget'Class;
 
    function Dirty (This : Widget) return Boolean;
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean);
+   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
    procedure Draw (This : in out Widget; Ctx : in out Context'Class) is null;
+
+   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True);
+   --  When a widget is disabled, it will no longer react to events
 
    procedure Set_Size (This : in out Widget; Size : Size_T);
    function Get_Size (This : Widget) return Size_T;
 
    procedure On_Builtin_Event
-     (This : in out Widget;
-      Evt : Event_Not_Null_Access) is abstract;
+     (This : in out Widget'Class;
+      Evt : Event_Not_Null_Access);
+
+   procedure On_Click
+     (This  : in out Widget;
+      Pos   : Point_T;
+      CType : Click_Type) is null;
+
    procedure On_Custom_Event
      (This : in out Widget;
       Evt : Event_Not_Null_Access) is null;
@@ -44,7 +53,8 @@ package Giza.Widgets is
 
 private
    type Widget is abstract tagged record
-      Is_Dirty : Boolean := True;
+      Is_Dirty    : Boolean := True;
+      Is_Disabled : Boolean := False;
       Size : Size_T := (0, 0);
 --        Next : access Widget'Class := null;
    end record;

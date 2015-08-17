@@ -30,9 +30,10 @@ package Giza.Widgets.Composite is
    procedure Draw (This : in out Composite_Widget; Ctx : in out Context'Class);
 
    overriding
-   procedure On_Builtin_Event
-     (This : in out Composite_Widget;
-      Evt : Event_Not_Null_Access);
+   procedure On_Click
+     (This  : in out Composite_Widget;
+      Pos   : Point_T;
+      CType : Click_Type);
 
    procedure Add_Child
      (This  : in out Composite_Widget;

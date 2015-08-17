@@ -22,30 +22,24 @@
 
 package body Giza.Widgets.Button is
 
-   ----------------------
-   -- On_Builtin_Event --
-   ----------------------
+   --------------
+   -- On_Click --
+   --------------
 
-   overriding procedure On_Builtin_Event
-     (This : in out Gbutton;
-      Evt : Event_Not_Null_Access)
+   procedure On_Click
+     (This  : in out Gbutton;
+      Pos   : Point_T;
+      CType : Click_Type)
    is
+      pragma Unreferenced (Pos);
    begin
-      if Evt.all in Click_Event then
-         declare
-            Click : constant Click_Event_Access := Click_Event_Access (Evt);
-         begin
-            if Click.CType = Click_Press
-              or else
-                (Click.CType = Click_Release and then not This.Is_Toggle)
-            then
-               This.Is_Active := not This.Is_Active;
-               This.Invert_Colors;
-               This.Set_Dirty (True);
-            end if;
-         end;
+      if CType = Click_Press
+        or else
+          (CType = Click_Release and then not This.Is_Toggle)
+      then
+         This.Set_Active (not This.Is_Active);
       end if;
-   end On_Builtin_Event;
+   end On_Click;
 
    ------------
    -- Active --

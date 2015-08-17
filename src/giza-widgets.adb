@@ -32,10 +32,19 @@ package body Giza.Widgets is
    -- Set_Dirty --
    ---------------
 
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean) is
+   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True) is
    begin
       This.Is_Dirty := Dirty;
    end Set_Dirty;
+
+   ------------------
+   -- Set_Disabled --
+   ------------------
+
+   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True) is
+   begin
+      This.Is_Disabled := Disabled;
+   end Set_Disabled;
 
    --------------
    -- Set_Size --
@@ -51,5 +60,29 @@ package body Giza.Widgets is
    --------------
 
    function Get_Size (This : Widget) return Size_T is (This.Size);
+
+   ----------------------
+   -- On_Builtin_Event --
+   ----------------------
+
+   procedure On_Builtin_Event
+     (This : in out Widget'Class;
+      Evt : Event_Not_Null_Access)
+   is
+   begin
+      if This.Is_Disabled then
+         return;
+      end if;
+
+      if Evt.all in Click_Event'Class then
+         declare
+            Click : constant Click_Event_Ref := Click_Event_Ref (Evt);
+         begin
+            This.On_Click (Click.Pos, Click.CType);
+         end;
+      else
+         This.On_Custom_Event (Evt);
+      end if;
+   end On_Builtin_Event;
 
 end Giza.Widgets;

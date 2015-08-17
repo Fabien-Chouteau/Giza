@@ -69,39 +69,29 @@ package body Giza.Widgets.Composite is
       Ctx.Set_Position (My_Pos);
    end Draw;
 
-   ----------------------
-   -- On_Builtin_Event --
-   ----------------------
+   --------------
+   -- On_Click --
+   --------------
 
-   overriding procedure On_Builtin_Event
-     (This : in out Composite_Widget;
-      Evt : Event_Not_Null_Access)
+   procedure On_Click
+     (This  : in out Composite_Widget;
+      Pos   : Point_T;
+      CType : Click_Type)
    is
+      Ref : Wrapper_Ref := This.List;
    begin
-      if Evt.all in Click_Event then
-         declare
-            Ref : Wrapper_Ref := This.List;
-            Click : constant Click_Event_Access := Click_Event_Access (Evt);
-            Click_Pos : constant Point_T := Click.Pos;
-         begin
-            while Ref /= null loop
-               --  Translate position into child coordinates
-               Click.Pos := Click_Pos - Ref.Pos;
-
-               --  Check if event is within the Widget and do something
-               if Click.Pos.X in 0 .. Ref.Widg.Size.W
-                 and then
-                  Click.Pos.Y in 0 .. Ref.Widg.Size.H
-               then
-                  Ref.Widg.On_Builtin_Event (Evt);
-               end if;
-               Ref := Ref.Next;
-            end loop;
-         end;
-      else
-         On_Custom_Event (This, Evt);
-      end if;
-   end On_Builtin_Event;
+      while Ref /= null loop
+         --  Check if event is within the Widget
+         if Pos.X in Ref.Pos.X .. Ref.Pos.X + Ref.Widg.Size.W
+           and then
+             Pos.Y in Ref.Pos.Y .. Ref.Pos.Y + Ref.Widg.Size.H
+         then
+         --  Translate position into child coordinates
+            Ref.Widg.On_Click (Pos - Ref.Pos, CType);
+         end if;
+         Ref := Ref.Next;
+      end loop;
+   end On_Click;
 
    ---------------
    -- Add_Child --
