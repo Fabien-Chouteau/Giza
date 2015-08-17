@@ -33,8 +33,8 @@ package Giza.Widgets.Button is
 
    function Active (This : Gbutton) return Boolean;
 
-   procedure Set_Active (This : in out Gbutton; Active : Boolean);
-   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean);
+   procedure Set_Active (This : in out Gbutton; Active : Boolean := True);
+   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean := True);
 
 private
    type Gbutton is new Gtext with record

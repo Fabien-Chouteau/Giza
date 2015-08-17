@@ -57,16 +57,20 @@ package body Giza.Widgets.Button is
    -- Set_Active --
    ----------------
 
-   procedure Set_Active (This : in out Gbutton; Active : Boolean) is
+   procedure Set_Active (This : in out Gbutton; Active : Boolean := True) is
    begin
-      This.Is_Active := Active;
+      if This.Active /= Active then
+         This.Is_Active := Active;
+         This.Invert_Colors;
+         This.Set_Dirty (True);
+      end if;
    end Set_Active;
 
    ----------------
    -- Set_Toggle --
    ----------------
 
-   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean) is
+   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean := True) is
    begin
       This.Is_Toggle := Toggle;
    end Set_Toggle;
