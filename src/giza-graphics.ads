@@ -38,6 +38,9 @@ package Giza.Graphics is
       W, H : Natural;
    end record;
 
+   function "+" (A, B : Size_T) return Size_T is (A.W + B.W, A.H + B.H);
+   function "-" (A, B : Size_T) return Size_T is (A.W - B.W, A.H - B.H);
+
    type Rect_T is record
       Org  : Point_T;
       Size : Size_T;
