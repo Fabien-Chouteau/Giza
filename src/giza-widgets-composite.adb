@@ -54,19 +54,18 @@ package body Giza.Widgets.Composite is
       Ctx : in out Context'Class)
    is
       Ref : Wrapper_Ref := This.List;
-      My_Bounds : constant Rect_T  := Ctx.Bounds;
-      My_Pos    : constant Point_T := Ctx.Position;
    begin
       while Ref /= null loop
          if Ref.Widg.Dirty then
-            Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
+            Ctx.Save;
+            Ctx.Translate (Ref.Pos);
+            --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
             Ctx.Set_Position ((0, 0));
             Draw (Ref.Widg.all, Ctx);
+            Ctx.Restore;
          end if;
          Ref := Ref.Next;
       end loop;
-      Ctx.Set_Bounds (My_Bounds);
-      Ctx.Set_Position (My_Pos);
    end Draw;
 
    --------------

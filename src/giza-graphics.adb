@@ -20,13 +20,20 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
+with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
+
 package body Giza.Graphics is
+
+   procedure Free is new Ada.Unchecked_Deallocation (State, State_Ref);
 
    function Char_To_Glyph_Index (C : Character) return Glyph_Index;
    function To_Scale (This : Context; A : Integer)
                       return Integer;
    procedure Draw_Glyph (This     : in out Context;
                          Charcode : Positive);
+
+   function Transform (This : Context; Pt : Point_T) return Point_T;
 
    ------------
    -- Center --
@@ -36,6 +43,108 @@ package body Giza.Graphics is
    begin
       return (R.Org.X + R.Size.W / 2, R.Org.Y + R.Size.H / 2);
    end Center;
+
+   ---------
+   -- "*" --
+   ---------
+
+   function "*" (A, B : HC_Matrix) return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := A.V11 * B.V11 + A.V12 * B.V21 + A.V13 * B.V31;
+      Res.V12 := A.V11 * B.V12 + A.V12 * B.V22 + A.V13 * B.V32;
+      Res.V13 := A.V11 * B.V13 + A.V12 * B.V23 + A.V13 * B.V33;
+
+      Res.V21 := A.V21 * B.V11 + A.V22 * B.V21 + A.V23 * B.V31;
+      Res.V22 := A.V21 * B.V12 + A.V22 * B.V22 + A.V23 * B.V32;
+      Res.V23 := A.V21 * B.V13 + A.V22 * B.V23 + A.V23 * B.V33;
+
+      Res.V31 := A.V31 * B.V11 + A.V32 * B.V21 + A.V33 * B.V31;
+      Res.V32 := A.V31 * B.V12 + A.V32 * B.V22 + A.V33 * B.V32;
+      Res.V33 := A.V31 * B.V13 + A.V32 * B.V23 + A.V33 * B.V33;
+      return Res;
+   end "*";
+
+   ---------
+   -- "*" --
+   ---------
+
+   function "*" (A : HC_Matrix; B : Point_T) return Point_T is
+      Res : Point_T;
+   begin
+      Res.X := Dim (Float (B.X) * A.V11 + Float (B.Y) * A.V12 + 1.0 * A.V13);
+      Res.Y := Dim (Float (B.X) * A.V21 + Float (B.Y) * A.V22 + 1.0 * A.V23);
+      return Res;
+   end "*";
+
+   --------
+   -- Id --
+   --------
+
+   function Id return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := 1.0;
+      Res.V22 := 1.0;
+      Res.V33 := 1.0;
+      return Res;
+   end Id;
+
+   ---------------------
+   -- Rotation_Matrix --
+   ---------------------
+
+   function Rotation_Matrix (Rad : Float) return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := Cos (Rad);
+      Res.V12 := -Sin (Rad);
+      Res.V21 := Sin (Rad);
+      Res.V22 := Cos (Rad);
+      Res.V33 := 1.0;
+      return Res;
+   end Rotation_Matrix;
+
+   ------------------------
+   -- Translation_Matrix --
+   ------------------------
+
+   function Translation_Matrix (Pt : Point_T) return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := 1.0;
+      Res.V22 := 1.0;
+      Res.V33 := 1.0;
+      Res.V13 := Float (Pt.X);
+      Res.V23 := Float (Pt.Y);
+      return Res;
+   end Translation_Matrix;
+
+   ------------------
+   -- Scale_Matrix --
+   ------------------
+
+   function Scale_Matrix (Scale : Float) return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := Scale;
+      Res.V22 := Scale;
+      Res.V33 := 1.0;
+      return Res;
+   end Scale_Matrix;
+
+   ------------------
+   -- Scale_Matrix --
+   ------------------
+
+   function Scale_Matrix (X, Y : Float) return HC_Matrix is
+      Res : HC_Matrix;
+   begin
+      Res.V11 := X;
+      Res.V22 := Y;
+      Res.V33 := 1.0;
+      return Res;
+   end Scale_Matrix;
 
    ---------------
    -- Set_Pixel --
@@ -56,6 +165,7 @@ package body Giza.Graphics is
       --  Default backend, doing nothing...
       null;
    end Set_Color;
+
    ----------
    -- Size --
    ----------
@@ -68,32 +178,64 @@ package body Giza.Graphics is
    end Size;
 
    ---------------
+   -- Transform --
+   ---------------
+
+   function Transform (This : Context; Pt : Point_T) return Point_T is
+   begin
+      if This.Current_State.Translate_Only then
+         return ((Pt.X + Dim (This.Current_State.Transform.V13),
+                  Pt.Y + Dim (This.Current_State.Transform.V23)));
+      else
+         return This.Current_State.Transform * Pt;
+      end if;
+   end Transform;
+
+   ---------------
    -- Set_Pixel --
    ---------------
 
    procedure Set_Pixel (This : in out Context; Pt : Point_T) is
-      Translate : Point_T;
+      Target : constant Point_T := Transform (This, Pt);
    begin
       if This.Bck = null
-        or else
-          Pt.X not in 0 .. This.Bounds.Size.W
-        or else
-          Pt.Y not in 0 .. This.Bounds.Size.H
+
+        --  FIXME: with the transformation matrix I'm not sure how to check
+        --         bounds...
+        --          or else
+        --            Target.X not in 0 .. This.Bounds.Size.W
+        --          or else
+        --            Target.Y not in 0 .. This.Bounds.Size.H
       then
          --  Out of bounds
          return;
       end if;
 
---        Put_Line ("Point X:" & Pt.X'Img
---                 & " Y:" & Pt.Y'Img);
---        Put_Line ("Origin X:" & This.Bounds.Org.X'Img
---                 & " Y:" & This.Bounds.Org.Y'Img);
-      Translate := Pt + This.Bounds.Org;
---        Put_Line ("Translated X:" & Translate.X'Img
---                 & " Y:" & Translate.Y'Img);
-
-      This.Bck.Set_Pixel (Translate);
+      This.Bck.Set_Pixel (Target);
    end Set_Pixel;
+
+   ----------
+   -- Save --
+   ----------
+
+   procedure Save (This : in out Context) is
+   begin
+      This.Current_State.Next := new State'(This.Current_State);
+   end Save;
+
+   -------------
+   -- Restore --
+   -------------
+
+   procedure Restore (This : in out Context) is
+      Tmp : State_Ref;
+   begin
+      Tmp := This.Current_State.Next;
+      if Tmp /= null then
+         This.Current_State := Tmp.all;
+         Free (Tmp);
+      end if;
+   end Restore;
 
    ---------------
    -- Set_Color --
@@ -112,14 +254,15 @@ package body Giza.Graphics is
 
    procedure Set_Bounds (This : in out Context; Bounds : Rect_T) is
    begin
-      This.Bounds := Bounds;
+      This.Current_State.Bounds := Bounds;
    end Set_Bounds;
 
    ------------
    -- Bounds --
    ------------
 
-   function Bounds (This : Context) return Rect_T is (This.Bounds);
+   function Bounds (This : Context) return Rect_T is
+     (This.Current_State.Bounds);
 
    ------------------
    -- Set_Position --
@@ -127,7 +270,7 @@ package body Giza.Graphics is
 
    procedure Set_Position (This : in out Context; Pt : Point_T) is
    begin
-      This.Pos := Pt;
+      This.Current_State.Pos := Pt;
    end Set_Position;
 
    --------------
@@ -136,7 +279,7 @@ package body Giza.Graphics is
 
    function Position (This : Context) return Point_T is
    begin
-      return This.Pos;
+      return This.Current_State.Pos;
    end Position;
 
    -----------------
@@ -148,13 +291,54 @@ package body Giza.Graphics is
       This.Bck := Bck;
    end Set_Backend;
 
+   ------------
+   -- Rotate --
+   ------------
+
+   procedure Rotate (This : in out Context; Rad : Float) is
+   begin
+      This.Current_State.Transform :=
+        This.Current_State.Transform * Rotation_Matrix (Rad);
+      This.Current_State.Translate_Only := False;
+   end Rotate;
+
+   ---------------
+   -- Translate --
+   ---------------
+
+   procedure Translate (This : in out Context; Pt : Point_T) is
+   begin
+      This.Current_State.Transform :=
+        This.Current_State.Transform * Translation_Matrix (Pt);
+   end Translate;
+
+   -----------
+   -- Scale --
+   -----------
+
+   procedure Scale (This : in out Context; Scale : Float) is
+   begin
+      This.Scale (Scale, Scale);
+   end Scale;
+
+   -----------
+   -- Scale --
+   -----------
+
+   procedure Scale (This : in out Context; X, Y : Float) is
+   begin
+      This.Current_State.Transform :=
+        This.Current_State.Transform * Scale_Matrix (X, Y);
+      This.Current_State.Translate_Only := False;
+   end Scale;
+
    --------------------
    -- Set_Line_Width --
    --------------------
 
    procedure Set_Line_Width (This : in out Context; Width : Positive) is
    begin
-      This.Line_Width := Width;
+      This.Current_State.Line_Width := Width;
    end Set_Line_Width;
 
    -------------
@@ -163,7 +347,7 @@ package body Giza.Graphics is
 
    procedure Move_To (This : in out Context; Pt : Point_T) is
    begin
-      This.Pos := Pt;
+      This.Current_State.Pos := Pt;
    end Move_To;
 
    -------------
@@ -172,7 +356,7 @@ package body Giza.Graphics is
 
    procedure Line_To (This : in out Context; Pt : Point_T) is
    begin
-      This.Line (This.Pos, Pt);
+      This.Line (This.Current_State.Pos, Pt);
       This.Move_To (Pt);
    end Line_To;
 
@@ -354,7 +538,7 @@ package body Giza.Graphics is
 
    procedure Set_Font (This : in out Context; Font : Font_Access) is
    begin
-      This.Font := Font;
+      This.Current_State.Font := Font;
    end Set_Font;
 
    -------------------
@@ -363,7 +547,7 @@ package body Giza.Graphics is
 
    procedure Set_Font_Size (This : in out Context; Size : Float) is
    begin
-      This.Font_Size := Size;
+      This.Current_State.Font_Size := Size;
    end Set_Font_Size;
 
    ----------------------
@@ -372,8 +556,29 @@ package body Giza.Graphics is
 
    procedure Set_Font_Spacing (This : in out Context; Spacing : Dim) is
    begin
-      This.Font_Spacing := Spacing;
+      This.Current_State.Font_Spacing := Spacing;
    end Set_Font_Spacing;
+
+   ----------
+   -- Font --
+   ----------
+
+   function Font (This : Context) return Font_Access is
+     (This.Current_State.Font);
+
+   ---------------
+   -- Font_Size --
+   ---------------
+
+   function Font_Size (This : Context) return Float is
+      (This.Current_State.Font_Size);
+
+   ------------------
+   -- Font_Spacing --
+   ------------------
+
+   function Font_Spacing (This : Context) return Dim is
+      (This.Current_State.Font_Spacing);
 
    -------------------------
    -- Char_To_Glyph_Index --
@@ -411,9 +616,9 @@ package body Giza.Graphics is
          return;
       end if;
 
-      G := This.Font.Glyphs (Charcode);
-      Center := (This.Pos.X + To_Scale (This, -G.Left),
-                 This.Pos.Y);
+      G := This.Current_State.Font.Glyphs (Charcode);
+      Center := (This.Position.X + To_Scale (This, -G.Left),
+                 This.Position.Y);
 
       for Vect of G.Vects loop
          if Vect /= Raise_Pen then
@@ -429,8 +634,8 @@ package body Giza.Graphics is
          end if;
          Last := Vect;
       end loop;
-      This.Pos.X := Center.X + To_Scale (This, This.Font_Spacing + G.Right);
-      This.Pos.Y := Center.Y;
+      This.Move_To
+        ((Center.X + To_Scale (This, This.Font_Spacing + G.Right), Center.Y));
    end Draw_Glyph;
 
    -----------
@@ -486,10 +691,10 @@ package body Giza.Graphics is
          end if;
       end loop;
 
-      Top := This.Pos.Y + To_Scale (This, T);
-      Bottom := This.Pos.Y + To_Scale (This, B);
-      Left := This.Pos.X + To_Scale (This, L);
-      Right := This.Pos.X + To_Scale (This, R);
+      Top := This.Position.Y + To_Scale (This, T);
+      Bottom := This.Position.Y + To_Scale (This, B);
+      Left := This.Position.X + To_Scale (This, L);
+      Right := This.Position.X + To_Scale (This, R);
    end Box;
 
 end Giza.Graphics;

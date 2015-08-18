@@ -23,6 +23,10 @@
 with Hershey_Fonts; use Hershey_Fonts;
 with Giza.Colors; use Giza.Colors;
 
+-------------------
+-- Giza.Graphics --
+-------------------
+
 package Giza.Graphics is
 
    subtype Dim is Integer;
@@ -48,13 +52,38 @@ package Giza.Graphics is
 
    function Center (R : Rect_T) return Point_T;
 
+   type HC_Matrix is record
+      V11, V12, V13 : Float := 0.0;
+      V21, V22, V23 : Float := 0.0;
+      V31, V32, V33 : Float := 0.0;
+   end record;
+
+   function "*" (A, B : HC_Matrix) return HC_Matrix;
+   function "*" (A : HC_Matrix; B : Point_T) return Point_T;
+   function Id return HC_Matrix;
+   function Rotation_Matrix (Rad : Float) return HC_Matrix;
+   function Translation_Matrix (Pt : Point_T) return HC_Matrix;
+   function Scale_Matrix (Scale : Float) return HC_Matrix;
+   function Scale_Matrix (X, Y : Float) return HC_Matrix;
+
+   --------------
+   --  Backend --
+   --------------
+
    type Backend is tagged private;
 
    procedure Set_Pixel (This : in out Backend; Pt : Point_T);
    procedure Set_Color (This : in out Backend; C : Color);
    function Size (This : Backend) return Size_T;
 
+   -------------
+   -- Context --
+   -------------
+
    type Context is tagged private;
+
+   procedure Save (This : in out Context);
+   procedure Restore (This : in out Context);
 
    procedure Set_Color (This : in out Context; C : Color);
    procedure Set_Pixel (This : in out Context; Pt : Point_T);
@@ -65,6 +94,11 @@ package Giza.Graphics is
    procedure Set_Backend (This : in out Context; Bck : access Backend'Class);
 
    --  Drawing
+
+   procedure Rotate (This : in out Context; Rad : Float);
+   procedure Translate (This : in out Context; Pt : Point_T);
+   procedure Scale (This : in out Context; Scale : Float);
+   procedure Scale (This : in out Context; X, Y : Float);
 
    procedure Set_Line_Width (This : in out Context; Width : Positive);
 
@@ -95,8 +129,11 @@ package Giza.Graphics is
 
    --  Fonts
    procedure Set_Font (This : in out Context; Font : Font_Access);
+   function Font (This : Context) return Font_Access;
    procedure Set_Font_Size (This : in out Context; Size : Float);
+   function Font_Size (This : Context) return Float;
    procedure Set_Font_Spacing (This : in out Context; Spacing : Dim);
+   function Font_Spacing (This : Context) return Dim;
    procedure Print (This : in out Context; C : Character);
    procedure Print (This : in out Context; Str : String);
    procedure Box (This : in out Context;
@@ -106,18 +143,28 @@ private
 
    type Backend is tagged null record;
 
+   type State;
+   type State_Ref is access all State;
+
+   type State is record
+      Bounds         : Rect_T;
+      Pos            : Point_T;
+      Line_Width     : Positive;
+      Font           : Font_Access := Empty_Font'Access;
+      Font_Size      : Float := 1.0;
+      Font_Spacing   : Dim := 1;
+      Transform      : HC_Matrix := Id;
+
+      Translate_Only : Boolean := True;
+      --  We only translations are used we can avoid four unecessary float
+      --  multiplications for each pixel.
+
+      Next           : State_Ref := null;
+   end record;
+
    type Context is tagged record
       Bck  : access Backend'Class := null;
-      Bounds : Rect_T;
-      Pos    : Point_T;
-
-      Line_Width : Positive;
-
-      FG, BG : Color;
-
-      Font : Font_Access := Empty_Font'Access;
-      Font_Size : Float := 1.0;
-      Font_Spacing : Dim := 1;
+      Current_State : State;
    end record;
 
 end Giza.Graphics;
