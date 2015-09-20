@@ -27,7 +27,9 @@ package Giza.Widgets.Text is
    type Gtext is new Gframe with private;
 
    overriding
-   procedure Draw (This : in out Gtext; Ctx : in out Context'Class);
+   procedure Draw (This : in out Gtext;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
    procedure Set_Text (This : in out Gtext; Str : access String);
 

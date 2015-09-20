@@ -26,7 +26,9 @@ package Giza.Widgets.Frame is
    type Gframe is new Widget with private;
 
    overriding
-   procedure Draw (This : in out Gframe; Ctx : in out Context'Class);
+   procedure Draw (This : in out Gframe;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
    procedure Set_Foreground (This : in out Gframe; FG : Color);
    procedure Set_Background (This : in out Gframe; BG : Color);

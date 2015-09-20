@@ -166,7 +166,7 @@ package body Giza.GUI is
            and then
             Stack.Win.Dirty
          then
-            Stack.Win.Draw (Drawing_Context.all);
+            Stack.Win.Draw (Drawing_Context.all, False);
          end if;
       end loop;
    end Event_Loop;

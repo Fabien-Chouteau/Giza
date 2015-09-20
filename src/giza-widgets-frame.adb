@@ -26,13 +26,17 @@ package body Giza.Widgets.Frame is
    -- Draw --
    ----------
 
-   procedure Draw (This : in out Gframe; Ctx : in out Context'Class) is
+   procedure Draw (This : in out Gframe;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True) is
    begin
-      Ctx.Set_Color (This.BG);
-      Ctx.Fill_Rectangle (((0, 0), This.Size));
-      Ctx.Set_Color (This.FG);
-      Ctx.Rectangle (((0, 0), This.Size));
-      This.Set_Dirty (False);
+      if This.Dirty or else Force then
+         Ctx.Set_Color (This.BG);
+         Ctx.Fill_Rectangle (((0, 0), This.Size));
+         Ctx.Set_Color (This.FG);
+         Ctx.Rectangle (((0, 0), This.Size));
+         This.Set_Dirty (False);
+      end if;
    end Draw;
 
    --------------------

@@ -32,9 +32,11 @@ package body Giza.Widgets.Tabs is
    -- Draw --
    ----------
 
-   procedure Draw (This : in out Gtabs; Ctx : in out Context'Class) is
+   procedure Draw (This : in out Gtabs;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True) is
    begin
-      This.Root.Draw (Ctx);
+      This.Root.Draw (Ctx, Force);
    end Draw;
 
    --------------

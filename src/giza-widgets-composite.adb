@@ -51,17 +51,18 @@ package body Giza.Widgets.Composite is
 
    overriding procedure Draw
      (This : in out Composite_Widget;
-      Ctx : in out Context'Class)
+      Ctx : in out Context'Class;
+      Force : Boolean := True)
    is
       Ref : Wrapper_Ref := This.List;
    begin
       while Ref /= null loop
-         if Ref.Widg.Dirty then
+         if Ref.Widg.Dirty or else Force then
             Ctx.Save;
             Ctx.Translate (Ref.Pos);
             --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
             Ctx.Set_Position ((0, 0));
-            Draw (Ref.Widg.all, Ctx);
+            Draw (Ref.Widg.all, Ctx, Force);
             Ctx.Restore;
          end if;
          Ref := Ref.Next;

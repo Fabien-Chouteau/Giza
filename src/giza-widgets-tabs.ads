@@ -31,7 +31,9 @@ package Giza.Widgets.Tabs is
    function Dirty (This : Gtabs) return Boolean;
 
    overriding
-   procedure Draw (This : in out Gtabs; Ctx : in out Context'Class);
+   procedure Draw (This : in out Gtabs;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
    overriding
    procedure On_Click

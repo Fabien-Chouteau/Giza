@@ -27,7 +27,9 @@ package Giza.Widgets.Composite is
    function Dirty (This : Composite_Widget) return Boolean;
 
    overriding
-   procedure Draw (This : in out Composite_Widget; Ctx : in out Context'Class);
+   procedure Draw (This : in out Composite_Widget;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
    overriding
    procedure On_Click

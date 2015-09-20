@@ -26,10 +26,17 @@ package body Giza.Widgets.Text is
    -- Draw --
    ----------
 
-   procedure Draw (This : in out Gtext; Ctx : in out Context'Class) is
+   procedure Draw (This : in out Gtext;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True)
+   is
       Top, Bottom, Left, Right : Integer;
       Pt : Point_T;
    begin
+      if not This.Dirty and then not Force then
+         return;
+      end if;
+
       Draw (Gframe (This), Ctx);
 
       if This.Str /= null then

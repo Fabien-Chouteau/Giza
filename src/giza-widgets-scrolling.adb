@@ -37,8 +37,15 @@ package body Giza.Widgets.Scrolling is
    -- Draw --
    ----------
 
-   procedure Draw (This : in out Gscroll; Ctx : in out Context'Class) is
+   procedure Draw (This : in out Gscroll;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True)
+   is
    begin
+      if not This.Dirty and then not Force then
+         return;
+      end if;
+
       if This.Child /= null then
          Ctx.Save;
          Ctx.Translate (This.Child_Pos);

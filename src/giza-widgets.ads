@@ -29,7 +29,9 @@ package Giza.Widgets is
 
    function Dirty (This : Widget) return Boolean;
    procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
-   procedure Draw (This : in out Widget; Ctx : in out Context'Class) is null;
+   procedure Draw (This : in out Widget;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True) is null;
 
    procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True);
    --  When a widget is disabled, it will no longer react to events
