@@ -31,7 +31,7 @@ package Giza.Widgets.Text is
                    Ctx : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Text (This : in out Gtext; Str : access String);
+   procedure Set_Text (This : in out Gtext; Str : String);
 
 private
    type Gtext is new Gframe with record

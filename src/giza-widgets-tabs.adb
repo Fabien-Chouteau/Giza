@@ -73,7 +73,7 @@ package body Giza.Widgets.Tabs is
    procedure Set_Tab
      (This  : in out Gtabs;
       Index : Natural;
-      Title : not null access String;
+      Title : String;
       Child : not null Widget_Ref)
    is
       Button_Size : constant Size_T := (This.Get_Size.W / This.Tab_Number,

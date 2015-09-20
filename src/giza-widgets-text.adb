@@ -52,9 +52,9 @@ package body Giza.Widgets.Text is
    -- Set_Text --
    --------------
 
-   procedure Set_Text (This : in out Gtext; Str : access String) is
+   procedure Set_Text (This : in out Gtext; Str : String) is
    begin
-      This.Str := Str;
+      This.Str := new String'(Str);
    end Set_Text;
 
 end Giza.Widgets.Text;
