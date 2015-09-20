@@ -36,7 +36,9 @@ package Giza.Widgets.Scrolling is
       CType : Click_Type) return Boolean;
 
    overriding
-   procedure Draw (This : in out Gscroll; Ctx : in out Context'Class);
+   procedure Draw (This : in out Gscroll;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
    procedure Set_Child (This : in out Gscroll; Child : not null Widget_Ref);
 
