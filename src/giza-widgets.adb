@@ -65,23 +65,24 @@ package body Giza.Widgets is
    -- On_Builtin_Event --
    ----------------------
 
-   procedure On_Builtin_Event
+   function On_Builtin_Event
      (This : in out Widget'Class;
-      Evt : Event_Not_Null_Access)
+      Evt : Event_Not_Null_Access) return Boolean
    is
    begin
       if This.Is_Disabled then
-         return;
+         return False;
       end if;
 
       if Evt.all in Click_Event'Class then
          declare
             Click : constant Click_Event_Ref := Click_Event_Ref (Evt);
+            Unref : Boolean with Unreferenced;
          begin
-            This.On_Click (Click.Pos, Click.CType);
+            return This.On_Click (Click.Pos, Click.CType);
          end;
       else
-         This.On_Custom_Event (Evt);
+         return This.On_Custom_Event (Evt);
       end if;
    end On_Builtin_Event;
 

@@ -73,12 +73,13 @@ package body Giza.Widgets.Composite is
    -- On_Click --
    --------------
 
-   procedure On_Click
+   function On_Click
      (This  : in out Composite_Widget;
       Pos   : Point_T;
-      CType : Click_Type)
+      CType : Click_Type) return Boolean
    is
       Ref : Wrapper_Ref := This.List;
+      Clicked : Boolean := False;
    begin
       while Ref /= null loop
          --  Check if event is within the Widget
@@ -87,10 +88,12 @@ package body Giza.Widgets.Composite is
              Pos.Y in Ref.Pos.Y .. Ref.Pos.Y + Ref.Widg.Size.H
          then
          --  Translate position into child coordinates
-            Ref.Widg.On_Click (Pos - Ref.Pos, CType);
+            Clicked := Clicked or else
+              Ref.Widg.On_Click (Pos - Ref.Pos, CType);
          end if;
          Ref := Ref.Next;
       end loop;
+      return Clicked;
    end On_Click;
 
    ---------------

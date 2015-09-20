@@ -36,10 +36,10 @@ package Giza.Widgets.Tabs is
                    Force : Boolean := True);
 
    overriding
-   procedure On_Click
+   function On_Click
      (This  : in out Gtabs;
       Pos   : Point_T;
-      CType : Click_Type);
+      CType : Click_Type) return Boolean;
 
    procedure Set_Tab
      (This  : in out Gtabs;

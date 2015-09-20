@@ -26,10 +26,10 @@ package body Giza.Widgets.Button is
    -- On_Click --
    --------------
 
-   procedure On_Click
+   function On_Click
      (This  : in out Gbutton;
       Pos   : Point_T;
-      CType : Click_Type)
+      CType : Click_Type) return Boolean
    is
       pragma Unreferenced (Pos);
    begin
@@ -38,6 +38,9 @@ package body Giza.Widgets.Button is
           (CType = Click_Release and then not This.Is_Toggle)
       then
          This.Set_Active (not This.Is_Active);
+         return True;
+      else
+         return False;
       end if;
    end On_Click;
 

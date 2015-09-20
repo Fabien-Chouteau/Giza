@@ -149,6 +149,7 @@ package body Giza.GUI is
 
    procedure Event_Loop is
       Event : Event_Access;
+      Event_Handled : Boolean;
    begin
       loop
          Event_Sync.Wait_For_Event (Event);
@@ -156,7 +157,8 @@ package body Giza.GUI is
             if Event.all in Timer_Event then
                Timer_Event'Class (Event.all).Triggered;
             else
-               Stack.Win.On_Builtin_Event (Event_Not_Null_Access (Event));
+               Event_Handled :=
+                 Stack.Win.On_Builtin_Event (Event_Not_Null_Access (Event));
             end if;
          end if;
 
@@ -164,7 +166,7 @@ package body Giza.GUI is
            and then
             Drawing_Context /= null
            and then
-            Stack.Win.Dirty
+            Event_Handled
          then
             Stack.Win.Draw (Drawing_Context.all, False);
          end if;

@@ -39,18 +39,18 @@ package Giza.Widgets is
    procedure Set_Size (This : in out Widget; Size : Size_T);
    function Get_Size (This : Widget) return Size_T;
 
-   procedure On_Builtin_Event
+   function On_Builtin_Event
      (This : in out Widget'Class;
-      Evt : Event_Not_Null_Access);
+      Evt : Event_Not_Null_Access) return Boolean;
 
-   procedure On_Click
+   function On_Click
      (This  : in out Widget;
       Pos   : Point_T;
-      CType : Click_Type) is null;
+      CType : Click_Type) return Boolean is (False);
 
-   procedure On_Custom_Event
+   function On_Custom_Event
      (This : in out Widget;
-      Evt : Event_Not_Null_Access) is null;
+      Evt : Event_Not_Null_Access) return Boolean is (False);
    --  This subprogram should be overriden when custom event are used
 
 private

@@ -32,10 +32,10 @@ package Giza.Widgets.Composite is
                    Force : Boolean := True);
 
    overriding
-   procedure On_Click
+   function On_Click
      (This  : in out Composite_Widget;
       Pos   : Point_T;
-      CType : Click_Type);
+      CType : Click_Type) return Boolean;
 
    procedure Add_Child
      (This  : in out Composite_Widget;

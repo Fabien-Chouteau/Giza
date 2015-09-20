@@ -71,10 +71,10 @@ package body Giza.Widgets.Scrolling is
    -- On_Click --
    --------------
 
-   procedure On_Click
+   function On_Click
      (This  : in out Gscroll;
       Pos   : Point_T;
-      CType : Click_Type)
+      CType : Click_Type) return Boolean
    is
    begin
       if This.Child /= null then
@@ -82,24 +82,27 @@ package body Giza.Widgets.Scrolling is
            and then
             Pos.Y < This.Up.Get_Size.H
          then
-            This.Up.On_Click (Pos, CType);
-            if This.Up.Active then
+            if This.Up.On_Click (Pos, CType) and then This.Up.Active then
                This.Child_Pos := This.Child_Pos + (0, 5);
+               return True;
             end if;
 
          elsif This.Child_Pos.Y > -(This.Child.Size.H - This.Get_Size.H)
            and then
             Pos.Y > This.Get_Size.H - This.Up.Get_Size.H
          then
-            This.Down.On_Click
-              (Pos - (0, This.Get_Size.H - This.Up.Get_Size.H), CType);
-            if This.Down.Active then
+            if This.Down.On_Click
+              (Pos - (0, This.Get_Size.H - This.Up.Get_Size.H), CType) and then
+              This.Down.Active
+            then
                This.Child_Pos := This.Child_Pos - (0, 5);
+               return True;
             end if;
          else
-            This.Child.On_Click (Pos + This.Child_Pos, CType);
+            return This.Child.On_Click (Pos + This.Child_Pos, CType);
          end if;
       end if;
+      return False;
    end On_Click;
 
    ---------------

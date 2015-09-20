@@ -27,10 +27,10 @@ package Giza.Widgets.Button is
    type Gbutton is new Gtext with private;
 
    overriding
-   procedure On_Click
+   function On_Click
      (This  : in out Gbutton;
       Pos   : Point_T;
-      CType : Click_Type);
+      CType : Click_Type) return Boolean;
 
    function Active (This : Gbutton) return Boolean;
 

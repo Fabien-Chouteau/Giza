@@ -30,10 +30,10 @@ package Giza.Widgets.Scrolling is
    function Dirty (This : Gscroll) return Boolean;
 
    overriding
-   procedure On_Click
+   function On_Click
      (This  : in out Gscroll;
       Pos   : Point_T;
-      CType : Click_Type);
+      CType : Click_Type) return Boolean;
 
    overriding
    procedure Draw (This : in out Gscroll; Ctx : in out Context'Class);

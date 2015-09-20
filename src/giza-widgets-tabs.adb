@@ -43,25 +43,27 @@ package body Giza.Widgets.Tabs is
    -- On_Click --
    --------------
 
-   procedure On_Click
+   function On_Click
      (This  : in out Gtabs;
       Pos   : Point_T;
-      CType : Click_Type)
+      CType : Click_Type) return Boolean
    is
    begin
-      This.Root.On_Click (Pos, CType);
-
-      for Index in This.Tabs'Range loop
-         if Index /= This.Selected
-           and then
-            This.Tabs (Index).Button.Active
-         then
-            This.Set_Selected (Index);
-            exit;
-         end if;
-      end loop;
-
-      This.Tabs (This.Selected).Button.Set_Active (True);
+      if This.Root.On_Click (Pos, CType) then
+         for Index in This.Tabs'Range loop
+            if Index /= This.Selected
+              and then
+                This.Tabs (Index).Button.Active
+            then
+               This.Set_Selected (Index);
+               exit;
+            end if;
+         end loop;
+         This.Tabs (This.Selected).Button.Set_Active (True);
+         return True;
+      else
+         return False;
+      end if;
    end On_Click;
 
    -------------
