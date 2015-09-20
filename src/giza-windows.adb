@@ -26,19 +26,23 @@ package body Giza.Windows is
    -- Draw --
    ----------
 
-   procedure Draw (This : in out Window; Ctx : in out Context'Class) is
+   procedure Draw (This : in out Window;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True)
+   is
    begin
       --  TODO: Fill background
-      Draw (Composite_Widget (This), Ctx);
+      Draw (Composite_Widget (This), Ctx, Force);
    end Draw;
 
-   ------------
-   -- Create --
-   ------------
-
-   function Create return not null Window_Ref is
+   procedure On_Pushed (This : in out Window) is
    begin
-      return new Window;
-   end Create;
+      if not This.Initialized then
+         On_Init (Window'Class (This));
+         This.Initialized := True;
+      end if;
+
+      On_Displayed (Window'Class (This));
+   end On_Pushed;
 
 end Giza.Windows;

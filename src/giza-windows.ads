@@ -25,14 +25,22 @@ with Giza.Graphics; use Giza.Graphics;
 
 package Giza.Windows is
 
-   type Window is new Composite_Widget with private;
+   type Window is abstract new Composite_Widget with private;
    type Window_Ref is access all Window'Class;
 
    overriding
-   procedure Draw (This : in out Window; Ctx : in out Context'Class);
+   procedure Draw (This : in out Window;
+                   Ctx : in out Context'Class;
+                   Force : Boolean := True);
 
-   function Create return not null Window_Ref;
+   procedure On_Pushed (This : in out Window);
+
+   procedure On_Init (This : in out Window) is abstract;
+   procedure On_Displayed (This : in out Window) is abstract;
+   procedure On_Hidden (This : in out Window) is abstract;
 
 private
-   type Window is new Composite_Widget with null record;
+   type Window is abstract new Composite_Widget with record
+      Initialized : Boolean := False;
+   end record;
 end Giza.Windows;
