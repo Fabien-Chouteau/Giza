@@ -46,8 +46,17 @@ package body Giza.GUI is
 
    procedure Push (Win : not null Window_Ref) is
    begin
+
+      if Stack /= null then
+         Stack.Win.On_Hidden;
+      end if;
+
       Stack := new Wrapper'(Win => Win,
                             Next => Stack);
+
+      Win.Set_Size (Drawing_Backend.Size);
+
+      Win.On_Pushed;
 
       if Drawing_Context /= null then
          Stack.Win.Draw (Drawing_Context.all);
@@ -64,6 +73,10 @@ package body Giza.GUI is
       if Tmp /= null then
          Stack := Tmp.Next;
          Free (Tmp);
+
+         if Stack /= null then
+            Stack.Win.On_Displayed;
+         end if;
       end if;
    end Pop;
 
