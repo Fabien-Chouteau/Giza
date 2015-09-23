@@ -27,8 +27,10 @@ with Giza.Widgets.Composite; use Giza.Widgets.Composite;
 package Giza.Widgets.Tabs is
    type Gtabs (Tab_Number : Natural) is new Gframe with private;
 
+
    overriding
-   function Dirty (This : Gtabs) return Boolean;
+   procedure Set_Dirty (This : in out Gtabs;
+                        Dirty : Boolean := True);
 
    overriding
    procedure Draw (This : in out Gtabs;

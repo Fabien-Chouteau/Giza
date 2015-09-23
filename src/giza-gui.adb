@@ -59,7 +59,7 @@ package body Giza.GUI is
       Win.On_Pushed;
 
       if Drawing_Context /= null then
-         Stack.Win.Draw (Drawing_Context.all);
+         Stack.Win.Draw (Drawing_Context.all, True);
       end if;
    end Push;
 
