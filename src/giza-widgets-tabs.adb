@@ -22,11 +22,16 @@
 
 package body Giza.Widgets.Tabs is
 
-   -----------
-   -- Dirty --
-   -----------
+   ---------------
+   -- Set_Dirty --
+   ---------------
 
-   function Dirty (This : Gtabs) return Boolean is (This.Root.Dirty);
+   procedure Set_Dirty (This : in out Gtabs;
+                        Dirty : Boolean := True)
+   is
+   begin
+      This.Root.Set_Dirty (Dirty);
+   end Set_Dirty;
 
    ----------
    -- Draw --

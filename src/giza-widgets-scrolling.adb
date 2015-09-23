@@ -22,16 +22,20 @@
 
 package body Giza.Widgets.Scrolling is
 
-   -----------
-   -- Dirty --
-   -----------
+   ---------------
+   -- Set_Dirty --
+   ---------------
 
-   function Dirty (This : Gscroll) return Boolean is
+   procedure Set_Dirty (This : in out Gscroll;
+                        Dirty : Boolean := True)
+   is
    begin
-      return This.Child /= null
-        and then
-          (This.Child.Dirty or else This.Up.Dirty or else This.Down.Dirty);
-   end Dirty;
+      This.Up.Set_Dirty (Dirty);
+      This.Down.Set_Dirty (Dirty);
+      if This.Child /= null then
+         This.Child.Set_Dirty (Dirty);
+      end if;
+   end Set_Dirty;
 
    ----------
    -- Draw --
@@ -54,14 +58,14 @@ package body Giza.Widgets.Scrolling is
 
          if This.Child_Pos.Y < 0 then
             Ctx.Save;
-            This.Up.Draw (Ctx);
+            This.Up.Draw (Ctx, True);
             Ctx.Restore;
          end if;
 
          if This.Child_Pos.Y > -(This.Child.Size.H - This.Get_Size.H) then
             Ctx.Save;
             Ctx.Translate ((0, This.Get_Size.H - This.Down.Get_Size.H));
-            This.Down.Draw (Ctx);
+            This.Down.Draw (Ctx, True);
             Ctx.Restore;
          end if;
       end if;

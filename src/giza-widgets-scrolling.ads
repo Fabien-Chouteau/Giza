@@ -27,7 +27,8 @@ package Giza.Widgets.Scrolling is
    type Gscroll is new Gframe with private;
 
    overriding
-   function Dirty (This : Gscroll) return Boolean;
+   procedure Set_Dirty (This : in out Gscroll;
+                        Dirty : Boolean := True);
 
    overriding
    function On_Click

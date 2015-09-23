@@ -24,7 +24,8 @@ package Giza.Widgets.Composite is
    type Composite_Widget is new Widget with private;
 
    overriding
-   function Dirty (This : Composite_Widget) return Boolean;
+   procedure Set_Dirty (This : in out Composite_Widget;
+                        Dirty : Boolean := True);
 
    overriding
    procedure Draw (This : in out Composite_Widget;

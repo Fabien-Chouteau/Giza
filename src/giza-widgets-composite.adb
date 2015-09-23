@@ -26,24 +26,20 @@ package body Giza.Widgets.Composite is
 
    procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
 
-   -----------
-   -- Dirty --
-   -----------
+   ---------------
+   -- Set_Dirty --
+   ---------------
 
-   overriding function Dirty
-     (This : Composite_Widget)
-      return Boolean
+   procedure Set_Dirty (This : in out Composite_Widget;
+                        Dirty : Boolean := True)
    is
       Ref : Wrapper_Ref := This.List;
    begin
       while Ref /= null loop
-         if Ref.Widg.Dirty then
-            return True;
-         end if;
+         Ref.Widg.Set_Dirty (Dirty);
          Ref := Ref.Next;
       end loop;
-      return False;
-   end Dirty;
+   end Set_Dirty;
 
    ----------
    -- Draw --
