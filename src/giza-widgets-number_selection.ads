@@ -7,12 +7,12 @@ package Giza.Widgets.Number_Selection is
    type Gnumber_Select is new Gframe with private;
 
    overriding
+   procedure Set_Dirty (This : in out Gnumber_Select;
+                        Dirty : Boolean := True);
+   overriding
    procedure Draw (This : in out Gnumber_Select;
                    Ctx : in out Context'Class;
                    Force : Boolean := True);
-
-   overriding
-   function Dirty (This : Gnumber_Select) return Boolean;
 
    overriding
    function On_Click
@@ -25,11 +25,14 @@ package Giza.Widgets.Number_Selection is
    procedure Set_Min (This : in out Gnumber_Select; Min : Integer);
    procedure Set_Max (This : in out Gnumber_Select; Max : Integer);
    procedure Set_Label (This : in out Gnumber_Select; Label : String);
+   procedure Show_Value (This : in out Gnumber_Select;
+                         Show : Boolean := True);
 
    function Value (This : Gnumber_Select) return Integer;
 private
    type Gnumber_Select is new Gframe with record
       Init        : Boolean := False;
+      Show_Value  : Boolean := False;
       Value       : Integer := 0;
       Min         : Integer := 0;
       Max         : Integer := 100;

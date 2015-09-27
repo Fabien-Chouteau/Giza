@@ -1,5 +1,15 @@
-with Ada.Text_IO; use Ada.Text_IO;
 package body Giza.Widgets.Number_Selection is
+
+   ---------------
+   -- Set_Dirty --
+   ---------------
+
+   procedure Set_Dirty (This : in out Gnumber_Select;
+                        Dirty : Boolean := True)
+   is
+   begin
+      This.Root.Set_Dirty (Dirty);
+   end Set_Dirty;
 
    ----------
    -- Draw --
@@ -10,41 +20,69 @@ package body Giza.Widgets.Number_Selection is
       Ctx : in out Context'Class;
       Force : Boolean := True)
    is
-      L1, L2 : Integer;
+      W1, W2, H1 : Integer;
       Top, Bottom, Left, Right : Integer;
       Pt : Point_T;
+      Value_Rect, Lable_Rect : Rect_T;
    begin
+      --  0         W1                                          W2        W
+      --  +---------+-------------------------------------------+---------+
+      --  |                                                               |
+      --  |                             Value                             |
+      --  |                                                               |
+      --  +---------+-------------------------------------------+---------+ H1
+      --  |         |                                           |    |    |
+      --  |  -----  |                   Label                   |  -----  |
+      --  |         |                                           |    |    |
+      --  +---------+-------------------------------------------+---------+
+
+      H1 := (if This.Show_Value then This.Get_Size.H / 2 else 0);
+      W1 := This.Get_Size.H - H1;
+      W2 := This.Get_Size.W - W1;
+
+      Lable_Rect := ((W1 + 1, H1),
+                     (W2 - W1 - 2, W1));
+
       if not This.Init then
          This.Init := True;
 
          This.Root.Set_Size (This.Get_Size);
 
-         --  0         L1                                          L2        W
-         --  +---------+-------------------------------------------+---------+
-         --  |         |                                           |         |
-         --  |         |                                           |    |    |
-         --  |  -----  |                 Label                     |  -----  |
-         --  |         |                                           |    |    |
-         --  |         |                                           |         |
-         --  +---------+-------------------------------------------+---------+
-
-         L1 := This.Get_Size.H;
-         L2 := This.Get_Size.W - L1;
-
          This.Minus := new Gbutton;
          This.Minus.Set_Text ("-");
-         This.Minus.Set_Size ((L1, L1));
-         This.Root.Add_Child (This.Minus, (0, 0));
+         This.Minus.Set_Size ((W1, W1));
+         This.Root.Add_Child (This.Minus, (0, H1));
 
          This.Plus := new Gbutton;
          This.Plus.Set_Text ("+");
-         This.Plus.Set_Size ((L1, L1));
-         This.Root.Add_Child (This.Plus, (L2, 0));
+         This.Plus.Set_Size ((W1, W1));
+         This.Root.Add_Child (This.Plus, (W2, H1));
       end if;
 
       if This.Dirty or else Force then
+         if This.Show_Value then
+            Value_Rect := ((0, 0), (This.Get_Size.W, H1 - 1));
+            declare
+               Str : constant String := This.Value'Img;
+            begin
+               Ctx.Set_Color (This.Background);
+               Ctx.Fill_Rectangle (Value_Rect);
+
+               Ctx.Set_Color (This.Foreground);
+               Pt := Center (Value_Rect);
+               Ctx.Box (Str, Top, Bottom, Left, Right);
+               Pt.X := Pt.X - (Right - Left) / 2;
+               Ctx.Move_To (Pt);
+               Ctx.Print (Str);
+            end;
+         end if;
+
          if This.Str /= null then
-            Pt := Center (((0, 0), This.Get_Size));
+            Ctx.Set_Color (This.Background);
+            Ctx.Fill_Rectangle (Lable_Rect);
+
+            Ctx.Set_Color (This.Foreground);
+            Pt := Center (Lable_Rect);
             Ctx.Box (This.Str.all, Top, Bottom, Left, Right);
             Pt.X := Pt.X - (Right - Left) / 2;
             Ctx.Move_To (Pt);
@@ -53,18 +91,6 @@ package body Giza.Widgets.Number_Selection is
       end if;
       This.Root.Draw (Ctx, Force);
    end Draw;
-
-   -----------
-   -- Dirty --
-   -----------
-
-   overriding
-   function Dirty (This : Gnumber_Select) return Boolean is
-      pragma Unreferenced (This);
-   begin
-      return True;
---        return This.Root.Dirty;
-   end Dirty;
 
    --------------
    -- On_Click --
@@ -87,9 +113,6 @@ package body Giza.Widgets.Number_Selection is
             if This.Value < This.Min then
                This.Value := This.Min;
             end if;
-         end if;
-         if This.Str /= null then
-            Put_Line (This.Str.all & ".Value :" & This.Value'Img);
          end if;
          return True;
       else
@@ -151,5 +174,16 @@ package body Giza.Widgets.Number_Selection is
    begin
       This.Str := new String'(Label);
    end Set_Label;
+
+   ----------------
+   -- Show_Value --
+   ----------------
+
+   procedure Show_Value (This : in out Gnumber_Select;
+                         Show : Boolean := True)
+   is
+   begin
+      This.Show_Value := Show;
+   end Show_Value;
 
 end Giza.Widgets.Number_Selection;
