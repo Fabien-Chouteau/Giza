@@ -37,9 +37,10 @@ package body Giza.Widgets.Text is
          return;
       end if;
 
-      Draw (Gframe (This), Ctx);
+      Draw (Gframe (This), Ctx, Force => True);
 
       if This.Str /= null then
+         Ctx.Set_Color (This.Foreground);
          Pt := Center (((0, 0), This.Get_Size));
          Ctx.Box (This.Str.all, Top, Bottom, Left, Right);
          Pt.X := Pt.X - (Right - Left) / 2;
