@@ -26,6 +26,9 @@ with Giza.Graphics; use Giza.Graphics;
 package Giza.Widgets is
    type Widget is abstract tagged private;
    type Widget_Ref is access all Widget'Class;
+   type Not_Null_Widget_Ref is not null access all Widget'Class;
+
+   type Widget_Ref_Array is array (Positive range <>) of Widget_Ref;
 
    function Dirty (This : Widget) return Boolean;
    procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
