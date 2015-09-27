@@ -32,10 +32,10 @@ package Giza.GUI is
    procedure Event_Loop with No_Return;
    --  Non returning loop that will process GUI events
 
-   procedure Set_Context (Ctx : access Context'Class);
+   procedure Set_Context (Ctx : Context_Ref);
    --  Set the context that will be used for widgets rendering
 
-   procedure Set_Backend (Bck : access Backend'Class);
+   procedure Set_Backend (Bck : Backend_Ref);
    --  Set the graphical backend that will be used for widgets rendering
 
    procedure Push (Win : not null Window_Ref);

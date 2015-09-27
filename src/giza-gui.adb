@@ -34,8 +34,8 @@ package body Giza.GUI is
 
    procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
 
-   Drawing_Context : access Context'Class := null;
-   Drawing_Backend : access Backend'Class := null;
+   Drawing_Context : Context_Ref := null;
+   Drawing_Backend : Backend_Ref := null;
 
    --  Window stack
    Stack : Wrapper_Ref := null;
@@ -84,7 +84,7 @@ package body Giza.GUI is
    -- Set_Context --
    -----------------
 
-   procedure Set_Context (Ctx : access Context'Class) is
+   procedure Set_Context (Ctx : Context_Ref) is
    begin
       Drawing_Context := Ctx;
       if Drawing_Context /= null then
@@ -96,7 +96,7 @@ package body Giza.GUI is
    -- Set_Backend --
    -----------------
 
-   procedure Set_Backend (Bck : access Backend'Class) is
+   procedure Set_Backend (Bck : Backend_Ref) is
 
    begin
       Drawing_Backend := Bck;

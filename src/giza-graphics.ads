@@ -71,6 +71,7 @@ package Giza.Graphics is
    --------------
 
    type Backend is tagged private;
+   type Backend_Ref is access all Backend'Class;
 
    procedure Set_Pixel (This : in out Backend; Pt : Point_T);
    procedure Set_Color (This : in out Backend; C : Color);
@@ -81,6 +82,7 @@ package Giza.Graphics is
    -------------
 
    type Context is tagged private;
+   type Context_Ref is access all Context'Class;
 
    procedure Save (This : in out Context);
    procedure Restore (This : in out Context);
