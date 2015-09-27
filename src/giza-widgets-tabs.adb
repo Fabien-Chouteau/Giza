@@ -64,7 +64,7 @@ package body Giza.Widgets.Tabs is
                exit;
             end if;
          end loop;
-         This.Tabs (This.Selected).Button.Set_Active (True);
+         This.Tabs (This.Selected).Button.Set_Active;
          return True;
       else
          return False;
@@ -81,27 +81,29 @@ package body Giza.Widgets.Tabs is
       Title : String;
       Child : not null Widget_Ref)
    is
-      Button_Size : constant Size_T := (This.Get_Size.W / This.Tab_Number,
-                                        (This.Get_Size.H / 4 - 1));
+      Tabs_H : constant Integer := This.Get_Size.H / 4;
    begin
-      --  Initialization (This could/should be done only once...)
-      This.Root.Set_Size (This.Get_Size);
-      This.Tabs_Group.Set_Size ((This.Get_Size.W, This.Get_Size.H / 4));
-      This.Root.Add_Child (This.Tabs_Group'Unchecked_Access, (0, 0));
+      if not This.Init then
+         --  Initialization (This could/should be done only once...)
+         This.Root.Set_Size (This.Get_Size);
+         This.Tabs_Group.Set_Size ((This.Get_Size.W, Tabs_H));
+         This.Tabs_Group.Set_Background (This.Foreground);
+         This.Root.Add_Child (This.Tabs_Group'Unchecked_Access, (0, 0));
+         This.Init := True;
+      end if;
 
       if Index in This.Tabs'Range then
          This.Tabs (Index).Widg := Child;
-         Child.Set_Size (This.Get_Size - (0, (This.Get_Size.H / 4) + 1));
+         Child.Set_Size (This.Get_Size - (0, Tabs_H + 1));
          Child.Set_Dirty;
-         This.Tabs (Index).Button.Set_Size (Button_Size);
          This.Tabs (Index).Button.Set_Text (Title);
          This.Tabs (Index).Button.Set_Foreground (This.Foreground);
          This.Tabs (Index).Button.Set_Background (This.Background);
+         This.Tabs (Index).Button.Disable_Frame;
          This.Tabs (Index).Button.Set_Toggle (True);
 
-         This.Tabs_Group.Add_Child
-           (This.Tabs (Index).Button'Unchecked_Access,
-            (Button_Size.W * (Index - 1), 0));
+         This.Tabs_Group.Set_Child (Index,
+                                    This.Tabs (Index).Button'Unchecked_Access);
          This.Set_Selected (Index);
       end if;
    end Set_Tab;
@@ -126,7 +128,7 @@ package body Giza.Widgets.Tabs is
          This.Selected := Selected;
          This.Tabs (This.Selected).Widg.Set_Dirty;
          This.Root.Add_Child (This.Tabs (This.Selected).Widg,
-                              (0, This.Get_Size.H / 4));
+                              (0, This.Tabs_Group.Get_Size.H + 1));
 
          for Index in This.Tabs'Range loop
             This.Tabs (Index).Button.Set_Active (Index = Selected);

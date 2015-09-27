@@ -23,6 +23,7 @@
 with Giza.Widgets.Frame; use Giza.Widgets.Frame;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Composite; use Giza.Widgets.Composite;
+with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 
 package Giza.Widgets.Tabs is
    type Gtabs (Tab_Number : Natural) is new Gframe with private;
@@ -62,9 +63,11 @@ private
    type Wrapper_Array is array (Positive range <>) of Tab_Wrapper;
 
    type Gtabs (Tab_Number : Natural) is new Gframe with record
+      Init : Boolean := False;
       Selected   : Natural := 1;
       Tabs       : Wrapper_Array (1 .. Tab_Number);
 
-      Root, Tabs_Group : aliased Composite_Widget;
+      Root : aliased Composite_Widget;
+      Tabs_Group : aliased Gtile (Tab_Number);
    end record;
 end Giza.Widgets.Tabs;
