@@ -21,26 +21,19 @@
 -------------------------------------------------------------------------------
 
 with Giza.Colors; use Giza.Colors;
-with Giza.Widgets.Background; use Giza.Widgets.Background;
 
-package Giza.Widgets.Frame is
-   type Gframe is new Gbackground with private;
+package Giza.Widgets.Background is
+   type Gbackground is new Widget with private;
 
    overriding
-   procedure Draw (This : in out Gframe;
+   procedure Draw (This : in out Gbackground;
                    Ctx : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Foreground (This : in out Gframe; FG : Color);
-   function Foreground (This : Gframe) return Color;
-   procedure Invert_Colors (This : in out Gframe);
-
-   procedure Disable_Background (This : in out Gframe);
-   procedure Disable_Frame (This : in out Gframe);
+   procedure Set_Background (This : in out Gbackground; BG : Color);
+   function Background (This : Gbackground) return Color;
 private
-   type Gframe is new Gbackground with record
-      FG : Color := Black;
-      BG_Disabled : Boolean := False;
-      Frame_Disabled : Boolean := False;
+   type Gbackground is new Widget with record
+      BG : Color := White;
    end record;
-end Giza.Widgets.Frame;
+end Giza.Widgets.Background;

@@ -20,27 +20,38 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Colors; use Giza.Colors;
-with Giza.Widgets.Background; use Giza.Widgets.Background;
+package body Giza.Widgets.Background is
 
-package Giza.Widgets.Frame is
-   type Gframe is new Gbackground with private;
+   ----------
+   -- Draw --
+   ----------
 
-   overriding
-   procedure Draw (This : in out Gframe;
-                   Ctx : in out Context'Class;
-                   Force : Boolean := True);
+   overriding procedure Draw
+     (This : in out Gbackground;
+      Ctx : in out Context'Class;
+      Force : Boolean := True)
+   is
+   begin
+      if This.Is_Dirty or else Force then
+         Ctx.Set_Color (This.BG);
+         Ctx.Fill_Rectangle (((0, 0), This.Get_Size));
+         This.Set_Dirty (False);
+      end if;
+   end Draw;
 
-   procedure Set_Foreground (This : in out Gframe; FG : Color);
-   function Foreground (This : Gframe) return Color;
-   procedure Invert_Colors (This : in out Gframe);
+   --------------------
+   -- Set_Background --
+   --------------------
 
-   procedure Disable_Background (This : in out Gframe);
-   procedure Disable_Frame (This : in out Gframe);
-private
-   type Gframe is new Gbackground with record
-      FG : Color := Black;
-      BG_Disabled : Boolean := False;
-      Frame_Disabled : Boolean := False;
-   end record;
-end Giza.Widgets.Frame;
+   procedure Set_Background (This : in out Gbackground; BG : Color) is
+   begin
+      This.BG := BG;
+   end Set_Background;
+
+   ----------------
+   -- Background --
+   ----------------
+
+   function Background (This : Gbackground) return Color is (This.BG);
+
+end Giza.Widgets.Background;

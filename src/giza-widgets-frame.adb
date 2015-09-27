@@ -31,10 +31,13 @@ package body Giza.Widgets.Frame is
                    Force : Boolean := True) is
    begin
       if This.Dirty or else Force then
-         Ctx.Set_Color (This.BG);
-         Ctx.Fill_Rectangle (((0, 0), This.Size));
-         Ctx.Set_Color (This.FG);
-         Ctx.Rectangle (((0, 0), This.Size));
+         if not This.BG_Disabled then
+            Draw (Gbackground (This), Ctx, Force);
+         end if;
+         if not This.Frame_Disabled then
+            Ctx.Set_Color (This.FG);
+            Ctx.Rectangle (((0, 0), This.Get_Size));
+         end if;
          This.Set_Dirty (False);
       end if;
    end Draw;
@@ -48,26 +51,11 @@ package body Giza.Widgets.Frame is
       This.FG := FG;
    end Set_Foreground;
 
-   --------------------
-   -- Set_Background --
-   --------------------
-
-   procedure Set_Background (This : in out Gframe; BG : Color) is
-   begin
-      This.BG := BG;
-   end Set_Background;
-
    ----------------
    -- Foreground --
    ----------------
 
    function Foreground (This : Gframe) return Color is (This.FG);
-
-   ----------------
-   -- Background --
-   ----------------
-
-   function Background (This : Gframe) return Color is (This.BG);
 
    -------------------
    -- Invert_Colors --
@@ -77,8 +65,25 @@ package body Giza.Widgets.Frame is
       Tmp : Color;
    begin
       Tmp := This.FG;
-      This.FG := This.BG;
-      This.BG := Tmp;
+      This.FG := This.Background;
+      This.Set_Background (Tmp);
    end Invert_Colors;
 
+   ------------------------
+   -- Disable_Background --
+   ------------------------
+
+   procedure Disable_Background (This : in out Gframe) is
+   begin
+      This.BG_Disabled := True;
+   end Disable_Background;
+
+   ------------------------
+   -- Disable_Foreground --
+   ------------------------
+
+   procedure Disable_Frame (This : in out Gframe) is
+   begin
+      This.Frame_Disabled := True;
+   end Disable_Frame;
 end Giza.Widgets.Frame;
