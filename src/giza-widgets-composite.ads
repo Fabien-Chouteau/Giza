@@ -20,8 +20,10 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Giza.Widgets.Background; use Giza.Widgets.Background;
+
 package Giza.Widgets.Composite is
-   type Composite_Widget is new Widget with private;
+   type Composite_Widget is new Gbackground with private;
 
    overriding
    procedure Set_Dirty (This : in out Composite_Widget;
@@ -58,7 +60,7 @@ private
       Next : Wrapper_Ref := null;
    end record;
 
-   type Composite_Widget is new Widget with record
+   type Composite_Widget is new Gbackground with record
       List : Wrapper_Ref := null;
    end record;
 

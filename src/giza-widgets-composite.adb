@@ -21,6 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use Ada.Text_IO;
 
 package body Giza.Widgets.Composite is
 
@@ -53,14 +54,12 @@ package body Giza.Widgets.Composite is
       Ref : Wrapper_Ref := This.List;
    begin
       while Ref /= null loop
-         if Ref.Widg.Dirty or else Force then
-            Ctx.Save;
-            Ctx.Translate (Ref.Pos);
-            --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
-            Ctx.Set_Position ((0, 0));
-            Draw (Ref.Widg.all, Ctx, Force);
-            Ctx.Restore;
-         end if;
+         Ctx.Save;
+         Ctx.Translate (Ref.Pos);
+         --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
+         Ctx.Set_Position ((0, 0));
+         Draw (Ref.Widg.all, Ctx, Force);
+         Ctx.Restore;
          Ref := Ref.Next;
       end loop;
    end Draw;
@@ -83,9 +82,8 @@ package body Giza.Widgets.Composite is
            and then
              Pos.Y in Ref.Pos.Y .. Ref.Pos.Y + Ref.Widg.Size.H
          then
-         --  Translate position into child coordinates
-            Clicked := Clicked or else
-              Ref.Widg.On_Click (Pos - Ref.Pos, CType);
+            --  Translate position into child coordinates and propagate
+            Clicked := Clicked or Ref.Widg.On_Click (Pos - Ref.Pos, CType);
          end if;
          Ref := Ref.Next;
       end loop;
@@ -102,15 +100,16 @@ package body Giza.Widgets.Composite is
       Pos   : Point_T)
    is
    begin
-      if Pos.X not in 0 .. This.Size.W
+      if Pos.X not in 0 .. This.Get_Size.W
         or else
-          Pos.Y not in 0 .. This.Size.H
+          Pos.Y not in 0 .. This.Get_Size.H
         or else
-          Pos.X + Child.Size.W not in 0 .. This.Size.W
+          Pos.X + Child.Size.W not in 0 .. This.Get_Size.W
         or else
-          Pos.Y + Child.Size.H not in 0 .. This.Size.H
+          Pos.Y + Child.Size.H not in 0 .. This.Get_Size.H
       then
          --  Doesn't fit
+         Put_Line ("Widget doesn't fit in composite");
          return;
       end if;
 
