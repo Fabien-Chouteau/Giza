@@ -30,8 +30,6 @@ package body Giza.Widgets.Text is
                    Ctx : in out Context'Class;
                    Force : Boolean := True)
    is
-      Top, Bottom, Left, Right : Integer;
-      Pt : Point_T;
    begin
       if not This.Dirty and then not Force then
          return;
@@ -41,11 +39,7 @@ package body Giza.Widgets.Text is
 
       if This.Str /= null then
          Ctx.Set_Color (This.Foreground);
-         Pt := Center (((0, 0), This.Get_Size));
-         Ctx.Box (This.Str.all, Top, Bottom, Left, Right);
-         Pt.X := Pt.X - (Right - Left) / 2;
-         Ctx.Move_To (Pt);
-         Ctx.Print (This.Str.all);
+         Ctx.Print_In_Rect (This.Str.all, ((0, 0), This.Get_Size));
       end if;
    end Draw;
 

@@ -658,6 +658,32 @@ package body Giza.Graphics is
       end loop;
    end Print;
 
+   -------------------
+   -- Print_In_Rect --
+   -------------------
+
+   procedure Print_In_Rect (This : in out Context;
+                            Str : String;
+                            Box : Rect_T)
+   is
+      Top, Bottom, Left, Right : Integer;
+      Pt : Point_T;
+      H, W : Integer;
+      Ratio, Ratio_H, Ratio_W : Float;
+   begin
+      Pt := Center (Box);
+      This.Box (Str, Top, Bottom, Left, Right);
+      H := Bottom - Top;
+      W := Right - Left;
+      Ratio_W := Float (Box.Size.W) / Float (W);
+      Ratio_H := Float (Box.Size.H) / Float (H);
+      Ratio := (if Ratio_H < Ratio_W then  Ratio_H else Ratio_W);
+      Pt.X := Pt.X - Integer ((Float (W) / 2.0) * Ratio);
+      This.Move_To (Pt);
+      This.Set_Font_Size (Ratio);
+      This.Print (Str);
+   end Print_In_Rect;
+
    ---------
    -- Box --
    ---------

@@ -138,6 +138,7 @@ package Giza.Graphics is
    function Font_Spacing (This : Context) return Dim;
    procedure Print (This : in out Context; C : Character);
    procedure Print (This : in out Context; Str : String);
+   procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
    procedure Box (This : in out Context;
                   Str : String;
                   Top, Bottom, Left, Right : out Integer);

@@ -21,8 +21,6 @@ package body Giza.Widgets.Number_Selection is
       Force : Boolean := True)
    is
       W1, W2, H1 : Integer;
-      Top, Bottom, Left, Right : Integer;
-      Pt : Point_T;
       Value_Rect, Lable_Rect : Rect_T;
    begin
       --  0         W1                                          W2        W
@@ -69,11 +67,7 @@ package body Giza.Widgets.Number_Selection is
                Ctx.Fill_Rectangle (Value_Rect);
 
                Ctx.Set_Color (This.Foreground);
-               Pt := Center (Value_Rect);
-               Ctx.Box (Str, Top, Bottom, Left, Right);
-               Pt.X := Pt.X - (Right - Left) / 2;
-               Ctx.Move_To (Pt);
-               Ctx.Print (Str);
+               Ctx.Print_In_Rect (Str, Value_Rect);
             end;
          end if;
 
@@ -82,11 +76,7 @@ package body Giza.Widgets.Number_Selection is
             Ctx.Fill_Rectangle (Lable_Rect);
 
             Ctx.Set_Color (This.Foreground);
-            Pt := Center (Lable_Rect);
-            Ctx.Box (This.Str.all, Top, Bottom, Left, Right);
-            Pt.X := Pt.X - (Right - Left) / 2;
-            Ctx.Move_To (Pt);
-            Ctx.Print (This.Str.all);
+            Ctx.Print_In_Rect (This.Str.all, Lable_Rect);
          end if;
       end if;
       This.Root.Draw (Ctx, Force);
