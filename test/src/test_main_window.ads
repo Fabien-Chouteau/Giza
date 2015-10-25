@@ -30,6 +30,6 @@ private
 
    type Main_Window is new Giza.Windows.Window with record
       Tiles        : Gtile_Ref;
-      Sub_Windows  : Sub_Window_Array (1 .. 2);
+      Sub_Windows  : Sub_Window_Array (1 .. 4);
    end record;
 end Test_Main_Window;
