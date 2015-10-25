@@ -68,6 +68,6 @@ private
       Tabs       : Wrapper_Array (1 .. Tab_Number);
 
       Root : aliased Composite_Widget;
-      Tabs_Group : aliased Gtile (Tab_Number);
+      Tabs_Group : aliased Gtile (Tab_Number, Left_Right);
    end record;
 end Giza.Widgets.Tabs;

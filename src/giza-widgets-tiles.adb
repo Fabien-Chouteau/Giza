@@ -48,23 +48,16 @@ package body Giza.Widgets.Tiles is
    is
       W, H : Integer;
       Margin : constant Integer := 1;
-   begin
-      if This.Dirty or else Force then
-         Draw (Gbackground (This), Ctx, Force);
-      end if;
 
-      W := This.Get_Size.W;
-      W := W - 2 * This.Margin;
-      W := W - (This.Number_Of_Widget - 1) * This.Spacing;
-      W := W / This.Number_Of_Widget;
+      procedure Draw_Tile (Index : Integer);
 
-      H := This.Get_Size.H - 2 * This.Margin;
+      ---------------
+      -- Draw_Tile --
+      ---------------
 
-      Ctx.Save;
-      Ctx.Translate ((Margin, Margin));
-
-      for Index in This.Widgs'Range loop
-         if This.Widgs (Index) /= null then
+      procedure Draw_Tile (Index : Integer) is
+      begin
+         if Index in This.Widgs'Range and then This.Widgs (Index) /= null then
             --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
             This.Widgs (Index).Set_Size ((W, H));
             Ctx.Set_Position ((0, 0));
@@ -73,9 +66,50 @@ package body Giza.Widgets.Tiles is
             Ctx.Restore;
 
             --  Translate for next tile
-            Ctx.Translate ((This.Spacing + W, 0));
+            case This.Dir is
+            when Top_Down | Bottom_Up =>
+               Ctx.Translate ((0, This.Spacing + H));
+            when Left_Right | Right_Left =>
+               Ctx.Translate ((This.Spacing + W, 0));
+            end case;
          end if;
-      end loop;
+
+      end Draw_Tile;
+   begin
+      if This.Dirty or else Force then
+         Draw (Gbackground (This), Ctx, Force);
+      end if;
+
+      case This.Dir is
+         when Top_Down | Bottom_Up =>
+            H := This.Get_Size.H;
+            H := H - 2 * This.Margin;
+            H := H - (This.Number_Of_Widget - 1) * This.Spacing;
+            H := H / This.Number_Of_Widget;
+
+            W := This.Get_Size.W - 2 * This.Margin;
+         when Left_Right | Right_Left =>
+            W := This.Get_Size.W;
+            W := W - 2 * This.Margin;
+            W := W - (This.Number_Of_Widget - 1) * This.Spacing;
+            W := W / This.Number_Of_Widget;
+
+            H := This.Get_Size.H - 2 * This.Margin;
+      end case;
+
+      Ctx.Save;
+      Ctx.Translate ((Margin, Margin));
+
+      if This.Dir = Left_Right or else This.Dir = Top_Down then
+         for Index in This.Widgs'Range loop
+            Draw_Tile (Index);
+         end loop;
+      else
+         for Index in reverse This.Widgs'Range loop
+            Draw_Tile (Index);
+         end loop;
+      end if;
+
       Ctx.Restore;
    end Draw;
 
@@ -89,16 +123,46 @@ package body Giza.Widgets.Tiles is
       CType : Click_Type)
       return Boolean
    is
-      W : Integer;
+      W, H : Integer;
    begin
-      W := This.Get_Size.W / This.Number_Of_Widget;
+
+      case This.Dir is
+         when Top_Down | Bottom_Up =>
+            H := This.Get_Size.H / This.Number_Of_Widget;
+         when Left_Right | Right_Left =>
+            W := This.Get_Size.W / This.Number_Of_Widget;
+      end case;
 
       for Index in This.Widgs'Range loop
-         if Pos.X in (Index - 1) * W .. Index * W then
-            return On_Click (This.Widgs (Index).all,
-                             Pos - ((Index - 1) * W, 0),
-                             CType);
-         end if;
+         case This.Dir is
+         when Top_Down =>
+            if Pos.Y in (Index - 1) * H .. Index * H then
+               return On_Click (This.Widgs (Index).all,
+                                Pos - (0, (Index - 1) * H),
+                                CType);
+            end if;
+         when Bottom_Up =>
+            if Pos.Y in (This.Widgs'Last - Index) * H ..
+              (This.Widgs'Last - Index + 1) * H then
+               return On_Click (This.Widgs (Index).all,
+                                Pos -
+                                  (0, (This.Widgs'Last - Index) * H),
+                                CType);
+            end if;
+         when Left_Right =>
+            if Pos.X in (Index - 1) * W .. Index * W then
+               return On_Click (This.Widgs (Index).all,
+                                Pos - ((Index - 1) * W, 0),
+                                CType);
+            end if;
+         when Right_Left =>
+            if Pos.X in (This.Widgs'Last - Index) * W ..
+              (This.Widgs'Last - Index + 1) * W then
+               return On_Click (This.Widgs (Index).all,
+                                Pos - ((Index - 1) * W, 0),
+                                CType);
+            end if;
+         end case;
       end loop;
       return False;
    end On_Click;

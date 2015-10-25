@@ -23,7 +23,13 @@
 with Giza.Widgets.Background; use Giza.Widgets.Background;
 
 package Giza.Widgets.Tiles is
-   type Gtile (Number_Of_Widget : Positive) is new Gbackground with private;
+
+   type Tile_Direction is (Top_Down, Bottom_Up, Right_Left, Left_Right);
+
+   type Gtile (Number_Of_Widget : Positive; Dir : Tile_Direction) is
+     new Gbackground with private;
+
+   type Gtile_Ref is access all Gtile'Class;
 
    overriding
    procedure Set_Dirty (This : in out Gtile;
@@ -49,7 +55,8 @@ package Giza.Widgets.Tiles is
    procedure Set_Margin (This : in out Gtile; Margin : Natural);
 private
 
-   type Gtile (Number_Of_Widget : Positive) is new Gbackground with record
+   type Gtile (Number_Of_Widget : Positive; Dir : Tile_Direction) is
+     new Gbackground with record
       Widgs   : Widget_Ref_Array (1 .. Number_Of_Widget) := (others => null);
       Spacing : Natural := 2;
       Margin  : Natural := 1;
