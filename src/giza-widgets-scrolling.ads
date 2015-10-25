@@ -26,6 +26,8 @@ with Giza.Widgets.Button; use Giza.Widgets.Button;
 package Giza.Widgets.Scrolling is
    type Gscroll is new Gframe with private;
 
+   type Gscroll_Ref is access all Gscroll'Class;
+
    overriding
    procedure Set_Dirty (This : in out Gscroll;
                         Dirty : Boolean := True);

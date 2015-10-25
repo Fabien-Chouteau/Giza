@@ -25,6 +25,8 @@ with Giza.Widgets.Background; use Giza.Widgets.Background;
 package Giza.Widgets.Composite is
    type Composite_Widget is new Gbackground with private;
 
+   type Composite_Widget_Ref is access all Composite_Widget'Class;
+
    overriding
    procedure Set_Dirty (This : in out Composite_Widget;
                         Dirty : Boolean := True);

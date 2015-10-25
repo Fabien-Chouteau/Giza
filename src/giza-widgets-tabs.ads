@@ -28,6 +28,8 @@ with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 package Giza.Widgets.Tabs is
    type Gtabs (Tab_Number : Natural) is new Gframe with private;
 
+   type Gtabs_Ref is access all Gtabs'Class;
+
    overriding
    procedure Set_Dirty (This : in out Gtabs;
                         Dirty : Boolean := True);

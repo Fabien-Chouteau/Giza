@@ -6,6 +6,8 @@ package Giza.Widgets.Number_Selection is
 
    type Gnumber_Select is new Gframe with private;
 
+   type Gnumber_Select_Ref is access all Gnumber_Select'Class;
+
    overriding
    procedure Set_Dirty (This : in out Gnumber_Select;
                         Dirty : Boolean := True);

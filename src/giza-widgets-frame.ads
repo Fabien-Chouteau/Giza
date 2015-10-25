@@ -26,6 +26,8 @@ with Giza.Widgets.Background; use Giza.Widgets.Background;
 package Giza.Widgets.Frame is
    type Gframe is new Gbackground with private;
 
+   type Gframe_Ref is access all Gframe'Class;
+
    overriding
    procedure Draw (This : in out Gframe;
                    Ctx : in out Context'Class;

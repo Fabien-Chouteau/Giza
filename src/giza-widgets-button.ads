@@ -26,6 +26,8 @@ package Giza.Widgets.Button is
 
    type Gbutton is new Gtext with private;
 
+   type Gbutton_Ref is access all Gbutton'Class;
+
    overriding
    function On_Click
      (This  : in out Gbutton;

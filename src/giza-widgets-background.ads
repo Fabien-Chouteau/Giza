@@ -25,6 +25,8 @@ with Giza.Colors; use Giza.Colors;
 package Giza.Widgets.Background is
    type Gbackground is new Widget with private;
 
+   type Gbackground_Ref is access all Gbackground'Class;
+
    overriding
    procedure Draw (This : in out Gbackground;
                    Ctx : in out Context'Class;
