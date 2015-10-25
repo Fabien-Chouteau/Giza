@@ -1,0 +1,29 @@
+with "gtkada";
+with "../Giza";
+with "../test/Giza_Test";
+
+project Default is
+
+   type Backend_Type is
+      ("gtkada", "stm32");
+   Backend : Backend_Type := external ("Backend", "gtkada");
+   for Object_Dir use "obj";
+   type Gtkada_Kind_Type is
+      ("static", "relocatable");
+   Library_Type : Gtkada_Kind_Type := external ("LIBRARY_TYPE");
+
+   for Main use ("main.adb", "giza_test_gtk.adb");
+   for Source_Dirs use ("src", "example");
+   for Exec_Dir use ".";
+
+   package Naming is
+--        for Body ("screen_interface") use "screen_interface-" & Backend & ".adb";
+      for Spec ("screen_parameters") use "screen_parameters-" & Backend & ".ads";
+   end Naming;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnat12");
+   end Compiler;
+
+end Default;
+
