@@ -48,11 +48,16 @@ package Giza.Events is
    type Click_Released_Event_Ref is not null access all
      Click_Released_Event'Class;
 
-   type Basic_Timer_Callback is access procedure;
-   type Timer_Event is new Event with record
-      Callback : Basic_Timer_Callback;
-   end record;
+   type Timer_Event is new Event with null record;
    type Timer_Event_Not_Null_Ref is not null access constant Timer_Event'Class;
 
-   procedure Triggered (Timer : Timer_Event);
+   procedure Triggered (Timer : Timer_Event) is null;
+
+   type Basic_Timer_Callback is access procedure;
+   type Basic_Timer_Event is new Timer_Event with record
+      Callback : Basic_Timer_Callback;
+   end record;
+
+   procedure Triggered (Timer : Basic_Timer_Event);
+
 end Giza.Events;

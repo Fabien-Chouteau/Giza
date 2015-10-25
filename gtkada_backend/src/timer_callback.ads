@@ -22,7 +22,7 @@ package Timer_Callback is
 
    procedure Callback;
 
-   My_Timer : aliased Timer_Event :=
+   My_Timer : aliased Basic_Timer_Event :=
      (Callback => Callback'Access);
 
 end Timer_Callback;

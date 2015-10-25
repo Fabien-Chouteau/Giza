@@ -26,7 +26,7 @@ package body Giza.Events is
    -- Triggered --
    ---------------
 
-   procedure Triggered (Timer : Timer_Event) is
+   procedure Triggered (Timer : Basic_Timer_Event) is
    begin
       Timer.Callback.all;
    end Triggered;

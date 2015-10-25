@@ -20,7 +20,36 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Giza.Timers;
+with Ada.Text_IO; use Ada.Text_IO;
+
 package body Giza.Widgets.Scrolling is
+
+   procedure Triggered (This : Repeat_Event) is
+      Reset : Boolean := False;
+   begin
+      Put_Line ("Repeat Triggered");
+      if This.Scroll = null then
+         return;
+      end if;
+
+      if This.Scroll.Up.Active then
+         Reset := True;
+         This.Scroll.Go_Up;
+         Put_Line ("Repeat Go up");
+      elsif This.Scroll.Down.Active then
+         Reset := True;
+         This.Scroll.Go_Down;
+         Put_Line ("Repeat Go down");
+      end if;
+
+      if Reset then
+         Put_Line ("Repeat reset timer");
+         --  Reset timer
+         Giza.Timers.Set_Timer (This'Unchecked_Access,
+                                Clock + This.Scroll.Repeat_Time);
+      end if;
+   end Triggered;
 
    ---------------
    -- Set_Dirty --
@@ -90,7 +119,9 @@ package body Giza.Widgets.Scrolling is
               and then
                 This.Up.Active
             then
-               This.Child_Pos := This.Child_Pos + (0, 5);
+               This.Go_Up;
+               Giza.Timers.Set_Timer
+                 (This.Repeat_Evt'Unchecked_Access, Clock + This.Repeat_Time);
                return True;
             end if;
 
@@ -104,11 +135,14 @@ package body Giza.Widgets.Scrolling is
               and then
               This.Down.Active
             then
-               This.Child_Pos := This.Child_Pos - (0, 5);
+               This.Go_Down;
+               This.Repeat_Evt.Scroll := This'Unchecked_Access;
+               Giza.Timers.Set_Timer
+                 (This.Repeat_Evt'Unchecked_Access, Clock + This.Repeat_Time);
                return True;
             end if;
          else
-            return This.Child.On_Position_Event (Evt, Pos + This.Child_Pos);
+            return This.Child.On_Position_Event (Evt, Pos - This.Child_Pos);
          end if;
       end if;
       return False;
@@ -123,7 +157,9 @@ package body Giza.Widgets.Scrolling is
       Evt  : Event_Not_Null_Ref) return Boolean
    is
    begin
-      return This.Child = null or else This.Child.On_Event (Evt);
+      return (This.Child = null or else This.Child.On_Event (Evt))
+        or This.Up.On_Event (Evt) or This.Down.On_Event (Evt);
+
    end On_Event;
 
    ---------------
@@ -137,5 +173,61 @@ package body Giza.Widgets.Scrolling is
       This.Up.Set_Size ((This.Get_Size.W, This.Get_Size.H / 10));
       This.Down.Set_Size ((This.Get_Size.W, This.Get_Size.H / 10));
    end Set_Child;
+
+   -----------
+   -- Go_Up --
+   -----------
+
+   procedure Go_Up (This : in out Gscroll) is
+   begin
+      if This.Child /= null then
+         This.Child_Pos := This.Child_Pos + (0, 5);
+         if This.Child_Pos.Y > 0 then
+            This.Child_Pos.Y := 0;
+         end if;
+      end if;
+   end Go_Up;
+
+   -------------
+   -- Go_Down --
+   -------------
+
+   procedure Go_Down (This : in out Gscroll) is
+   begin
+      if This.Child /= null then
+         This.Child_Pos := This.Child_Pos - (0, 5);
+         if This.Child_Pos.Y < This.Get_Size.H - This.Child.Get_Size.H  then
+            This.Child_Pos.Y := This.Get_Size.H - This.Child.Get_Size.H;
+         end if;
+      end if;
+   end Go_Down;
+
+   -------------
+   -- Go_Left --
+   -------------
+
+   procedure Go_Left (This : in out Gscroll) is
+   begin
+      if This.Child /= null then
+         This.Child_Pos := This.Child_Pos + (5, 0);
+         if This.Child_Pos.X > 0 then
+            This.Child_Pos.X := 0;
+         end if;
+      end if;
+   end Go_Left;
+
+   --------------
+   -- Go_Right --
+   --------------
+
+   procedure Go_Right (This : in out Gscroll) is
+   begin
+      if This.Child /= null then
+         This.Child_Pos := This.Child_Pos - (5, 0);
+         if This.Child_Pos.X < (This.Get_Size.W - This.Child.Get_Size.W) then
+            This.Child_Pos.X := (This.Get_Size.W - This.Child.Get_Size.W);
+         end if;
+      end if;
+   end Go_Right;
 
 end Giza.Widgets.Scrolling;

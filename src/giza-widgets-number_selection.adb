@@ -1,4 +1,32 @@
+with Giza.Timers;
+
 package body Giza.Widgets.Number_Selection is
+
+   ---------------
+   -- Triggered --
+   ---------------
+
+   procedure Triggered (This : Repeat_Event) is
+      Reset : Boolean := False;
+   begin
+      if This.Nbr = null then
+         return;
+      end if;
+
+      if This.Nbr.Plus /= null and then This.Nbr.Plus.Active then
+         This.Nbr.Do_Plus;
+         Reset := True;
+      elsif This.Nbr.Minus /= null and then This.Nbr.Minus.Active then
+         This.Nbr.Do_Minus;
+         Reset := True;
+      end if;
+
+      if Reset then
+         --  Reset timer
+         Giza.Timers.Set_Timer (This'Unchecked_Access,
+                                Clock + This.Nbr.Repeat_Time);
+      end if;
+   end Triggered;
 
    ---------------
    -- Set_Dirty --
@@ -94,21 +122,30 @@ package body Giza.Widgets.Number_Selection is
    begin
       if This.Root.On_Position_Event (Evt, Pos) then
          if This.Plus /= null and then This.Plus.Active then
-            This.Value := This.Value + This.Step;
-            if This.Value > This.Max then
-               This.Value := This.Max;
-            end if;
+            This.Do_Plus;
          elsif This.Minus /= null and then This.Minus.Active then
-            This.Value := This.Value - This.Step;
-            if This.Value < This.Min then
-               This.Value := This.Min;
-            end if;
+            This.Do_Minus;
          end if;
+
+         This.Repeat_Evt.Nbr := This'Unchecked_Access;
+         Giza.Timers.Set_Timer
+           (This.Repeat_Evt'Unchecked_Access, Clock + This.Repeat_Time);
          return True;
       else
          return False;
       end if;
    end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out Gnumber_Select;
+      Evt  : Event_Not_Null_Ref) return Boolean is
+   begin
+      return This.Root.On_Event (Evt);
+   end On_Event;
 
    ---------------
    -- Set_Value --
@@ -175,5 +212,29 @@ package body Giza.Widgets.Number_Selection is
    begin
       This.Show_Value := Show;
    end Show_Value;
+
+   -------------
+   -- Do_Plus --
+   -------------
+
+   procedure Do_Plus (This : in out Gnumber_Select) is
+   begin
+      This.Value := This.Value + This.Step;
+      if This.Value > This.Max then
+         This.Value := This.Max;
+      end if;
+   end Do_Plus;
+
+   --------------
+   -- Do_Minus --
+   --------------
+
+   procedure Do_Minus (This : in out Gnumber_Select) is
+   begin
+      This.Value := This.Value - This.Step;
+      if This.Value < This.Min then
+         This.Value := This.Min;
+      end if;
+   end Do_Minus;
 
 end Giza.Widgets.Number_Selection;

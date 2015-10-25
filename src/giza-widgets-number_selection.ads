@@ -1,6 +1,7 @@
 with Giza.Widgets.Frame; use Giza.Widgets.Frame;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Composite; use Giza.Widgets.Composite;
+with Ada.Real_Time; use Ada.Real_Time;
 
 package Giza.Widgets.Number_Selection is
 
@@ -22,6 +23,11 @@ package Giza.Widgets.Number_Selection is
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
+   overriding
+   function On_Event
+     (This : in out Gnumber_Select;
+      Evt  : Event_Not_Null_Ref) return Boolean;
+
    procedure Set_Value (This : in out Gnumber_Select; Val : Integer);
    procedure Set_Step (This : in out Gnumber_Select; Step : Integer);
    procedure Set_Min (This : in out Gnumber_Select; Min : Integer);
@@ -30,9 +36,21 @@ package Giza.Widgets.Number_Selection is
    procedure Show_Value (This : in out Gnumber_Select;
                          Show : Boolean := True);
 
+   procedure Do_Plus (This : in out Gnumber_Select);
+   procedure Do_Minus (This : in out Gnumber_Select);
+
    function Value (This : Gnumber_Select) return Integer;
 private
+
+   type Repeat_Event is new Timer_Event with record
+      Nbr : Gnumber_Select_Ref;
+   end record;
+
+   procedure Triggered (This : Repeat_Event);
+
    type Gnumber_Select is new Gframe with record
+      Repeat_Time : Time_Span := Milliseconds (200);
+      Repeat_Evt  : aliased Repeat_Event;
       Init        : Boolean := False;
       Show_Value  : Boolean := False;
       Value       : Integer := 0;

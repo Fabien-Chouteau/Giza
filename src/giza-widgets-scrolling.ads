@@ -20,6 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Ada.Real_Time; use Ada.Real_Time;
 with Giza.Widgets.Frame; use Giza.Widgets.Frame;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 
@@ -50,10 +51,24 @@ package Giza.Widgets.Scrolling is
 
    procedure Set_Child (This : in out Gscroll; Child : not null Widget_Ref);
 
+   procedure Go_Up (This : in out Gscroll);
+   procedure Go_Down (This : in out Gscroll);
+   procedure Go_Left (This : in out Gscroll);
+   procedure Go_Right (This : in out Gscroll);
+
 private
+
+   type Repeat_Event is new Timer_Event with record
+      Scroll : Gscroll_Ref;
+   end record;
+
+   procedure Triggered (This : Repeat_Event);
+
    type Gscroll is new Gframe with record
-      Child     : Widget_Ref := null;
-      Up, Down  : Gbutton;
-      Child_Pos : Point_T := (0, 0);
+      Repeat_Time : Time_Span := Milliseconds (100);
+      Repeat_Evt  : aliased Repeat_Event;
+      Child       : Widget_Ref := null;
+      Up, Down    : Gbutton;
+      Child_Pos   : Point_T := (0, 0);
    end record;
 end Giza.Widgets.Scrolling;
