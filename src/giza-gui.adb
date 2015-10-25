@@ -76,6 +76,7 @@ package body Giza.GUI is
 
          if Stack /= null then
             Stack.Win.On_Displayed;
+            Stack.Win.Set_Dirty;
          end if;
       end if;
    end Pop;
