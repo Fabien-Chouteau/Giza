@@ -1,6 +1,7 @@
 with Giza.Colors; use Giza.Colors;
 with Giza.Widgets; use Giza.Widgets;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.GUI;
+with Giza.Windows; use Giza.Windows;
 
 package body Test_Tiles_Window is
 
@@ -27,15 +28,25 @@ package body Test_Tiles_Window is
          return Widget_Ref (Txt);
       end New_Text;
 
+      Size : Size_T;
    begin
+      --  Add a back button at the bottom of the window
+      This.Back := new Gbutton;
+      This.Back.Set_Text ("Back");
+      This.Back.Set_Size ((This.Get_Size.W, This.Get_Size.H / 10));
+      This.Back.Set_Foreground (Red);
+      This.Add_Child (Widget_Ref (This.Back),
+                      (0, This.Get_Size.H - This.Back.Get_Size.H));
 
-      This.Tile_Top_Down := new Gtile (3, Top_Down);
-      This.Tile_Bottom_Up := new Gtile (3, Bottom_Up);
+      Size := This.Get_Size - (0, This.Back.Get_Size.H);
+
+      This.Tile_Top_Down   := new Gtile (3, Top_Down);
+      This.Tile_Bottom_Up  := new Gtile (3, Bottom_Up);
       This.Tile_Right_Left := new Gtile (3, Right_Left);
       This.Tile_Left_Right := new Gtile (3, Left_Right);
 
-      This.Tile_Top_Down.Set_Size ((This.Get_Size.W / 2,
-                             This.Get_Size.H / 2));
+      This.Tile_Top_Down.Set_Size ((Size.W / 2,
+                             Size.H / 2));
       This.Tile_Bottom_Up.Set_Size (This.Tile_Top_Down.Get_Size);
       This.Tile_Right_Left.Set_Size (This.Tile_Top_Down.Get_Size);
       This.Tile_Left_Right.Set_Size (This.Tile_Top_Down.Get_Size);
@@ -51,13 +62,13 @@ package body Test_Tiles_Window is
                       (0, 0));
 
       This.Add_Child (Widget_Ref (This.Tile_Bottom_Up),
-                      (This.Get_Size.W / 2, 0));
+                      (Size.W / 2, 0));
 
       This.Add_Child (Widget_Ref (This.Tile_Right_Left),
-                      (0, This.Get_Size.H / 2));
+                      (0, Size.H / 2));
 
       This.Add_Child (Widget_Ref (This.Tile_Left_Right),
-                      (This.Get_Size.W / 2,  This.Get_Size.H / 2));
+                      (Size.W / 2,  Size.H / 2));
    end On_Init;
 
    ------------------
@@ -83,5 +94,27 @@ package body Test_Tiles_Window is
    begin
       null;
    end On_Hidden;
+
+   --------------
+   -- On_Click --
+   --------------
+
+   overriding
+   function On_Click
+     (This  : in out Tiles_Window;
+      Pos   : Point_T;
+      CType : Click_Type) return Boolean is
+
+      Res : Boolean;
+   begin
+      Res := On_Click (Window (This), Pos, CType);
+
+      if Res and then This.Back /= null and then This.Back.Active then
+         This.Back.Set_Active (False);
+         Giza.GUI.Pop;
+      end if;
+
+      return Res;
+   end On_Click;
 
 end Test_Tiles_Window;
