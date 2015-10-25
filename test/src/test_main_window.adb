@@ -60,13 +60,13 @@ package body Test_Main_Window is
    --------------
 
    overriding
-   function On_Click
-     (This  : in out Main_Window;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+   function On_Position_Event
+     (This : in out Main_Window;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
    is
    begin
-      if not On_Click (Window (This), Pos, CType) then
+      if not On_Position_Event (Window (This), Evt, Pos) then
          return False;
       end if;
 
@@ -83,5 +83,5 @@ package body Test_Main_Window is
          end if;
       end loop;
       return True;
-   end On_Click;
+   end On_Position_Event;
 end Test_Main_Window;

@@ -1,9 +1,8 @@
-with Giza.Windows;
-use Giza.Windows;
+with Giza.Windows; use Giza.Windows;
 with Giza.Graphics; use Giza.Graphics;
-with Giza.Events; use Giza.Events;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
+with Giza.Events; use Giza.Events;
 
 package Test_Main_Window is
    type Main_Window is new Window with private;
@@ -16,10 +15,10 @@ package Test_Main_Window is
    overriding
    procedure On_Hidden (This : in out Main_Window);
    overriding
-   function On_Click
-     (This  : in out Main_Window;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+   function On_Position_Event
+     (This : in out Main_Window;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
 
 private
    type Sub_Window is record
