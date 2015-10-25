@@ -61,29 +61,41 @@ package body Giza.Widgets is
 
    function Get_Size (This : Widget) return Size_T is (This.Size);
 
-   ----------------------
-   -- On_Builtin_Event --
-   ----------------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   function On_Builtin_Event
-     (This : in out Widget'Class;
-      Evt : Event_Not_Null_Access) return Boolean
-   is
+   function On_Position_Event
+     (This : in out Widget;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean is
    begin
       if This.Is_Disabled then
          return False;
       end if;
 
       if Evt.all in Click_Event'Class then
-         declare
-            Click : constant Click_Event_Ref := Click_Event_Ref (Evt);
-            Unref : Boolean with Unreferenced;
-         begin
-            return This.On_Click (Click.Pos, Click.CType);
-         end;
-      else
-         return This.On_Custom_Event (Evt);
+         return On_Click (Widget'Class (This), Pos);
       end if;
-   end On_Builtin_Event;
+      return False;
+   end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out Widget;
+      Evt : Event_Not_Null_Ref) return Boolean is
+   begin
+      if This.Is_Disabled then
+         return False;
+      end if;
+
+      if Evt.all in Click_Released_Event'Class then
+         return On_Click_Released (Widget'Class (This));
+      end if;
+      return False;
+   end On_Event;
 
 end Giza.Widgets;

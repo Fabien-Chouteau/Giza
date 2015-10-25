@@ -41,10 +41,15 @@ package Giza.Widgets.Tiles is
                    Force : Boolean := True);
 
    overriding
-   function On_Click
-     (This  : in out Gtile;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+   function On_Position_Event
+     (This : in out Gtile;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
+
+   overriding
+   function On_Event
+     (This : in out Gtile;
+      Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Set_Child
      (This  : in out Gtile;

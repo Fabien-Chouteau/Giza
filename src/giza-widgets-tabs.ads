@@ -40,10 +40,15 @@ package Giza.Widgets.Tabs is
                    Force : Boolean := True);
 
    overriding
-   function On_Click
-     (This  : in out Gtabs;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+   function On_Position_Event
+     (This : in out Gtabs;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
+
+   overriding
+   function On_Event
+     (This : in out Gtabs;
+      Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Set_Tab
      (This  : in out Gtabs;

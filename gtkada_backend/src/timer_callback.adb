@@ -24,21 +24,21 @@ package body Timer_Callback is
 
    task body Touch_Screen is
       TS, Prev : Touch_State;
-      Evt : constant access Click_Event := new Click_Event;
+      Evt : Click_Event_Ref := new Click_Event;
+      Released_Evt : Click_Released_Event_Ref := new Click_Released_Event;
    begin
       Prev.Touch_Detected := False;
       loop
          TS := Get_Touch_State;
          if TS.Touch_Detected /= Prev.Touch_Detected then
 
-            Evt.Pos.X := TS.X;
-            Evt.Pos.Y := TS.Y;
             if TS.Touch_Detected then
-               Evt.CType := Click_Press;
+               Evt.Pos.X := TS.X;
+               Evt.Pos.Y := TS.Y;
+               Emit (Event_Not_Null_Ref (Evt));
             else
-               Evt.CType := Click_Release;
+               Emit (Event_Not_Null_Ref (Released_Evt));
             end if;
-            Emit (Evt);
          end if;
          Prev := TS;
       end loop;

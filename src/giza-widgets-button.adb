@@ -28,19 +28,28 @@ package body Giza.Widgets.Button is
 
    function On_Click
      (This  : in out Gbutton;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+      Pos   : Point_T) return Boolean
    is
       pragma Unreferenced (Pos);
       Active_Old : constant Boolean := This.Active;
    begin
-      if CType = Click_Press then
-         This.Set_Active (if This.Is_Toggle then not Active_Old else True);
-      elsif CType = Click_Release and then not This.Is_Toggle then
+      This.Set_Active (if This.Is_Toggle then not Active_Old else True);
+      return This.Active /= Active_Old;
+   end On_Click;
+
+   -----------------------
+   -- On_Click_Released --
+   -----------------------
+
+   overriding
+   function On_Click_Released (This  : in out Gbutton) return Boolean is
+      Active_Old : constant Boolean := This.Active;
+   begin
+      if not This.Is_Toggle then
          This.Set_Active (False);
       end if;
       return This.Active /= Active_Old;
-   end On_Click;
+   end On_Click_Released;
 
    ------------
    -- Active --

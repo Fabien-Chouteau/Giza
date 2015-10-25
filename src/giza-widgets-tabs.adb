@@ -44,17 +44,17 @@ package body Giza.Widgets.Tabs is
       This.Root.Draw (Ctx, Force);
    end Draw;
 
-   --------------
-   -- On_Click --
-   --------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   function On_Click
-     (This  : in out Gtabs;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+   function On_Position_Event
+     (This : in out Gtabs;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
    is
    begin
-      if This.Root.On_Click (Pos, CType) then
+      if This.Root.On_Position_Event (Evt, Pos) then
          for Index in This.Tabs'Range loop
             if Index /= This.Selected
               and then
@@ -69,7 +69,19 @@ package body Giza.Widgets.Tabs is
       else
          return False;
       end if;
-   end On_Click;
+   end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out Gtabs;
+      Evt  : Event_Not_Null_Ref) return Boolean
+   is
+   begin
+      return This.Root.On_Event (Evt);
+   end On_Event;
 
    -------------
    -- Set_Tab --

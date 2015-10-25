@@ -31,8 +31,11 @@ package Giza.Widgets.Button is
    overriding
    function On_Click
      (This  : in out Gbutton;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+      Pos   : Point_T) return Boolean;
+
+   overriding
+   function On_Click_Released
+     (This  : in out Gbutton) return Boolean;
 
    function Active (This : Gbutton) return Boolean;
 

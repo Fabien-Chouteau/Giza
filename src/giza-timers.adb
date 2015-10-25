@@ -30,7 +30,7 @@ package body Giza.Timers is
    type Wrapper_Access is access all Wrapper;
 
    type Wrapper is record
-      Event   : not null access Timer_Event'Class;
+      Event   : Timer_Event_Not_Null_Ref;
       Timeout : Time;
       Next    : Wrapper_Access := null;
    end record;
@@ -119,7 +119,7 @@ package body Giza.Timers is
    ---------------
 
    procedure Set_Timer
-     (Timer : not null access Timer_Event'Class;
+     (Timer : Timer_Event_Not_Null_Ref;
       Timeout : Time)
    is
       Item : constant Wrapper_Access :=
@@ -149,7 +149,7 @@ package body Giza.Timers is
 
             Sync.Pop (Tmp);
             if Tmp /= null then
-               Emit (Tmp.Event);
+               Emit (Event_Not_Null_Ref (Tmp.Event));
 
                --  Destroy wrapper
                Free (Tmp);

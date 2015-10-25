@@ -25,6 +25,6 @@ with Giza.Events; use Giza.Events;
 
 package Giza.Timers is
    procedure Set_Timer
-     (Timer : not null access Timer_Event'Class;
+     (Timer   : Timer_Event_Not_Null_Ref;
       Timeout : Time);
 end Giza.Timers;

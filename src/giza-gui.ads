@@ -26,7 +26,7 @@ with Giza.Graphics; use Giza.Graphics;
 
 package Giza.GUI is
 
-   procedure Emit (Evt : not null access Event'Class);
+   procedure Emit (Evt : Event_Not_Null_Ref);
    --  Put an event that will be processed by the Event_Loop
 
    procedure Event_Loop with No_Return;

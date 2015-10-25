@@ -17,10 +17,10 @@ package Giza.Widgets.Number_Selection is
                    Force : Boolean := True);
 
    overriding
-   function On_Click
-     (This  : in out Gnumber_Select;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+   function On_Position_Event
+     (This : in out Gnumber_Select;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
 
    procedure Set_Value (This : in out Gnumber_Select; Val : Integer);
    procedure Set_Step (This : in out Gnumber_Select; Step : Integer);

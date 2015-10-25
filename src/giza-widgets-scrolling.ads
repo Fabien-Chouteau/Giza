@@ -33,10 +33,15 @@ package Giza.Widgets.Scrolling is
                         Dirty : Boolean := True);
 
    overriding
-   function On_Click
-     (This  : in out Gscroll;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean;
+   function On_Position_Event
+     (This : in out Gscroll;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
+
+   overriding
+   function On_Event
+     (This : in out Gscroll;
+      Evt  : Event_Not_Null_Ref) return Boolean;
 
    overriding
    procedure Draw (This : in out Gscroll;

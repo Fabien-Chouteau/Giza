@@ -71,43 +71,60 @@ package body Giza.Widgets.Scrolling is
       end if;
    end Draw;
 
-   --------------
-   -- On_Click --
-   --------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   function On_Click
-     (This  : in out Gscroll;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+   function On_Position_Event
+     (This : in out Gscroll;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
    is
    begin
       if This.Child /= null then
          if This.Child_Pos.Y < 0
            and then
-            Pos.Y < This.Up.Get_Size.H
+            Evt.Pos.Y < This.Up.Get_Size.H
          then
-            if This.Up.On_Click (Pos, CType) and then This.Up.Active then
+            if This.Up.On_Position_Event (Evt, Pos)
+              and then
+                This.Up.Active
+            then
                This.Child_Pos := This.Child_Pos + (0, 5);
                return True;
             end if;
 
          elsif This.Child_Pos.Y > -(This.Child.Size.H - This.Get_Size.H)
            and then
-            Pos.Y > This.Get_Size.H - This.Up.Get_Size.H
+            Evt.Pos.Y > This.Get_Size.H - This.Up.Get_Size.H
          then
-            if This.Down.On_Click
-              (Pos - (0, This.Get_Size.H - This.Up.Get_Size.H), CType) and then
+
+            if This.Down.On_Position_Event
+              (Evt, Pos - (0, This.Get_Size.H - This.Up.Get_Size.H))
+              and then
               This.Down.Active
             then
                This.Child_Pos := This.Child_Pos - (0, 5);
                return True;
             end if;
          else
-            return This.Child.On_Click (Pos + This.Child_Pos, CType);
+            return This.Child.On_Position_Event (Evt, Pos + This.Child_Pos);
          end if;
       end if;
       return False;
-   end On_Click;
+   end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out Gscroll;
+      Evt  : Event_Not_Null_Ref) return Boolean
+   is
+   begin
+      return This.Child = null or else This.Child.On_Event (Evt);
+   end On_Event;
 
    ---------------
    -- Set_Child --

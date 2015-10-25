@@ -25,22 +25,34 @@ with Giza.Graphics; use Giza.Graphics;
 package Giza.Events is
 
    type Event is abstract tagged null record;
-   type Event_Access is access all Event'Class;
-   type Event_Not_Null_Access is not null access all Event'Class;
+   type Event_Ref is access constant Event'Class;
+   type Event_Not_Null_Ref is not null access constant Event'Class;
 
    --  Built-in events
-   type Click_Type is (Click_None, Click_Press, Click_Release, Click_Move);
-   type Click_Event is new Event with record
-      CType : Click_Type := Click_None;
+
+   type Position_Event is new Event with record
       Pos   : Point_T := (0, 0);
    end record;
-   type Click_Event_Ref is not null access constant Click_Event'Class;
+   type Position_Event_Ref is not null access constant Position_Event'Class;
+
+   type Click_Event is new Position_Event with record
+      Something : Boolean;
+   end record;
+   type Click_Event_Ref is not null access all Click_Event'Class;
+   type Click_Event_Constant_Ref is not null access constant Click_Event'Class;
+
+   type Click_Released_Event is new Event with record
+      Something : Boolean;
+   end record;
+
+   type Click_Released_Event_Ref is not null access all
+     Click_Released_Event'Class;
 
    type Basic_Timer_Callback is access procedure;
    type Timer_Event is new Event with record
       Callback : Basic_Timer_Callback;
    end record;
-   type Timer_Event_Ref is not null access constant Timer_Event'Class;
+   type Timer_Event_Not_Null_Ref is not null access constant Timer_Event'Class;
 
-   procedure Triggered (Timer : in out Timer_Event);
+   procedure Triggered (Timer : Timer_Event);
 end Giza.Events;

@@ -111,11 +111,11 @@ package body Giza.GUI is
    ----------------
 
    protected Event_Sync is
-      entry Wait_For_Event (Evt : out Event_Access);
-      procedure Emit (Evt : not null access Event'Class);
+      entry Wait_For_Event (Evt : out Event_Ref);
+      procedure Emit (Evt : Event_Not_Null_Ref);
    private
       Has_Event : Boolean;
-      Even     : access Event'Class := null;
+      Even     : Event_Ref := null;
    end Event_Sync;
 
    ----------------
@@ -128,9 +128,9 @@ package body Giza.GUI is
       -- Wait_For_Event --
       --------------------
 
-      entry Wait_For_Event (Evt : out Event_Access) when Has_Event is
+      entry Wait_For_Event (Evt : out Event_Ref) when Has_Event is
       begin
-         Evt := Event_Access (Even);
+         Evt := Even;
 
          Has_Event := False;
          Even := null;
@@ -140,11 +140,11 @@ package body Giza.GUI is
       -- Emit --
       ----------
 
-      procedure Emit (Evt : not null access Event'Class) is
+      procedure Emit (Evt : Event_Not_Null_Ref) is
       begin
          --  TODO: make it a list of events...
          Has_Event := True;
-         Even := Evt;
+         Even := Event_Ref (Evt);
       end Emit;
    end Event_Sync;
 
@@ -152,7 +152,7 @@ package body Giza.GUI is
    -- Emit --
    ----------
 
-   procedure Emit (Evt : not null access Event'Class) is
+   procedure Emit (Evt : Event_Not_Null_Ref) is
    begin
       Event_Sync.Emit (Evt);
    end Emit;
@@ -162,17 +162,25 @@ package body Giza.GUI is
    ----------------
 
    procedure Event_Loop is
-      Event : Event_Access;
+      Event : Event_Ref;
       Event_Handled : Boolean;
    begin
       loop
          Event_Sync.Wait_For_Event (Event);
          if Event /= null and then Stack /= null then
-            if Event.all in Timer_Event then
+            if Event.all in Timer_Event'Class then
                Timer_Event'Class (Event.all).Triggered;
+            elsif Event.all in Position_Event'Class then
+               declare
+                  P_Evt : constant Position_Event_Ref :=
+                    Position_Event_Ref (Event);
+               begin
+                  Event_Handled :=
+                    Stack.Win.On_Position_Event (P_Evt, P_Evt.Pos);
+               end;
             else
                Event_Handled :=
-                 Stack.Win.On_Builtin_Event (Event_Not_Null_Access (Event));
+                 Stack.Win.On_Event (Event_Not_Null_Ref (Event));
             end if;
          end if;
 

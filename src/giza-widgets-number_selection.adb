@@ -82,17 +82,17 @@ package body Giza.Widgets.Number_Selection is
       This.Root.Draw (Ctx, Force);
    end Draw;
 
-   --------------
-   -- On_Click --
-   --------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   overriding function On_Click
-     (This  : in out Gnumber_Select;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+   overriding function On_Position_Event
+     (This : in out Gnumber_Select;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
    is
    begin
-      if This.Root.On_Click (Pos, CType) then
+      if This.Root.On_Position_Event (Evt, Pos) then
          if This.Plus /= null and then This.Plus.Active then
             This.Value := This.Value + This.Step;
             if This.Value > This.Max then
@@ -108,7 +108,7 @@ package body Giza.Widgets.Number_Selection is
       else
          return False;
       end if;
-   end On_Click;
+   end On_Position_Event;
 
    ---------------
    -- Set_Value --

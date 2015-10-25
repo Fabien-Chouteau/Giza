@@ -64,17 +64,17 @@ package body Giza.Widgets.Composite is
       end loop;
    end Draw;
 
-   --------------
-   -- On_Click --
-   --------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   function On_Click
-     (This  : in out Composite_Widget;
-      Pos   : Point_T;
-      CType : Click_Type) return Boolean
+   function On_Position_Event
+     (This : in out Composite_Widget;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
    is
-      Ref : Wrapper_Ref := This.List;
-      Clicked : Boolean := False;
+      Ref     : Wrapper_Ref := This.List;
+      Handled : Boolean := False;
    begin
       while Ref /= null loop
          --  Check if event is within the Widget
@@ -83,12 +83,33 @@ package body Giza.Widgets.Composite is
              Pos.Y in Ref.Pos.Y .. Ref.Pos.Y + Ref.Widg.Size.H
          then
             --  Translate position into child coordinates and propagate
-            Clicked := Clicked or Ref.Widg.On_Click (Pos - Ref.Pos, CType);
+            Handled := Handled or
+              Ref.Widg.On_Position_Event (Evt, Pos - Ref.Pos);
          end if;
          Ref := Ref.Next;
       end loop;
-      return Clicked;
-   end On_Click;
+      return Handled;
+   end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   overriding
+   function On_Event
+     (This : in out Composite_Widget;
+      Evt  : Event_Not_Null_Ref) return Boolean
+   is
+      Ref     : Wrapper_Ref := This.List;
+      Handled : Boolean := False;
+   begin
+
+      while Ref /= null loop
+         Handled := Handled or Ref.Widg.On_Event (Evt);
+         Ref := Ref.Next;
+      end loop;
+      return Handled;
+   end On_Event;
 
    ---------------
    -- Add_Child --

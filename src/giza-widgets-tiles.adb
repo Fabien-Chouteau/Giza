@@ -113,14 +113,15 @@ package body Giza.Widgets.Tiles is
       Ctx.Restore;
    end Draw;
 
-   --------------
-   -- On_Click --
-   --------------
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
 
-   overriding function On_Click
-     (This  : in out Gtile;
-      Pos   : Point_T;
-      CType : Click_Type)
+   overriding
+   function On_Position_Event
+     (This : in out Gtile;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T)
       return Boolean
    is
       W, H : Integer;
@@ -137,35 +138,55 @@ package body Giza.Widgets.Tiles is
          case This.Dir is
          when Top_Down =>
             if Pos.Y in (Index - 1) * H .. Index * H then
-               return On_Click (This.Widgs (Index).all,
-                                Pos - (0, (Index - 1) * H),
-                                CType);
+               return On_Position_Event (This.Widgs (Index).all,
+                                         Evt,
+                                         Pos - (0, (Index - 1) * H));
             end if;
          when Bottom_Up =>
             if Pos.Y in (This.Widgs'Last - Index) * H ..
               (This.Widgs'Last - Index + 1) * H then
-               return On_Click (This.Widgs (Index).all,
-                                Pos -
-                                  (0, (This.Widgs'Last - Index) * H),
-                                CType);
+
+               return On_Position_Event
+                 (This.Widgs (Index).all,
+                  Evt,
+                  Pos - (0, (This.Widgs'Last - Index) * H));
             end if;
          when Left_Right =>
             if Pos.X in (Index - 1) * W .. Index * W then
-               return On_Click (This.Widgs (Index).all,
-                                Pos - ((Index - 1) * W, 0),
-                                CType);
+               return On_Position_Event (This.Widgs (Index).all,
+                                         Evt,
+                                         Pos - ((Index - 1) * W, 0));
             end if;
          when Right_Left =>
             if Pos.X in (This.Widgs'Last - Index) * W ..
-              (This.Widgs'Last - Index + 1) * W then
-               return On_Click (This.Widgs (Index).all,
-                                Pos - ((Index - 1) * W, 0),
-                                CType);
+              (This.Widgs'Last - Index + 1) * W
+            then
+               return On_Position_Event (This.Widgs (Index).all,
+                                         Evt,
+                                         Pos - ((Index - 1) * W, 0));
             end if;
          end case;
       end loop;
       return False;
-   end On_Click;
+   end On_Position_Event;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out Gtile;
+      Evt  : Event_Not_Null_Ref) return Boolean
+   is
+      Handled : Boolean := False;
+   begin
+      for W of This.Widgs loop
+         if W /= null then
+            Handled := Handled or W.On_Event (Evt);
+         end if;
+      end loop;
+      return Handled;
+   end On_Event;
 
    ---------------
    -- Set_Child --
