@@ -32,16 +32,14 @@ package body Giza.Widgets.Button is
       CType : Click_Type) return Boolean
    is
       pragma Unreferenced (Pos);
+      Active_Old : constant Boolean := This.Active;
    begin
-      if CType = Click_Press
-        or else
-          (CType = Click_Release and then not This.Is_Toggle)
-      then
-         This.Set_Active (not This.Is_Active);
-         return True;
-      else
-         return False;
+      if CType = Click_Press then
+         This.Set_Active (if This.Is_Toggle then not Active_Old else True);
+      elsif CType = Click_Release and then not This.Is_Toggle then
+         This.Set_Active (False);
       end if;
+      return This.Active /= Active_Old;
    end On_Click;
 
    ------------
