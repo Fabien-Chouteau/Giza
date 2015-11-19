@@ -22,6 +22,7 @@
 
 with Ada.Unchecked_Deallocation;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
+with Ada.Text_IO; use Ada.Text_IO;
 
 package body Giza.Graphics is
 
@@ -43,6 +44,38 @@ package body Giza.Graphics is
    begin
       return (R.Org.X + R.Size.W / 2, R.Org.Y + R.Size.H / 2);
    end Center;
+
+   ---------------
+   -- Intersect --
+   ---------------
+
+   function Intersection (A, B : Rect_T) return Rect_T is
+      P1 : constant Point_T := A.Org;
+      P2 : constant Point_T := A.Org + (A.Size.W, A.Size.H);
+      P3 : constant Point_T := B.Org;
+      P4 : constant Point_T := B.Org + (B.Size.W, B.Size.H);
+
+      Ret1, Ret2 : Point_T;
+      H, W : Natural;
+   begin
+      Ret1.X := Dim'Max (P1.X, P3.X);
+      Ret1.Y := Dim'Max (P1.Y, P3.Y);
+      Ret2.X := Dim'Min (P2.X, P4.X);
+      Ret2.Y := Dim'Min (P2.Y, P4.Y);
+
+      if Ret2.X - Ret1.X < 0 then
+         W := 0;
+      else
+         W := Ret2.X - Ret1.X;
+      end if;
+
+      if Ret2.Y - Ret1.Y < 0 then
+         H := 0;
+      else
+         H := Ret2.Y - Ret1.Y;
+      end if;
+      return (Ret1, (W, H));
+   end Intersection;
 
    ---------
    -- "*" --
@@ -198,20 +231,24 @@ package body Giza.Graphics is
    procedure Set_Pixel (This : in out Context; Pt : Point_T) is
       Target : constant Point_T := Transform (This, Pt);
    begin
-      if This.Bck = null
 
-        --  FIXME: with the transformation matrix I'm not sure how to check
-        --         bounds...
-        --          or else
-        --            Target.X not in 0 .. This.Bounds.Size.W
-        --          or else
-        --            Target.Y not in 0 .. This.Bounds.Size.H
-      then
-         --  Out of bounds
-         return;
+      if This.Bounds.Size.W /= 0 and then This.Bounds.Size.H /= 0 then
+         if This.Bck /= null
+           and then
+             Pt.X in This.Bounds.Org.X .. This.Bounds.Size.W
+           and then
+             Pt.Y in This.Bounds.Org.Y .. This.Bounds.Size.H
+         then
+            This.Bck.Set_Pixel (Target);
+--           else
+--              Put_Line ("Set_Pixel out of bounds: Pt:" & To_String (Pt) &
+--                       " bounds: " & To_String (This.Bounds));
+         end if;
+      else
+         if This.Bck /= null then
+            This.Bck.Set_Pixel (Target);
+         end if;
       end if;
-
-      This.Bck.Set_Pixel (Target);
    end Set_Pixel;
 
    ----------
@@ -234,6 +271,8 @@ package body Giza.Graphics is
       if Tmp /= null then
          This.Current_State := Tmp.all;
          Free (Tmp);
+      else
+         Put_Line ("Invalid graphic context Restore...");
       end if;
    end Restore;
 
@@ -254,7 +293,8 @@ package body Giza.Graphics is
 
    procedure Set_Bounds (This : in out Context; Bounds : Rect_T) is
    begin
-      This.Current_State.Bounds := Bounds;
+      This.Current_State.Bounds := Intersection (This.Current_State.Bounds,
+                                              Bounds);
    end Set_Bounds;
 
    ------------
@@ -289,6 +329,9 @@ package body Giza.Graphics is
    procedure Set_Backend (This : in out Context; Bck : access Backend'Class) is
    begin
       This.Bck := Bck;
+      if Bck /= null then
+         This.Current_State.Bounds := ((0, 0), Bck.Size);
+      end if;
    end Set_Backend;
 
    ------------
@@ -310,6 +353,9 @@ package body Giza.Graphics is
    begin
       This.Current_State.Transform :=
         This.Current_State.Transform * Translation_Matrix (Pt);
+
+      This.Current_State.Bounds :=
+        (This.Current_State.Bounds.Org - Pt, This.Current_State.Bounds.Size);
    end Translate;
 
    -----------
@@ -340,6 +386,13 @@ package body Giza.Graphics is
    begin
       This.Current_State.Line_Width := Width;
    end Set_Line_Width;
+
+   ----------------
+   -- Line_Width --
+   ----------------
+
+   function Line_Width (This : Context) return Positive is
+     (This.Current_State.Line_Width);
 
    -------------
    -- Move_To --
@@ -526,11 +579,46 @@ package body Giza.Graphics is
       Center : Point_T;
       Radius : Dim)
    is
-      pragma Unreferenced (This, Center, Radius);
+      R2 : constant Dim := Radius ** 2;
+      Cx : Dim;
+      Line_Width : constant Positive := This.Line_Width;
    begin
-      --  Generated stub: replace with real body!
-      raise Program_Error with "Unimplemented procedure Fill_Circle";
+      This.Set_Line_Width (1);
+
+      --  Draw every horizontal lines of the circle
+      for Cy in -Radius .. Radius loop
+         Cx := Dim (Sqrt (Float (R2 - Cy ** 2)));
+         This.Line (Start => (Center.X - Cx, Center.Y + Cy),
+                    Stop  => (Center.X + Cx, Center.Y + Cy));
+      end loop;
+
+      --  Restore line width
+      This.Set_Line_Width (Line_Width);
    end Fill_Circle;
+
+   procedure Fill_Arc
+     (This     : in out Context;
+      Center   : Point_T;
+      Radius   : Dim;
+      From, To : Float)
+   is
+      Line_Width : constant Positive := This.Line_Width;
+      Angle : Float;
+   begin
+      This.Set_Line_Width (1);
+
+      --  Until we have a real fill arc algorithm...
+      Angle := From;
+      while Angle < To loop
+         This.Line (Center, Center + (Dim (Cos (Angle) * Float (Radius)),
+                    Dim (-Sin (Angle) * Float (Radius))));
+
+         Angle := Angle + 0.0005;
+      end loop;
+
+      --  Restore line width
+      This.Set_Line_Width (Line_Width);
+   end Fill_Arc;
 
    --------------
    -- Set_Font --

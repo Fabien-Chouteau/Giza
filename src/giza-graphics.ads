@@ -35,6 +35,9 @@ package Giza.Graphics is
       X, Y : Dim;
    end record;
 
+   function To_String (Pt : Point_T) return String is
+      ("(X:" & Pt.X'Img & ", Y:" & Pt.Y'Img & ")");
+
    function "+" (A, B : Point_T) return Point_T is (A.X + B.X, A.Y + B.Y);
    function "-" (A, B : Point_T) return Point_T is (A.X - B.X, A.Y - B.Y);
 
@@ -42,15 +45,26 @@ package Giza.Graphics is
       W, H : Natural;
    end record;
 
+   function To_String (Size : Size_T) return String is
+      ("(W:" & Size.W'Img & ", H:" & Size.H'Img & ")");
+
    function "+" (A, B : Size_T) return Size_T is (A.W + B.W, A.H + B.H);
    function "-" (A, B : Size_T) return Size_T is (A.W - B.W, A.H - B.H);
+   function "*" (A : Size_T; B : Integer) return Size_T is (A.W * B, A.H * B);
+   function "/" (A : Size_T; B : Integer) return Size_T is (A.W / B, A.H / B);
 
    type Rect_T is record
       Org  : Point_T;
       Size : Size_T;
    end record;
 
+   function To_String (Rect : Rect_T) return String is
+     ("(Org:" & To_String (Rect.Org) &
+        ", Size:" & To_String (Rect.Size) & ")");
+
    function Center (R : Rect_T) return Point_T;
+
+   function Intersection (A, B : Rect_T) return Rect_T;
 
    type HC_Matrix is record
       V11, V12, V13 : Float := 0.0;
@@ -103,6 +117,7 @@ package Giza.Graphics is
    procedure Scale (This : in out Context; X, Y : Float);
 
    procedure Set_Line_Width (This : in out Context; Width : Positive);
+   function Line_Width (This : Context) return Positive;
 
    procedure Move_To (This : in out Context; Pt : Point_T);
 
@@ -128,6 +143,12 @@ package Giza.Graphics is
      (This : in out Context;
       Center : Point_T;
       Radius : Dim);
+
+   procedure Fill_Arc
+     (This     : in out Context;
+      Center   : Point_T;
+      Radius   : Dim;
+      From, To : Float);
 
    --  Fonts
    procedure Set_Font (This : in out Context; Font : Font_Access);
@@ -159,7 +180,7 @@ private
       Transform      : HC_Matrix := Id;
 
       Translate_Only : Boolean := True;
-      --  We only translations are used we can avoid four unecessary float
+      --  When only translations are used we can avoid four unecessary float
       --  multiplications for each pixel.
 
       Next           : State_Ref := null;
