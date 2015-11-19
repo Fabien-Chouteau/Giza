@@ -4,6 +4,7 @@ with Test_Tiles_Window; use Test_Tiles_Window;
 with Test_Scroll_Window; use Test_Scroll_Window;
 with Test_Button_Window; use Test_Button_Window;
 with Test_Gnumber_Window; use Test_Gnumber_Window;
+with Test_Graphic_Bounds; use Test_Graphic_Bounds;
 
 package body Test_Main_Window is
 
@@ -30,6 +31,10 @@ package body Test_Main_Window is
       This.Sub_Windows (4).Button := new Gbutton;
       This.Sub_Windows (4).Button.Set_Text ("Number_Select");
       This.Sub_Windows (4).Win := new Gnumber_Window;
+
+      This.Sub_Windows (5).Button := new Gbutton;
+      This.Sub_Windows (5).Button.Set_Text ("Graphics");
+      This.Sub_Windows (5).Win := new Graphic_Bounds_Window;
 
       This.Tiles := new Gtile (This.Sub_Windows'Length, Top_Down);
       This.Tiles.Set_Size (This.Get_Size);
