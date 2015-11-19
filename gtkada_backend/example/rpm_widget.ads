@@ -1,5 +1,6 @@
 with Giza.Widgets.Frame; use Giza.Widgets.Frame;
 with Giza.Graphics; use Giza.Graphics;
+with Giza.Events; use Giza.Events;
 
 package RPM_Widget is
 
@@ -11,6 +12,10 @@ package RPM_Widget is
    procedure Draw (This : in out RPM;
                    Ctx : in out Context'Class;
                    Force : Boolean := True);
+   overriding
+   function On_Event
+     (This : in out RPM;
+      Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Set_RPM (This : in out RPM; Val : RPM_Range);
    function Get_RPM (This : RPM) return RPM_Range;

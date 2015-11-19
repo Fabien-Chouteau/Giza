@@ -1,5 +1,11 @@
 with Giza.Colors; use Giza.Colors;
+with Giza.GUI; use Giza.GUI;
+
+with Ada.Text_IO; use Ada.Text_IO;
+with Engine_Control_Events; use Engine_Control_Events;
 package body Engine_Control_UI is
+
+   Set_PP_Evt : aliased Set_PP_Event;
 
    -------------
    -- On_Init --
@@ -34,14 +40,22 @@ package body Engine_Control_UI is
       This.Ignition := new Gnumber_Select;
       This.Ignition.Set_Size ((This.Get_Size.W, 42));
       This.Ignition.Set_Label ("Ignition");
+      This.Ignition.Set_Min (0);
+      This.Ignition.Set_Max (100);
+      This.Ignition.Set_Step (5);
+      This.Ignition.Set_Value (25);
 
       This.Duration := new Gnumber_Select;
       This.Duration.Set_Size ((This.Get_Size.W, 42));
       This.Duration.Set_Label ("Duration");
+      This.Duration.Set_Min (0);
+      This.Duration.Set_Max (100);
+      This.Duration.Set_Step (5);
+      This.Duration.Set_Value (50);
 
       This.Manual.Add_Child (This.Ignition, (0, 0));
       This.Manual.Add_Child (This.Duration, (0, 43));
-      This.Tabs.Set_Selected (2);
+      This.Tabs.Set_Selected (1);
 
       This.Target_RPM := new Gnumber_Select;
       This.Target_RPM.Set_Label ("Target RPM");
@@ -78,5 +92,28 @@ package body Engine_Control_UI is
    begin
       null;
    end On_Hidden;
+
+   -----------------------
+   -- On_Position_Event --
+   -----------------------
+
+   function On_Position_Event
+     (This : in out Engine_Control_Window;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean
+   is
+   begin
+      if Giza.Widgets.Composite.On_Position_Event
+        (Giza.Widgets.Composite.Composite_Widget (This), Evt, Pos)
+      then
+         Set_PP_Evt := (Ignition => This.Ignition.Value,
+                        Duration => This.Duration.Value);
+         Giza.GUI.Emit (Set_PP_Evt'Access);
+         return True;
+      else
+         return False;
+      end if;
+   end On_Position_Event;
+
 
 end Engine_Control_UI;

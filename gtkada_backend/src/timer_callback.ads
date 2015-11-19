@@ -20,7 +20,7 @@ package Timer_Callback is
    My_Backend : aliased Screen_Interface.GTKada_Backend;
    My_Context : aliased Giza.Graphics.Context;
 
-   procedure Callback;
+   function Callback return Boolean;
 
    My_Timer : aliased Basic_Timer_Event :=
      (Callback => Callback'Access);

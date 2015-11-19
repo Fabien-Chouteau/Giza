@@ -1,7 +1,6 @@
 with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
-with Timer_Callback;
-use Timer_Callback;
+with Timer_Callback; use Timer_Callback;
 with Giza.Windows; use Giza.Windows;
 with Screen_Interface; use Screen_Interface;
 with Giza.Widgets.Text; use Giza.Widgets.Text;

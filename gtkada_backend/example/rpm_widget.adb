@@ -1,3 +1,5 @@
+with Engine_Control_Events; use Engine_Control_Events;
+
 package body RPM_Widget is
 
    ----------
@@ -26,6 +28,27 @@ package body RPM_Widget is
       Ctx.Move_To (Pt);
       Ctx.Print (Str);
    end Draw;
+
+   --------------
+   -- On_Event --
+   --------------
+
+   function On_Event
+     (This : in out RPM;
+      Evt  : Event_Not_Null_Ref) return Boolean
+   is
+   begin
+      if Evt.all in Set_RPM_Event'Class then
+         declare
+            Set_RPM_Evt : Set_RPM_Event_Ref := Set_RPM_Event_Ref (Evt);
+         begin
+            This.Value := Set_RPM_Evt.RPM;
+            This.Set_Dirty;
+            return True;
+         end;
+      end if;
+      return False;
+   end On_Event;
 
    -------------
    -- Set_RPM --

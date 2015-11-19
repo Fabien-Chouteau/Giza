@@ -7,10 +7,13 @@ with Power_Phase_Widget; use Power_Phase_Widget;
 with Giza.Widgets.Number_Selection; use Giza.Widgets.Number_Selection;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Background; use Giza.Widgets.Background;
+with Giza.Events; use Giza.Events;
+with Giza.Graphics; use Giza.Graphics;
 
 package Engine_Control_UI is
 
-   type Engine_Control_Window is new Giza.Windows.Window with private;
+   subtype Parent is Giza.Windows.Window;
+   type Engine_Control_Window is new Parent with private;
 
    overriding
    procedure On_Init (This : in out Engine_Control_Window);
@@ -18,6 +21,12 @@ package Engine_Control_UI is
    procedure On_Displayed (This : in out Engine_Control_Window);
    overriding
    procedure On_Hidden (This : in out Engine_Control_Window);
+
+   overriding
+   function On_Position_Event
+     (This : in out Engine_Control_Window;
+      Evt  : Position_Event_Ref;
+      Pos  : Point_T) return Boolean;
 
 private
    type Engine_Control_Window is new Giza.Windows.Window with record
