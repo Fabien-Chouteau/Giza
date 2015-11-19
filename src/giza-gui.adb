@@ -169,7 +169,8 @@ package body Giza.GUI is
          Event_Sync.Wait_For_Event (Event);
          if Event /= null and then Stack /= null then
             if Event.all in Timer_Event'Class then
-               Timer_Event'Class (Event.all).Triggered;
+               Event_Handled :=
+                 Timer_Event'Class (Event.all).Triggered;
             elsif Event.all in Position_Event'Class then
                declare
                   P_Evt : constant Position_Event_Ref :=

@@ -26,9 +26,9 @@ package body Giza.Events is
    -- Triggered --
    ---------------
 
-   procedure Triggered (Timer : Basic_Timer_Event) is
+   function Triggered (Timer : Basic_Timer_Event) return Boolean is
    begin
-      Timer.Callback.all;
+      return Timer.Callback.all;
    end Triggered;
 
 end Giza.Events;

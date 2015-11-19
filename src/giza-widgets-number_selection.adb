@@ -6,11 +6,11 @@ package body Giza.Widgets.Number_Selection is
    -- Triggered --
    ---------------
 
-   procedure Triggered (This : Repeat_Event) is
+   function Triggered (This : Repeat_Event) return Boolean is
       Reset : Boolean := False;
    begin
       if This.Nbr = null then
-         return;
+         return False;
       end if;
 
       if This.Nbr.Plus /= null and then This.Nbr.Plus.Active then
@@ -26,6 +26,7 @@ package body Giza.Widgets.Number_Selection is
          Giza.Timers.Set_Timer (This'Unchecked_Access,
                                 Clock + This.Nbr.Repeat_Time);
       end if;
+      return Reset;
    end Triggered;
 
    ---------------

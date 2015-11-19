@@ -62,7 +62,8 @@ private
       Scroll : Gscroll_Ref;
    end record;
 
-   procedure Triggered (This : Repeat_Event);
+   overriding
+   function Triggered (This : Repeat_Event) return Boolean;
 
    type Gscroll is new Gframe with record
       Repeat_Time : Time_Span := Milliseconds (100);

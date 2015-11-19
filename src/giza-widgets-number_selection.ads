@@ -46,7 +46,8 @@ private
       Nbr : Gnumber_Select_Ref;
    end record;
 
-   procedure Triggered (This : Repeat_Event);
+   overriding
+   function Triggered (This : Repeat_Event) return Boolean;
 
    type Gnumber_Select is new Gframe with record
       Repeat_Time : Time_Span := Milliseconds (200);

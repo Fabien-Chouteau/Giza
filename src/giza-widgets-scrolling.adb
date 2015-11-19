@@ -21,34 +21,35 @@
 -------------------------------------------------------------------------------
 
 with Giza.Timers;
-with Ada.Text_IO; use Ada.Text_IO;
 
 package body Giza.Widgets.Scrolling is
 
-   procedure Triggered (This : Repeat_Event) is
+   ---------------
+   -- Triggered --
+   ---------------
+
+   function Triggered (This : Repeat_Event)  return Boolean is
       Reset : Boolean := False;
    begin
-      Put_Line ("Repeat Triggered");
       if This.Scroll = null then
-         return;
+         return False;
       end if;
 
       if This.Scroll.Up.Active then
          Reset := True;
          This.Scroll.Go_Up;
-         Put_Line ("Repeat Go up");
       elsif This.Scroll.Down.Active then
          Reset := True;
          This.Scroll.Go_Down;
-         Put_Line ("Repeat Go down");
       end if;
 
       if Reset then
-         Put_Line ("Repeat reset timer");
          --  Reset timer
          Giza.Timers.Set_Timer (This'Unchecked_Access,
                                 Clock + This.Scroll.Repeat_Time);
       end if;
+
+      return Reset;
    end Triggered;
 
    ---------------
