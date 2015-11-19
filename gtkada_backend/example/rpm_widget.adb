@@ -40,7 +40,8 @@ package body RPM_Widget is
    begin
       if Evt.all in Set_RPM_Event'Class then
          declare
-            Set_RPM_Evt : Set_RPM_Event_Ref := Set_RPM_Event_Ref (Evt);
+            Set_RPM_Evt : constant Set_RPM_Event_Ref :=
+              Set_RPM_Event_Ref (Evt);
          begin
             This.Value := Set_RPM_Evt.RPM;
             This.Set_Dirty;

@@ -26,6 +26,7 @@ package body Giza.Widgets.Text is
    -- Draw --
    ----------
 
+   overriding
    procedure Draw (This : in out Gtext;
                    Ctx : in out Context'Class;
                    Force : Boolean := True)

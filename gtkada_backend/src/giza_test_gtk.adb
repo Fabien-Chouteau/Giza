@@ -2,15 +2,12 @@ with Timer_Callback;
 use Timer_Callback;
 with Giza.Windows; use Giza.Windows;
 with Screen_Interface; use Screen_Interface;
-with Giza.Widgets.Text; use Giza.Widgets.Text;
 with Giza.GUI; use Giza.GUI;
-with Giza.Colors; use Giza.Colors;
-with Giza.Graphics;
 with Hershey_Fonts.Rowmand;
 with Test_Main_Window; use Test_Main_Window;
 
 procedure Giza_Test_Gtk is
-   Main_W : Main_Window_Ref := new Main_Window;
+   Main_W : constant Main_Window_Ref := new Main_Window;
 begin
 
    Screen_Interface.Initialize;

@@ -22,7 +22,8 @@ project Default is
    end Naming;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat12");
+      for Default_Switches ("ada") use ("-gnat12", "-gnatwa", "-gnatwe",
+                                        "-gnatyg", "-gnaty-d", "-gnaty0");
    end Compiler;
 
 end Default;

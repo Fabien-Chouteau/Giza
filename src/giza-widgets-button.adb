@@ -26,6 +26,7 @@ package body Giza.Widgets.Button is
    -- On_Click --
    --------------
 
+   overriding
    function On_Click
      (This  : in out Gbutton;
       Pos   : Point_T) return Boolean

@@ -26,6 +26,7 @@ package body Giza.Widgets.Tabs is
    -- Set_Dirty --
    ---------------
 
+   overriding
    procedure Set_Dirty (This : in out Gtabs;
                         Dirty : Boolean := True)
    is
@@ -37,6 +38,7 @@ package body Giza.Widgets.Tabs is
    -- Draw --
    ----------
 
+   overriding
    procedure Draw (This : in out Gtabs;
                    Ctx : in out Context'Class;
                    Force : Boolean := True) is
@@ -48,6 +50,7 @@ package body Giza.Widgets.Tabs is
    -- On_Position_Event --
    -----------------------
 
+   overriding
    function On_Position_Event
      (This : in out Gtabs;
       Evt  : Position_Event_Ref;
@@ -75,6 +78,7 @@ package body Giza.Widgets.Tabs is
    -- On_Event --
    --------------
 
+   overriding
    function On_Event
      (This : in out Gtabs;
       Evt  : Event_Not_Null_Ref) return Boolean

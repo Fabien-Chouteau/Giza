@@ -26,6 +26,7 @@ package body Giza.Widgets.Frame is
    -- Draw --
    ----------
 
+   overriding
    procedure Draw (This : in out Gframe;
                    Ctx : in out Context'Class;
                    Force : Boolean := True) is

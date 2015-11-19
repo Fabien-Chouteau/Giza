@@ -21,7 +21,8 @@ library project Giza is
 
    package Compiler is
       for Default_Switches ("ada") use ("-gnat12", "-gnatwa", "-gnatwe",
-                                        "-gnatyg", "-gnaty-d")
+                                        "-gnatyg", "-gnaty-d", "-gnatw.X",
+                                        "-gnatyO")
                                         & Build_Switches;
    end Compiler;
 

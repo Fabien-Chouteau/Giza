@@ -17,6 +17,17 @@ package body Screen_Interface is
    Width_Size  : constant := Width'Last - Width'First + 1;
    Height_Size : constant := Height'Last - Height'First + 1;
 
+   function Window_Idle return Boolean;
+
+   function Redraw (Area  : access Gtk_Drawing_Area_Record'Class;
+                    Cr    : Cairo_Context) return Boolean;
+
+   procedure Initialize_Gtk;
+
+   function On_Motion
+     (Self  : access Gtk_Widget_Record'Class;
+      Event : Gdk.Event.Gdk_Event_Motion) return Boolean;
+
    function On_Button
      (Self  : access Gtk_Widget_Record'Class;
       Event : Gdk.Event.Gdk_Event_Button) return Boolean;
@@ -215,7 +226,7 @@ package body Screen_Interface is
          Put_Line ("On Motion exception");
          TS.X := 0;
          TS.Y := 0;
-         Touch.Set (Ts);
+         Touch.Set (TS);
          return False;
    end On_Motion;
 
@@ -233,10 +244,10 @@ package body Screen_Interface is
 
       Gtk_New (Win);
       Win.Set_Default_Size (Width_Size, Height_Size);
-      Win.Add_Events(Button_Release_Mask);
-      Win.Add_Events(Button_Press_Mask);
-      Win.Add_Events(Pointer_Motion_Mask);
-      Win.Add_Events(Pointer_Motion_Hint_Mask);
+      Win.Add_Events (Button_Release_Mask);
+      Win.Add_Events (Button_Press_Mask);
+      Win.Add_Events (Pointer_Motion_Mask);
+      Win.Add_Events (Pointer_Motion_Hint_Mask);
       Win.On_Button_Press_Event (On_Button'Access, True);
       Win.On_Button_Release_Event (On_Button'Access, True);
       Win.On_Motion_Notify_Event (On_Motion'Access);
@@ -279,7 +290,7 @@ package body Screen_Interface is
    procedure Initialize is
    begin
       Gtk_Task.Start;
-   end;
+   end Initialize;
 
    ---------------------
    -- Get_Touch_State --
@@ -291,7 +302,7 @@ package body Screen_Interface is
       delay 0.0005;
 
       return Touch.Get;
-   end;
+   end Get_Touch_State;
 
    ---------------
    -- Set_Pixel --
@@ -300,7 +311,7 @@ package body Screen_Interface is
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
       Protected_Interface.Set_Pixel (P, Col);
-   end;
+   end Set_Pixel;
 
    -----------------
    -- Fill_Screen --

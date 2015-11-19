@@ -1,7 +1,6 @@
 with Giza.Colors; use Giza.Colors;
 with Giza.GUI; use Giza.GUI;
 
-with Ada.Text_IO; use Ada.Text_IO;
 with Engine_Control_Events; use Engine_Control_Events;
 package body Engine_Control_UI is
 
@@ -114,6 +113,5 @@ package body Engine_Control_UI is
          return False;
       end if;
    end On_Position_Event;
-
 
 end Engine_Control_UI;

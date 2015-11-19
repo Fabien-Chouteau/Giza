@@ -28,6 +28,7 @@ package body Giza.Widgets.Scrolling is
    -- Triggered --
    ---------------
 
+   overriding
    function Triggered (This : Repeat_Event)  return Boolean is
       Reset : Boolean := False;
    begin
@@ -56,6 +57,7 @@ package body Giza.Widgets.Scrolling is
    -- Set_Dirty --
    ---------------
 
+   overriding
    procedure Set_Dirty (This : in out Gscroll;
                         Dirty : Boolean := True)
    is
@@ -71,6 +73,7 @@ package body Giza.Widgets.Scrolling is
    -- Draw --
    ----------
 
+   overriding
    procedure Draw (This : in out Gscroll;
                    Ctx : in out Context'Class;
                    Force : Boolean := True)
@@ -109,6 +112,7 @@ package body Giza.Widgets.Scrolling is
    -- On_Position_Event --
    -----------------------
 
+   overriding
    function On_Position_Event
      (This : in out Gscroll;
       Evt  : Position_Event_Ref;
@@ -157,6 +161,7 @@ package body Giza.Widgets.Scrolling is
    -- On_Event --
    --------------
 
+   overriding
    function On_Event
      (This : in out Gscroll;
       Evt  : Event_Not_Null_Ref) return Boolean

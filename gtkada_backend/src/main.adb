@@ -1,12 +1,8 @@
 with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
 with Timer_Callback; use Timer_Callback;
-with Giza.Windows; use Giza.Windows;
 with Screen_Interface; use Screen_Interface;
-with Giza.Widgets.Text; use Giza.Widgets.Text;
 with Giza.GUI; use Giza.GUI;
-with Giza.Colors; use Giza.Colors;
-with Giza.Graphics;
 with Hershey_Fonts.Rowmand;
 
 procedure Main is
@@ -43,7 +39,6 @@ begin
    Push (ECW'Access);
 
    Set_Timer (Timer_Callback.My_Timer'Access, Clock + Seconds (2));
-
 
    Event_Loop;
 

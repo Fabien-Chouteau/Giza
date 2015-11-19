@@ -9,9 +9,9 @@ package Timer_Callback is
 
    ECW : aliased Engine_Control_Window;
 
-   My_Str : access string := new String'("Gtext");
-   Str_Button : access string := new String'("Button");
-   Str_Toggle : access string := new String'("Toggle");
+   My_Str : access String := new String'("Gtext");
+   Str_Button : access String := new String'("Button");
+   Str_Toggle : access String := new String'("Toggle");
 
    My_Txt : aliased Gtext;
    My_Button : aliased Gbutton;

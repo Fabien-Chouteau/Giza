@@ -6,6 +6,7 @@ package body Giza.Widgets.Number_Selection is
    -- Triggered --
    ---------------
 
+   overriding
    function Triggered (This : Repeat_Event) return Boolean is
       Reset : Boolean := False;
    begin
@@ -33,6 +34,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Dirty --
    ---------------
 
+   overriding
    procedure Set_Dirty (This : in out Gnumber_Select;
                         Dirty : Boolean := True)
    is
@@ -141,6 +143,7 @@ package body Giza.Widgets.Number_Selection is
    -- On_Event --
    --------------
 
+   overriding
    function On_Event
      (This : in out Gnumber_Select;
       Evt  : Event_Not_Null_Ref) return Boolean is

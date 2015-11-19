@@ -26,6 +26,7 @@ package body Giza.Windows is
    -- Draw --
    ----------
 
+   overriding
    procedure Draw (This : in out Window;
                    Ctx : in out Context'Class;
                    Force : Boolean := True)

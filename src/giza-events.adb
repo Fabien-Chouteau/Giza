@@ -26,6 +26,7 @@ package body Giza.Events is
    -- Triggered --
    ---------------
 
+   overriding
    function Triggered (Timer : Basic_Timer_Event) return Boolean is
    begin
       return Timer.Callback.all;

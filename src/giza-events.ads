@@ -58,6 +58,7 @@ package Giza.Events is
       Callback : Basic_Timer_Callback;
    end record;
 
+   overriding
    function Triggered (Timer : Basic_Timer_Event) return Boolean;
 
 end Giza.Events;

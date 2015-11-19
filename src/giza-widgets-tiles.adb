@@ -26,6 +26,7 @@ package body Giza.Widgets.Tiles is
    -- Set_Dirty --
    ---------------
 
+   overriding
    procedure Set_Dirty (This : in out Gtile;
                         Dirty : Boolean := True)
    is
@@ -176,6 +177,7 @@ package body Giza.Widgets.Tiles is
    -- On_Event --
    --------------
 
+   overriding
    function On_Event
      (This : in out Gtile;
       Evt  : Event_Not_Null_Ref) return Boolean

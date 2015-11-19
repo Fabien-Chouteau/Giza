@@ -31,6 +31,7 @@ package body Giza.Widgets.Composite is
    -- Set_Dirty --
    ---------------
 
+   overriding
    procedure Set_Dirty (This : in out Composite_Widget;
                         Dirty : Boolean := True)
    is
@@ -68,6 +69,7 @@ package body Giza.Widgets.Composite is
    -- On_Position_Event --
    -----------------------
 
+   overriding
    function On_Position_Event
      (This : in out Composite_Widget;
       Evt  : Position_Event_Ref;

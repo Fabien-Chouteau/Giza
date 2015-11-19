@@ -5,7 +5,6 @@ with Giza.Widgets.Composite; use Giza.Widgets.Composite;
 with RPM_Widget; use RPM_Widget;
 with Power_Phase_Widget; use Power_Phase_Widget;
 with Giza.Widgets.Number_Selection; use Giza.Widgets.Number_Selection;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Background; use Giza.Widgets.Background;
 with Giza.Events; use Giza.Events;
 with Giza.Graphics; use Giza.Graphics;

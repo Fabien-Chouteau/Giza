@@ -74,7 +74,7 @@ package body Power_Phase_Widget is
    begin
       if Evt.all in Set_PP_Event'Class then
          declare
-            Set_Pulse_Evt : Set_PP_Event_Ref :=
+            Set_Pulse_Evt : constant Set_PP_Event_Ref :=
               Set_PP_Event_Ref (Evt);
          begin
             if Set_Pulse_Evt.Ignition < PP_Range'First then
@@ -96,7 +96,8 @@ package body Power_Phase_Widget is
             return True;
          end;
       end if;
-      return False;   end On_Event;
+      return False;
+   end On_Event;
 
    ------------------
    -- Set_Ignition --

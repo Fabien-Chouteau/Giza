@@ -1,7 +1,5 @@
-with Ada.Text_IO; use Ada.Text_IO;
 with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
-with Screen_Interface; use Screen_Interface;
 with Giza.GUI; use Giza.GUI;
 with Engine_Control_Events; use Engine_Control_Events;
 
@@ -30,8 +28,9 @@ package body Timer_Callback is
 
    task body Touch_Screen is
       TS, Prev : Touch_State;
-      Evt : Click_Event_Ref := new Click_Event;
-      Released_Evt : Click_Released_Event_Ref := new Click_Released_Event;
+      Evt : constant Click_Event_Ref := new Click_Event;
+      Released_Evt : constant Click_Released_Event_Ref :=
+        new Click_Released_Event;
    begin
       Prev.Touch_Detected := False;
       loop
