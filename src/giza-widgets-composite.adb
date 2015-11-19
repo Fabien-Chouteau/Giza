@@ -56,7 +56,7 @@ package body Giza.Widgets.Composite is
       while Ref /= null loop
          Ctx.Save;
          Ctx.Translate (Ref.Pos);
-         --  Ctx.Set_Bounds ((My_Bounds.Org + Ref.Pos, Ref.Widg.Get_Size));
+         Ctx.Set_Bounds (((0, 0), Ref.Widg.Get_Size));
          Ctx.Set_Position ((0, 0));
          Draw (Ref.Widg.all, Ctx, Force);
          Ctx.Restore;

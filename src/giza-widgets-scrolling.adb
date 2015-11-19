@@ -82,6 +82,9 @@ package body Giza.Widgets.Scrolling is
 
       if This.Child /= null then
          Ctx.Save;
+         Ctx.Set_Bounds (((0, 0), This.Get_Size));
+
+         Ctx.Save;
          Ctx.Translate (This.Child_Pos);
          This.Child.Draw (Ctx);
          Ctx.Restore;
@@ -98,6 +101,7 @@ package body Giza.Widgets.Scrolling is
             This.Down.Draw (Ctx, True);
             Ctx.Restore;
          end if;
+         Ctx.Restore;
       end if;
    end Draw;
 

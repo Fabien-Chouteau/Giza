@@ -62,6 +62,7 @@ package body Giza.Widgets.Tiles is
             This.Widgs (Index).Set_Size ((W, H));
             Ctx.Set_Position ((0, 0));
             Ctx.Save;
+            Ctx.Set_Bounds (((0, 0), (W, H)));
             Draw (This.Widgs (Index).all, Ctx, Force);
             Ctx.Restore;
 
@@ -144,7 +145,8 @@ package body Giza.Widgets.Tiles is
             end if;
          when Bottom_Up =>
             if Pos.Y in (This.Widgs'Last - Index) * H ..
-              (This.Widgs'Last - Index + 1) * H then
+              (This.Widgs'Last - Index + 1) * H
+            then
 
                return On_Position_Event
                  (This.Widgs (Index).all,
