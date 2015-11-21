@@ -23,6 +23,7 @@ with Ada.Unchecked_Deallocation;
 
 with Ada.Real_Time.Timing_Events; use Ada.Real_Time.Timing_Events;
 with Giza.GUI; use Giza.GUI;
+with System;
 
 package body Giza.Timers is
 
@@ -45,6 +46,8 @@ package body Giza.Timers is
    ----------
 
    protected Sync is
+      pragma Priority (System.Interrupt_Priority'Last);
+
       entry Wait;
       procedure Wakeup (Event : in out Timing_Event);
 
