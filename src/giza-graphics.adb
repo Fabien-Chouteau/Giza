@@ -613,8 +613,11 @@ package body Giza.Graphics is
          This.Line (Center, Center + (Dim (Cos (Angle) * Float (Radius)),
                     Dim (-Sin (Angle) * Float (Radius))));
 
-         Angle := Angle + 0.0005;
+         Angle := Angle + 0.5;
       end loop;
+
+      This.Line (Center, Center + (Dim (Cos (To) * Float (Radius)),
+                 Dim (-Sin (To) * Float (Radius))));
 
       --  Restore line width
       This.Set_Line_Width (Line_Width);
