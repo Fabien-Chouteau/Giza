@@ -21,8 +21,12 @@
 -------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+with System;
 
 package body Giza.GUI is
+
+   Buffer_Capacity : constant Natural := 100;
+   type Event_Buffer is array (1 .. Buffer_Capacity) of Event_Ref;
 
    type Wrapper;
    type Wrapper_Ref is access all Wrapper;
@@ -111,11 +115,16 @@ package body Giza.GUI is
    ----------------
 
    protected Event_Sync is
+      pragma Priority (System.Interrupt_Priority'Last);
+
       entry Wait_For_Event (Evt : out Event_Ref);
       procedure Emit (Evt : Event_Not_Null_Ref);
    private
-      Has_Event : Boolean;
-      Even     : Event_Ref := null;
+      Has_Event : Boolean := False;
+      Buffer    : Event_Buffer;
+      Next_In   : Positive := 1;
+      Next_Out  : Positive := 1;
+      Count     : Natural  := 0;
    end Event_Sync;
 
    ----------------
@@ -130,10 +139,10 @@ package body Giza.GUI is
 
       entry Wait_For_Event (Evt : out Event_Ref) when Has_Event is
       begin
-         Evt := Even;
-
-         Has_Event := False;
-         Even := null;
+         Evt :=  Buffer (Next_Out);
+         Next_Out := (Next_Out mod Buffer_Capacity) + 1;
+         Count := Count - 1;
+         Has_Event := Count /= 0;
       end Wait_For_Event;
 
       ----------
@@ -142,9 +151,16 @@ package body Giza.GUI is
 
       procedure Emit (Evt : Event_Not_Null_Ref) is
       begin
-         --  TODO: make it a list of events...
-         Has_Event := True;
-         Even := Event_Ref (Evt);
+         if Count < Buffer_Capacity then
+            Buffer (Next_In) := Event_Ref (Evt);
+            Next_In := (Next_In mod Buffer_Capacity) + 1;
+            Count := Count + 1;
+            Has_Event := True;
+         else
+            --  For the moment, events are just discarded when the buffer is
+            --  full.
+            null;
+         end if;
       end Emit;
    end Event_Sync;
 
