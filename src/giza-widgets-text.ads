@@ -36,7 +36,9 @@ package Giza.Widgets.Text is
    procedure Set_Text (This : in out Gtext; Str : String);
 
 private
+   type String_Access is access all String;
+
    type Gtext is new Gframe with record
-      Str : access constant String := null;
+      Str : String_Access := null;
    end record;
 end Giza.Widgets.Text;

@@ -20,7 +20,11 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
+
 package body Giza.Widgets.Text is
+
+   procedure Free is new Ada.Unchecked_Deallocation (String, String_Access);
 
    ----------
    -- Draw --
@@ -31,6 +35,8 @@ package body Giza.Widgets.Text is
                    Ctx : in out Context'Class;
                    Force : Boolean := True)
    is
+      Margin_H : constant Dim := This.Get_Size.H / 30;
+      Margin_W : constant Dim := This.Get_Size.W / 30;
    begin
       if not This.Dirty and then not Force then
          return;
@@ -40,7 +46,9 @@ package body Giza.Widgets.Text is
 
       if This.Str /= null then
          Ctx.Set_Color (This.Foreground);
-         Ctx.Print_In_Rect (This.Str.all, ((0, 0), This.Get_Size));
+         Ctx.Print_In_Rect (This.Str.all,
+                            ((Margin_W, Margin_H),
+                             This.Get_Size - (Margin_W * 2, Margin_H * 2)));
       end if;
    end Draw;
 
@@ -50,6 +58,10 @@ package body Giza.Widgets.Text is
 
    procedure Set_Text (This : in out Gtext; Str : String) is
    begin
+      if This.Str /= null then
+         Free (This.Str);
+      end if;
+
       This.Str := new String'(Str);
    end Set_Text;
 

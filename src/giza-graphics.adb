@@ -762,6 +762,12 @@ package body Giza.Graphics is
       H, W : Integer;
       Ratio, Ratio_H, Ratio_W : Float;
    begin
+      if Str'Length = 0 then
+         return;
+      end if;
+
+      This.Set_Font_Size (1.0);
+
       Pt := Center (Box);
       This.Box (Str, Top, Bottom, Left, Right);
       H := Bottom - Top;
