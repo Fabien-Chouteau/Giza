@@ -623,6 +623,89 @@ package body Giza.Graphics is
       This.Set_Line_Width (Line_Width);
    end Fill_Arc;
 
+   -----------------
+   -- Copy_Bitmap --
+   -----------------
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap;
+      Pt     : Point_T)
+   is
+   begin
+      This.Set_Position (Pt);
+      for W in 1 .. Bmp.W loop
+         for H in 1 .. Bmp.H loop
+            This.Set_Color (Bmp.Data (H, W));
+            This.Set_Pixel (Pt + (W - 1, H - 1));
+         end loop;
+      end loop;
+   end Copy_Bitmap;
+
+   -----------------
+   -- Copy_Bitmap --
+   -----------------
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_1bit;
+      Pt     : Point_T)
+   is
+   begin
+      This.Set_Position (Pt);
+      for W in 1 .. Bmp.W loop
+         for H in 1 .. Bmp.H loop
+            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
+            This.Set_Pixel (Pt + (W - 1, H - 1));
+         end loop;
+      end loop;
+   end Copy_Bitmap;
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_2bits;
+      Pt     : Point_T)
+   is
+   begin
+      This.Set_Position (Pt);
+      for W in 1 .. Bmp.W loop
+         for H in 1 .. Bmp.H loop
+            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
+            This.Set_Pixel (Pt + (W - 1, H - 1));
+         end loop;
+      end loop;
+   end Copy_Bitmap;
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_4bits;
+      Pt     : Point_T)
+   is
+   begin
+      This.Set_Position (Pt);
+      for W in 1 .. Bmp.W loop
+         for H in 1 .. Bmp.H loop
+            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
+            This.Set_Pixel (Pt + (W - 1, H - 1));
+         end loop;
+      end loop;
+   end Copy_Bitmap;
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_8bits;
+      Pt     : Point_T)
+   is
+   begin
+      This.Set_Position (Pt);
+      for W in 1 .. Bmp.W loop
+         for H in 1 .. Bmp.H loop
+            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
+            This.Set_Pixel (Pt + (W - 1, H - 1));
+         end loop;
+      end loop;
+   end Copy_Bitmap;
+
    --------------
    -- Set_Font --
    --------------

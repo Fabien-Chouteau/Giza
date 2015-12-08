@@ -28,6 +28,50 @@ package Giza.Colors is
       R, G, B : RGB_Component := 0;
    end record;
 
+   type Bitmap_Data is array (Integer range <>, Integer range <>) of Color;
+   type Bitmap (W, H : Integer) is record
+      Data : Bitmap_Data (1 .. H, 1 .. W);
+   end record;
+
+   type Unsigned_1 is mod 2**1 with Size => 1;
+   type Unsigned_2 is mod 2**2 with Size => 2;
+   type Unsigned_4 is mod 2**4 with Size => 4;
+   type Unsigned_8 is mod 2**8 with Size => 8;
+
+   type Bitmap_Indexed_Data_1bit is array (Integer range <>, Integer range <>)
+     of Unsigned_1;
+   type Bitmap_Indexed_Data_2bits is array (Integer range <>, Integer range <>)
+     of Unsigned_2;
+   type Bitmap_Indexed_Data_4bits is array (Integer range <>, Integer range <>)
+     of Unsigned_4;
+   type Bitmap_Indexed_Data_8bits is array (Integer range <>, Integer range <>)
+     of Unsigned_8;
+
+   type Palette_1bit  is array (Unsigned_1) of Color;
+   type Palette_2bits is array (Unsigned_2) of Color;
+   type Palette_4bits is array (Unsigned_4) of Color;
+   type Palette_8bits is array (Unsigned_8) of Color;
+
+   type Bitmap_Indexed_1bit (W, H : Integer) is record
+      Palette : Palette_1bit;
+      Data : Bitmap_Indexed_Data_1bit (1 .. H, 1 .. W);
+   end record;
+
+   type Bitmap_Indexed_2bits (W, H : Integer) is record
+      Palette : Palette_2bits;
+      Data : Bitmap_Indexed_Data_2bits (1 .. H, 1 .. W);
+   end record;
+
+   type Bitmap_Indexed_4bits (W, H : Integer) is record
+      Palette : Palette_4bits;
+      Data : Bitmap_Indexed_Data_4bits (1 .. H, 1 .. W);
+   end record;
+
+   type Bitmap_Indexed_8bits (W, H : Integer) is record
+      Palette : Palette_8bits;
+      Data : Bitmap_Indexed_Data_8bits (1 .. H, 1 .. W);
+   end record;
+
    function Dark_Red            return Color is ((139, 000, 000));
    function Brown               return Color is ((165, 042, 042));
    function Firebrick           return Color is ((178, 034, 034));

@@ -150,6 +150,31 @@ package Giza.Graphics is
       Radius   : Dim;
       From, To : Float);
 
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_1bit;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_2bits;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_4bits;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Context;
+      Bmp    : Bitmap_Indexed_8bits;
+      Pt     : Point_T);
+
    --  Fonts
    procedure Set_Font (This : in out Context; Font : Font_Access);
    function Font (This : Context) return Font_Access;
