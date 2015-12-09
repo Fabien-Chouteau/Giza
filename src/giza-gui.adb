@@ -195,6 +195,8 @@ package body Giza.GUI is
                   Event_Handled :=
                     Stack.Win.On_Position_Event (P_Evt, P_Evt.Pos);
                end;
+            elsif Event.all in Redraw_Event'Class then
+               Event_Handled := True;
             else
                Event_Handled :=
                  Stack.Win.On_Event (Event_Not_Null_Ref (Event));

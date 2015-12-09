@@ -30,6 +30,9 @@ package Giza.Events is
 
    --  Built-in events
 
+   type Redraw_Event is new Event with null record;
+   type Redraw_Event_Ref is not null access constant Redraw_Event'Class;
+
    type Position_Event is new Event with record
       Pos   : Point_T := (0, 0);
    end record;
