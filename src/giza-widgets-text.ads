@@ -34,6 +34,7 @@ package Giza.Widgets.Text is
                    Force : Boolean := True);
 
    procedure Set_Text (This : in out Gtext; Str : String);
+   function Text (This : Gtext) return String;
 
 private
    type String_Access is access all String;

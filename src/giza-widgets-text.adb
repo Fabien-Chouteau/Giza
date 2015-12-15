@@ -63,6 +63,20 @@ package body Giza.Widgets.Text is
       end if;
 
       This.Str := new String'(Str);
+      This.Set_Dirty;
    end Set_Text;
+
+   ----------
+   -- Text --
+   ----------
+
+   function Text (This : Gtext) return String is
+   begin
+      if This.Str /= null then
+         return This.Str.all;
+      else
+         return "";
+      end if;
+   end Text;
 
 end Giza.Widgets.Text;
