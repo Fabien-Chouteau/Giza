@@ -75,6 +75,7 @@ package body Giza.GUI is
       Tmp : Wrapper_Ref := Stack;
    begin
       if Tmp /= null then
+         Tmp.Win.On_Hidden;
          Stack := Tmp.Next;
          Free (Tmp);
 
