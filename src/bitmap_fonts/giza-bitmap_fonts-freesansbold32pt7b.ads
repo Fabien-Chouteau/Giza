@@ -1,5 +1,8 @@
 package Giza.Bitmap_Fonts.FreeSansBold32pt7b is
 
+   Font : constant Font_Ref;
+private
+
    FreeSansBold32pt7bBitmaps : aliased constant Font_Bitmap := (
   16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#,
   16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#, 16#FF#,
@@ -1735,10 +1738,11 @@ package Giza.Bitmap_Fonts.FreeSansBold32pt7b is
   (14554, 17, 59, 25, 5, -45),   -- 0x7D '}'
   (14680, 29, 11, 32, 1, -19)); -- 0x7E '~'
 
-   Font : Bitmap_Font :=
+   Font_D : aliased constant Bitmap_Font :=
      (FreeSansBold32pt7bBitmaps'Access,
       FreeSansBold32pt7bGlyphs'Access,
       16#20#,
       16#7E#,
       75);
+      Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSansBold32pt7b;

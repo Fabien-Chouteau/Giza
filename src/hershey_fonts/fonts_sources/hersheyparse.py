@@ -102,6 +102,7 @@ def flatten(list_of_list):
 
 def glyph_to_ada(glyph):
     flat = flatten(glyph['lines'])
+    flat = map(lambda x: str(x), flat)
     if len(flat) <= 1:
         flat = []
     glyph_str = "   Glyph_%s : aliased constant Glyph :=\n" \
@@ -119,7 +120,7 @@ def glyph_to_ada(glyph):
     if len(flat) == 0:
         glyph_str += '      Vects => (others => (Raise_Pen)));'
     else:
-        glyph_str += '      Vects => (%s));' % str(flat)[1:-1]
+        glyph_str += '      Vects => (%s)));' % ",\n".join(flat)[:-1]
     return glyph_str + '\n'
 
 ada_glyphs = ''
@@ -127,13 +128,13 @@ for glyph in hershey:
     ada_glyphs += glyph_to_ada(glyph)
 
 pck_name = os.path.basename(sys.argv[1])[:-4]
-pck_name = 'Hershey_Fonts.%s' % string.capwords(pck_name)
+pck_name = 'Giza.Hershey_Fonts.%s' % string.capwords(pck_name)
 
 pck = 'package %s is\n' % pck_name
-pck += '   Font : constant Font_Access;\n'
+pck += '   Font : constant Font_Ref;\n'
 pck += 'private\n'
 pck += ada_glyphs + '\n'
-pck += '   Font_D : aliased constant Font_Def :=\n'
+pck += '   Font_D : aliased constant Hershey_Font :=\n'
 pck += '     (Number_Of_Glyphs => %d,\n' % len(hershey)
 pck += '      Glyphs =>\n'
 pck += '        (\n'
@@ -141,7 +142,7 @@ for glyph in hershey[:-1]:
     pck += '         Glyph_%s\'Access,\n' % glyph['charcode']
 pck += '         Glyph_%s\'Access\n' % hershey[-1]['charcode']
 pck += '        ));\n'
-pck += '   Font : constant Font_Access := Font_D\'access;\n'
+pck += '   Font : constant Font_Ref := Font_D\'Access;\n'
 pck += 'end %s;' % pck_name
 
 print pck

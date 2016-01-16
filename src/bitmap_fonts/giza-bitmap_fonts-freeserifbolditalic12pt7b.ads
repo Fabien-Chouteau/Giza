@@ -1,5 +1,8 @@
 package Giza.Bitmap_Fonts.FreeSerifBoldItalic12pt7b is
 
+   Font : constant Font_Ref;
+private
+
    FreeSerifBoldItalic12pt7bBitmaps : aliased constant Font_Bitmap := (
   16#07#, 16#07#, 16#07#, 16#0F#, 16#0E#, 16#0E#, 16#0C#, 16#0C#, 16#08#,
   16#18#, 16#10#, 16#00#, 16#00#, 16#60#, 16#F0#, 16#F0#, 16#60#, 16#61#,
@@ -348,10 +351,11 @@ package Giza.Bitmap_Fonts.FreeSerifBoldItalic12pt7b is
   (2205, 10, 21, 8, -3, -16),   -- 0x7D '}'
   (2232, 11, 4, 14, 1, -7)); -- 0x7E '~'
 
-   Font : Bitmap_Font :=
+   Font_D : aliased constant Bitmap_Font :=
      (FreeSerifBoldItalic12pt7bBitmaps'Access,
       FreeSerifBoldItalic12pt7bGlyphs'Access,
       16#20#,
       16#7E#,
       28);
+      Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSerifBoldItalic12pt7b;

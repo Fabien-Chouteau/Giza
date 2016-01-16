@@ -1,5 +1,8 @@
 package Giza.Bitmap_Fonts.FreeMonoBoldOblique12pt7b is
 
+   Font : constant Font_Ref;
+private
+
    FreeMonoBoldOblique12pt7bBitmaps : aliased constant Font_Bitmap := (
   16#1C#, 16#F3#, 16#CE#, 16#38#, 16#E7#, 16#1C#, 16#61#, 16#86#, 16#00#,
   16#63#, 16#8C#, 16#00#, 16#E7#, 16#E7#, 16#E6#, 16#C6#, 16#C6#, 16#84#,
@@ -318,10 +321,11 @@ package Giza.Bitmap_Fonts.FreeMonoBoldOblique12pt7b is
   (1938, 9, 19, 14, 3, -14),   -- 0x7D '}'
   (1960, 12, 4, 14, 3, -7)); -- 0x7E '~'
 
-   Font : Bitmap_Font :=
+   Font_D : aliased constant Bitmap_Font :=
      (FreeMonoBoldOblique12pt7bBitmaps'Access,
       FreeMonoBoldOblique12pt7bGlyphs'Access,
       16#20#,
       16#7E#,
       24);
+      Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeMonoBoldOblique12pt7b;
