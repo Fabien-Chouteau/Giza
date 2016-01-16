@@ -191,7 +191,7 @@ package body Giza.Widgets.Scrolling is
    procedure Go_Up (This : in out Gscroll) is
    begin
       if This.Child /= null then
-         This.Child_Pos := This.Child_Pos + (0, 5);
+         This.Child_Pos := This.Child_Pos + Size_T'(0, 5);
          if This.Child_Pos.Y > 0 then
             This.Child_Pos.Y := 0;
          end if;
@@ -219,7 +219,7 @@ package body Giza.Widgets.Scrolling is
    procedure Go_Left (This : in out Gscroll) is
    begin
       if This.Child /= null then
-         This.Child_Pos := This.Child_Pos + (5, 0);
+         This.Child_Pos := This.Child_Pos + Size_T'(5, 0);
          if This.Child_Pos.X > 0 then
             This.Child_Pos.X := 0;
          end if;

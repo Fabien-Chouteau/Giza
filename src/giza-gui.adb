@@ -180,6 +180,7 @@ package body Giza.GUI is
    procedure Event_Loop is
       Event : Event_Ref;
       Event_Handled : Boolean;
+      Swap : Boolean;
    begin
       loop
          Event_Sync.Wait_For_Event (Event);
@@ -209,7 +210,13 @@ package body Giza.GUI is
            and then
             Event_Handled
          then
-            Stack.Win.Draw (Drawing_Context.all, False);
+            if Drawing_Backend /= null then
+               Swap := Drawing_Backend.Has_Double_Buffring;
+               Stack.Win.Draw (Drawing_Context.all, Force => Swap);
+               if Swap then
+                  Drawing_Backend.Swap_Buffers;
+               end if;
+            end if;
          end if;
       end loop;
    end Event_Loop;

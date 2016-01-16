@@ -51,9 +51,9 @@ package body Giza.Graphics is
 
    function Intersection (A, B : Rect_T) return Rect_T is
       P1 : constant Point_T := A.Org;
-      P2 : constant Point_T := A.Org + (A.Size.W, A.Size.H);
+      P2 : constant Point_T := A.Org + A.Size;
       P3 : constant Point_T := B.Org;
-      P4 : constant Point_T := B.Org + (B.Size.W, B.Size.H);
+      P4 : constant Point_T := B.Org + B.Size;
 
       Ret1, Ret2 : Point_T;
       H, W : Natural;
@@ -179,36 +179,82 @@ package body Giza.Graphics is
       return Res;
    end Scale_Matrix;
 
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel (This : in out Backend; Pt : Point_T) is
-   begin
-      --  Default backend, doing nothing...
-      null;
-   end Set_Pixel;
-
-   ---------------
-   -- Set_Colorr --
-   ---------------
-
-   procedure Set_Color (This : in out Backend; C : Color) is
-   begin
-      --  Default backend, doing nothing...
-      null;
-   end Set_Color;
-
    ----------
-   -- Size --
+   -- Line --
    ----------
 
-   function Size (This : Backend) return Size_T is
-      pragma Unreferenced (This);
+   procedure Line (This : in out Backend; Start, Stop : Point_T) is
+      DX     : constant Float := abs Float (Stop.X - Start.X);
+      DY     : constant Float := abs Float (Stop.Y - Start.Y);
+      Err    : Float;
+      X      : Dim        := Start.X;
+      Y      : Dim        := Start.Y;
+      Step_X : Integer        := 1;
+      Step_Y : Integer        := 1;
+
    begin
-      --  Default backend, doing nothing...
-      return (0, 0);
-   end Size;
+      if Start.X > Stop.X then
+         Step_X := -1;
+      end if;
+
+      if Start.Y > Stop.Y then
+         Step_Y := -1;
+      end if;
+
+      if DX > DY then
+         Err := DX / 2.0;
+         while X /= Stop.X loop
+            Set_Pixel (Backend'Class (This), (X, Y));
+            Err := Err - DY;
+            if Err < 0.0 then
+               Y := Y + Step_Y;
+               Err := Err + DX;
+            end if;
+            X := X + Step_X;
+         end loop;
+      else
+         Err := DY / 2.0;
+         while Y /= Stop.Y loop
+            Set_Pixel (Backend'Class (This), (X, Y));
+            Err := Err - DX;
+            if Err < 0.0 then
+               X := X + Step_X;
+               Err := Err + DY;
+            end if;
+            Y := Y + Step_Y;
+         end loop;
+      end if;
+
+      Set_Pixel (Backend'Class (This), (X, Y));
+   end Line;
+
+   ---------------
+   -- Rectangle --
+   ---------------
+
+   procedure Rectangle (This : in out Backend; Start, Stop : Point_T) is
+   begin
+      This.Line (Start, (Stop.X, Start.Y));
+      This.Line ((Stop.X, Start.Y), Stop);
+      This.Line (Stop, (Start.X, Stop.Y));
+      This.Line ((Start.X, Stop.Y), Start);
+   end Rectangle;
+
+   --------------------
+   -- Fill_Rectangle --
+   --------------------
+
+   procedure Fill_Rectangle (This : in out Backend; Start, Stop : Point_T) is
+      P1 : Point_T := Start;
+      P2 : Point_T := (Start.X, Stop.Y);
+   begin
+      loop
+         This.Line (P2, P1);
+         exit when P2.X = Stop.X;
+         P1.X := P1.X + 1;
+         P2.X := P2.X + 1;
+      end loop;
+   end Fill_Rectangle;
 
    ---------------
    -- Transform --
@@ -418,48 +464,12 @@ package body Giza.Graphics is
    ----------
 
    procedure Line (This : in out Context; Start, Stop : Point_T) is
-      DX     : constant Float := abs Float (Stop.X - Start.X);
-      DY     : constant Float := abs Float (Stop.Y - Start.Y);
-      Err    : Float;
-      X      : Dim        := Start.X;
-      Y      : Dim        := Start.Y;
-      Step_X : Integer        := 1;
-      Step_Y : Integer        := 1;
-
+      Start_2 : constant Point_T := Transform (This, Start);
+      Stop_2 : constant Point_T := Transform (This, Stop);
    begin
-      if Start.X > Stop.X then
-         Step_X := -1;
+      if This.Bck /= null then
+         This.Bck.Line (Start_2, Stop_2);
       end if;
-
-      if Start.Y > Stop.Y then
-         Step_Y := -1;
-      end if;
-
-      if DX > DY then
-         Err := DX / 2.0;
-         while X /= Stop.X loop
-            This.Set_Pixel ((X, Y));
-            Err := Err - DY;
-            if Err < 0.0 then
-               Y := Y + Step_Y;
-               Err := Err + DX;
-            end if;
-            X := X + Step_X;
-         end loop;
-      else
-         Err := DY / 2.0;
-         while Y /= Stop.Y loop
-            This.Set_Pixel ((X, Y));
-            Err := Err - DX;
-            if Err < 0.0 then
-               X := X + Step_X;
-               Err := Err + DY;
-            end if;
-            Y := Y + Step_Y;
-         end loop;
-      end if;
-
-      This.Set_Pixel ((X, Y));
    end Line;
 
    ---------------
@@ -467,14 +477,12 @@ package body Giza.Graphics is
    ---------------
 
    procedure Rectangle (This : in out Context; Rect : Rect_T) is
-      Start : constant Point_T := Rect.Org;
-      Stop : constant Point_T  := (Rect.Org.X + Rect.Size.W,
-                                   Rect.Org.Y + Rect.Size.H);
+      Start : constant Point_T := Transform (This, Rect.Org);
+      Stop  : constant Point_T := Transform (This, Rect.Org + Rect.Size);
    begin
-      This.Line (Start, (Stop.X, Start.Y));
-      This.Line ((Stop.X, Start.Y), Stop);
-      This.Line (Stop, (Start.X, Stop.Y));
-      This.Line ((Start.X, Stop.Y), Start);
+      if This.Bck /= null then
+         This.Bck.Rectangle (Start, Stop);
+      end if;
    end Rectangle;
 
    --------------------
@@ -482,18 +490,12 @@ package body Giza.Graphics is
    --------------------
 
    procedure Fill_Rectangle (This : in out Context; Rect : Rect_T) is
-      Start : constant Point_T := Rect.Org;
-      Stop  : constant Point_T  := (Rect.Org.X + Rect.Size.W,
-                                    Rect.Org.Y + Rect.Size.H);
-      P1 : Point_T := Start;
-      P2 : Point_T := (Start.X, Stop.Y);
+      Start : constant Point_T := Transform (This, Rect.Org);
+      Stop  : constant Point_T := Transform (This, Rect.Org + Rect.Size);
    begin
-      loop
-         This.Line (P2, P1);
-         exit when P2.X = Stop.X;
-         P1.X := P1.X + 1;
-         P2.X := P2.X + 1;
-      end loop;
+      if This.Bck /= null then
+         This.Bck.Fill_Rectangle (Start, Stop);
+      end if;
    end Fill_Rectangle;
 
    ------------------
@@ -610,13 +612,14 @@ package body Giza.Graphics is
       --  Until we have a real fill arc algorithm...
       Angle := From;
       while Angle < To loop
-         This.Line (Center, Center + (Dim (Cos (Angle) * Float (Radius)),
-                    Dim (-Sin (Angle) * Float (Radius))));
+         This.Line (Center, Center +
+                      Size_T'(Dim (Cos (Angle) * Float (Radius)),
+                        Dim (-Sin (Angle) * Float (Radius))));
 
          Angle := Angle + 0.5;
       end loop;
 
-      This.Line (Center, Center + (Dim (Cos (To) * Float (Radius)),
+      This.Line (Center, Center + Size_T'(Dim (Cos (To) * Float (Radius)),
                  Dim (-Sin (To) * Float (Radius))));
 
       --  Restore line width
@@ -637,7 +640,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Data (H, W));
-            This.Set_Pixel (Pt + (W - 1, H - 1));
+            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -656,7 +659,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + (W - 1, H - 1));
+            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -671,7 +674,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + (W - 1, H - 1));
+            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -686,7 +689,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + (W - 1, H - 1));
+            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -701,7 +704,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + (W - 1, H - 1));
+            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;

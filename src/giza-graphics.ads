@@ -58,6 +58,11 @@ package Giza.Graphics is
       Size : Size_T;
    end record;
 
+   function "+" (A : Point_T; B : Size_T) return Point_T is
+     (A.X + B.W, A.Y + B.H);
+   function "+" (A : Size_T; B : Point_T) return Point_T is
+     (A.W + B.X, A.H + B.Y);
+
    function To_String (Rect : Rect_T) return String is
      ("(Org:" & To_String (Rect.Org) &
         ", Size:" & To_String (Rect.Size) & ")");
@@ -84,12 +89,18 @@ package Giza.Graphics is
    --  Backend --
    --------------
 
-   type Backend is tagged private;
+   type Backend is abstract tagged private;
    type Backend_Ref is access all Backend'Class;
 
-   procedure Set_Pixel (This : in out Backend; Pt : Point_T);
-   procedure Set_Color (This : in out Backend; C : Color);
-   function Size (This : Backend) return Size_T;
+   procedure Set_Pixel (This : in out Backend; Pt : Point_T) is abstract;
+   procedure Set_Color (This : in out Backend; C : Color) is abstract;
+   function Size (This : Backend) return Size_T is abstract;
+   function Has_Double_Buffring (This : Backend) return Boolean is abstract;
+   procedure Swap_Buffers (This : in out Backend) is abstract;
+
+   procedure Line (This : in out Backend; Start, Stop : Point_T);
+   procedure Rectangle (This : in out Backend; Start, Stop : Point_T);
+   procedure Fill_Rectangle (This : in out Backend; Start, Stop : Point_T);
 
    -------------
    -- Context --
@@ -190,7 +201,7 @@ package Giza.Graphics is
                   Top, Bottom, Left, Right : out Integer);
 private
 
-   type Backend is tagged null record;
+   type Backend is abstract tagged null record;
 
    type State;
    type State_Ref is access all State;
