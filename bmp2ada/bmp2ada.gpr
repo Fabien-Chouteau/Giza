@@ -1,0 +1,30 @@
+
+project BMP2ADA is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("main.adb");
+
+   type Build_Type is ("Debug", "Release");
+   Build : Build_Type := external ("Build", "Debug");
+
+   Build_Switches := ();
+   case Build is
+      when "Debug" =>
+         Build_Switches := ("-g", "-O0");
+      when "Release" =>
+         Build_Switches := ("-O3");
+   end case;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnat12", "-gnatwa", "-gnatwe",
+                                        "-gnatyg", "-gnaty-d") & Build_Switches;
+   end Compiler;
+
+   package Builder is
+      for Executable ("main.adb") use "bmp2ada";
+   end Builder;
+
+end BMP2ADA;
+
