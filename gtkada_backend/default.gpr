@@ -27,10 +27,5 @@ project Default is
       for Default_Switches ("ada") use ("-gnat12", "-gnatwa", "-gnatwe", "-gnatyg", "-gnaty-d", "-gnaty0");
    end Compiler;
 
-   package Ide is
-      for Program_Host use "192.168.0.1:2345";
-      for Communication_Protocol use "remote";
-   end Ide;
-
 end Default;
 
