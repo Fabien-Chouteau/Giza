@@ -1,18 +1,35 @@
-package body Keyboard_Windows is
+-------------------------------------------------------------------------------
+--                                                                           --
+--                                   Giza                                    --
+--                                                                           --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
+--                                                                           --
+--                                                                           --
+--    Giza is free software: you can redistribute it and/or modify it        --
+--    under the terms of the GNU General Public License as published by      --
+--    the Free Software Foundation, either version 3 of the License, or      --
+--    (at your option) any later version.                                    --
+--                                                                           --
+--    Giza is distributed in the hope that it will be useful, but WITHOUT    --
+--    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY     --
+--    or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public        --
+--    License for more details.                                              --
+--                                                                           --
+--    You should have received a copy of the GNU General Public License      --
+--    along with Giza. If not, see <http://www.gnu.org/licenses/>.           --
+--                                                                           --
+-------------------------------------------------------------------------------
 
-   procedure Set_Keymap (This : in out Keyboard_Window;
+package body Giza.Widgets.Keyboards is
+
+   procedure Set_Keymap (This : in out GKeyboard;
                          Special : Boolean := False;
                          Caps    : Boolean := False);
-
-   ----------------
-   -- Set_keyamp --
-   ----------------
-
    ----------------
    -- Set_Keymap --
    ----------------
 
-   procedure Set_Keymap (This : in out Keyboard_Window;
+   procedure Set_Keymap (This : in out GKeyboard;
                          Special : Boolean := False;
                          Caps    : Boolean := False) is
    begin
@@ -152,8 +169,8 @@ package body Keyboard_Windows is
    -- On_Init --
    -------------
 
-   overriding procedure On_Init
-     (This : in out Keyboard_Window)
+   procedure On_Init
+     (This : in out GKeyboard)
    is
       Win_Size : constant Size_T := This.Get_Size;
       Keyboard_Size : constant Size_T := (Win_Size.W, Win_Size.H / 2);
@@ -191,35 +208,28 @@ package body Keyboard_Windows is
       This.Add_Child (This.Text_Display'Unchecked_Access, (0, 0));
    end On_Init;
 
-   ------------------
-   -- On_Displayed --
-   ------------------
+   ----------
+   -- Draw --
+   ----------
 
-   overriding procedure On_Displayed
-     (This : in out Keyboard_Window)
-   is
-      pragma Unreferenced (This);
-   begin
-      null;
-   end On_Displayed;
-
-   ---------------
-   -- On_Hidden --
-   ---------------
-
-   overriding procedure On_Hidden
-     (This : in out Keyboard_Window)
+   overriding procedure Draw (This : in out GKeyboard;
+                              Ctx : in out Context'Class;
+                              Force : Boolean := True)
    is
    begin
-      null;
-   end On_Hidden;
+      if not This.Initialised then
+         This.On_Init;
+         This.Initialised := True;
+      end if;
+      Draw (Parent (This), Ctx, Force);
+   end Draw;
 
    -----------------------
    -- On_Position_Event --
    -----------------------
 
    overriding function On_Position_Event
-     (This  : in out Keyboard_Window;
+     (This  : in out GKeyboard;
       Evt   : Position_Event_Ref;
       Pos   : Point_T)
       return Boolean
@@ -230,12 +240,16 @@ package body Keyboard_Windows is
             if This.Buttons (Button_Index).Active then
                case Button_Index is
                when Btn_1 .. Btn_P | Btn_A .. Btn_L | Btn_Z .. Btn_M =>
-                  This.Text_Display.Set_Text
-                    (This.Text_Display.Text &
-                       This.Buttons (Button_Index).Text);
-                  when Btn_Space =>
+                  if This.Text_Display.Text'Length < This.Max_Text_Len then
                      This.Text_Display.Set_Text
-                       (This.Text_Display.Text & " ");
+                       (This.Text_Display.Text &
+                          This.Buttons (Button_Index).Text);
+                  end if;
+                  when Btn_Space =>
+                     if This.Text_Display.Text'Length < This.Max_Text_Len then
+                        This.Text_Display.Set_Text
+                          (This.Text_Display.Text & " ");
+                     end if;
                   when Btn_Del =>
                      declare
                         Str : constant String := This.Text_Display.Text;
@@ -268,18 +282,18 @@ package body Keyboard_Windows is
    -- Set_Max_Entry_Length --
    --------------------------
 
-   procedure Set_Max_Entry_Length (This : in out Keyboard_Window) is
+   procedure Set_Max_Entry_Length (This : in out GKeyboard; Len : Natural) is
    begin
-      This.Max_Text_Len := 10;
+      This.Max_Text_Len := Len;
    end Set_Max_Entry_Length;
 
    --------------
    -- Get_Text --
    --------------
 
-   function Get_Text (This : Keyboard_Window) return String is
+   function Get_Text (This : GKeyboard) return String is
    begin
       return This.Text_Display.Text;
    end Get_Text;
 
-end Keyboard_Windows;
+end Giza.Widgets.Keyboards;

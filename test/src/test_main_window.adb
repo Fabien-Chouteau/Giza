@@ -6,7 +6,7 @@ with Test_Button_Window; use Test_Button_Window;
 with Test_Gnumber_Window; use Test_Gnumber_Window;
 with Test_Graphic_Bounds; use Test_Graphic_Bounds;
 with Test_Fonts;
-with Keyboard_Windows;
+with Test_Keyboard_Window;
 
 package body Test_Main_Window is
 
@@ -40,7 +40,7 @@ package body Test_Main_Window is
 
       This.Sub_Windows (6).Button := new Gbutton;
       This.Sub_Windows (6).Button.Set_Text ("Keyboard");
-      This.Sub_Windows (6).Win := new Keyboard_Windows.Keyboard_Window;
+      This.Sub_Windows (6).Win := new Test_Keyboard_Window.Keyboard_Window;
 
       This.Sub_Windows (7).Button := new Gbutton;
       This.Sub_Windows (7).Button.Set_Text ("Fonts");
@@ -54,7 +54,9 @@ package body Test_Main_Window is
          This.Tiles.Set_Child (Index,
                                Widget_Ref (This.Sub_Windows (Index).Button));
       end loop;
-      Giza.GUI.Push (This.Sub_Windows (7).Win);
+
+      --  Uncomment to directly open a specific test window
+      --  Giza.GUI.Push (This.Sub_Windows (7).Win);
    end On_Init;
 
    ------------------
