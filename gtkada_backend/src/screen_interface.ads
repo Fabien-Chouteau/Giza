@@ -4,7 +4,13 @@ with Giza.Colors;
 
 package Screen_Interface is
 
-   type GTKada_Backend is new Backend with null record;
+   type GTKada_Backend is new Backend with record
+      Enabled : Boolean := True;
+   end record;
+
+   overriding
+   function Has_Double_Buffring (This : GTKada_Backend) return Boolean is
+     (False);
 
    overriding
    procedure Set_Pixel (This : in out GTKada_Backend;
@@ -17,6 +23,9 @@ package Screen_Interface is
 
    overriding
    function Size (This : GTKada_Backend) return Size_T;
+
+   procedure Enable (This : in out GTKada_Backend);
+   procedure Disable (This : in out GTKada_Backend);
 
    function Create return access GTKada_Backend is (new GTKada_Backend);
 

@@ -223,8 +223,6 @@ private
    Font_D : aliased constant Bitmap_Font :=
      (FreeSerifBoldItalic8pt7bBitmaps'Access,
       FreeSerifBoldItalic8pt7bGlyphs'Access,
-      16#20#,
-      16#7E#,
       19);
       Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSerifBoldItalic8pt7b;

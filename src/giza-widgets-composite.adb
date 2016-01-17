@@ -21,7 +21,6 @@
 -------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
-with Ada.Text_IO; use Ada.Text_IO;
 
 package body Giza.Widgets.Composite is
 
@@ -132,7 +131,6 @@ package body Giza.Widgets.Composite is
           Pos.Y + Child.Size.H not in 0 .. This.Get_Size.H
       then
          --  Doesn't fit
-         Put_Line ("Widget doesn't fit in composite");
          return;
       end if;
 

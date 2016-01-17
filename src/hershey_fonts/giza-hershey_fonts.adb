@@ -18,22 +18,28 @@ package body Giza.Hershey_Fonts is
    overriding
    procedure Glyph_Box (This : Hershey_Font;
                         C    : Character;
-                        Top, Bottom, Left, Right : out Integer)
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer)
    is
       Index : constant Glyph_Index := Char_To_Glyph_Index (C);
    begin
       if Index not in This.Glyphs'Range then
-         Top := 0;
-         Bottom := 0;
-         Left := 0;
-         Right := 0;
+         Width := 0;
+         Height := 0;
+         X_Offset := 0;
+         Y_Offset := 0;
+         X_Advance := 0;
          return;
       end if;
 
-      Top := This.Glyphs (Index).Top;
-      Bottom := This.Glyphs (Index).Bottom;
-      Left := This.Glyphs (Index).Left;
-      Right := This.Glyphs (Index).Right;
+      Width := Integer (This.Glyphs (Index).Right - This.Glyphs (Index).Left);
+      Height := Integer (This.Glyphs (Index).Bottom - This.Glyphs (Index).Top);
+--        X_Advance := Integer (This.Glyphs (Index).Right);
+      X_Advance := Width;
+--        X_Offset := Integer (This.Glyphs (Index).Left);
+      X_Offset := 0;
+      Y_Offset := Integer (This.Glyphs (Index).Top);
+
    end Glyph_Box;
 
    -----------
@@ -61,26 +67,29 @@ package body Giza.Hershey_Fonts is
       Index : constant Glyph_Index := Char_To_Glyph_Index (C);
       Last : Vect := Raise_Pen;
       G : Glyph_Access := Empty_Glyph'Access;
-      Center : Point_T;
+      Org : constant Point_T := Ctx.Position;
+      Offset : Point_T;
    begin
       if Index not in This.Glyphs'Range then
          return;
       end if;
 
       G := This.Glyphs (Index);
-      Center := (Ctx.Position.X - G.Left, Ctx.Position.Y);
 
+      Offset := Org - Point_T'(Integer (G.Left), 0);
       for Vect of G.Vects loop
          if Vect /= Raise_Pen then
             if Last /= Raise_Pen then
-               Ctx.Line_To ((Center.X + Vect.X, Center.Y + Vect.Y));
+               Ctx.Line_To (Offset +
+                              Point_T'(Integer (Vect.X), Integer (Vect.Y)));
             else
-               Ctx.Move_To ((Center.X + Vect.X, Center.Y + Vect.Y));
+               Ctx.Move_To (Offset +
+                              Point_T'(Integer (Vect.X), Integer (Vect.Y)));
             end if;
          end if;
          Last := Vect;
       end loop;
-      Ctx.Move_To ((Center.X + G.Right, Center.Y));
+      Ctx.Move_To ((Org.X + Integer (G.Right) - Integer (G.Left), Org.Y));
    end Print_Glyph;
 
    -------------------

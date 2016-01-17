@@ -49,7 +49,7 @@ package body Screen_Interface is
       procedure Draw (Cr : Cairo_Context);
       procedure Initialize;
    private
-      Buffer : aliased ARGB32_Array (0 .. (Width_Size * Height_Size) -1);
+      Buffer : aliased ARGB32_Array (0 .. (Width_Size * Height_Size) - 1);
       Surface : Cairo_Surface;
    end Protected_Interface;
 
@@ -344,9 +344,8 @@ package body Screen_Interface is
 
    procedure Set_Pixel (This : in out GTKada_Backend; Pt : Point_T)
    is
-      pragma Unreferenced (This);
    begin
-      if Pt.X in Width and then Pt.Y in Height then
+      if This.Enabled and then Pt.X in Width and then Pt.Y in Height then
          Set_Pixel ((Pt.X, Pt.Y), Current_Color);
       end if;
    end Set_Pixel;
@@ -374,5 +373,23 @@ package body Screen_Interface is
    begin
       return (Screen_Parameters.Width'Last, Screen_Parameters.Height'Last);
    end Size;
+
+   ------------
+   -- Enable --
+   ------------
+
+   procedure Enable (This : in out GTKada_Backend) is
+   begin
+      This.Enabled := True;
+   end Enable;
+
+   -------------
+   -- Disable --
+   -------------
+
+   procedure Disable (This : in out GTKada_Backend) is
+   begin
+      This.Enabled := False;
+   end Disable;
 
 end Screen_Interface;

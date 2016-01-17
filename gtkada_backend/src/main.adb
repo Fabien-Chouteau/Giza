@@ -3,14 +3,16 @@ with Ada.Real_Time; use Ada.Real_Time;
 with Timer_Callback; use Timer_Callback;
 with Screen_Interface; use Screen_Interface;
 with Giza.GUI; use Giza.GUI;
-with Hershey_Fonts.Rowmand;
+--  with Hershey_Fonts.Rowmand;
+with Giza.Bitmap_Fonts.FreeSerifItalic12pt7b;
 
 procedure Main is
 begin
 
    Screen_Interface.Initialize;
 
-   My_Context.Set_Font (Hershey_Fonts.Rowmand.Font);
+   --  My_Context.Set_Font (Hershey_Fonts.Rowmand.Font);
+   My_Context.Set_Font (Giza.Bitmap_Fonts.FreeSerifItalic12pt7b.Font);
    Giza.GUI.Set_Context (Timer_Callback.My_Context'Access);
    Giza.GUI.Set_Backend (Timer_Callback.My_Backend'Access);
 
@@ -36,7 +38,7 @@ begin
 --     Main_W.Add_Child (My_Button'Access, (0, 50));
 --     Main_W.Add_Child (My_Toggle'Access, (50, 0));
 --     Push (Main_W);
-   Push (ECW'Access);
+   Push (Main_W'Access);
 
    Set_Timer (Timer_Callback.My_Timer'Access, Clock + Seconds (2));
 

@@ -1084,8 +1084,6 @@ private
    Font_D : aliased constant Bitmap_Font :=
      (FreeSansOblique24pt7bBitmaps'Access,
       FreeSansOblique24pt7bGlyphs'Access,
-      16#20#,
-      16#7E#,
       56);
       Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSansOblique24pt7b;

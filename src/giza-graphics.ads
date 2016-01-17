@@ -20,7 +20,6 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Hershey_Fonts; use Hershey_Fonts;
 with Giza.Colors; use Giza.Colors;
 
 -------------------
@@ -96,7 +95,7 @@ package Giza.Graphics is
    procedure Set_Color (This : in out Backend; C : Color) is abstract;
    function Size (This : Backend) return Size_T is abstract;
    function Has_Double_Buffring (This : Backend) return Boolean is abstract;
-   procedure Swap_Buffers (This : in out Backend) is abstract;
+   procedure Swap_Buffers (This : in out Backend) is null;
 
    procedure Line (This : in out Backend; Start, Stop : Point_T);
    procedure Rectangle (This : in out Backend; Start, Stop : Point_T);
@@ -186,9 +185,20 @@ package Giza.Graphics is
       Bmp    : Bitmap_Indexed_8bits;
       Pt     : Point_T);
 
-   --  Fonts
-   procedure Set_Font (This : in out Context; Font : Font_Access);
-   function Font (This : Context) return Font_Access;
+   type Font is interface;
+   type Font_Ref is access constant Font'class;
+
+   procedure Glyph_Box (This : Font;
+                        C    : Character;
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer) is abstract;
+
+   procedure Print_Glyph (This : Font;
+                          Ctx  : in out Context'Class;
+                          C    : Character) is abstract;
+
+   procedure Set_Font (This : in out Context; Font : Font_Ref);
+   function Get_Font (This : Context) return Font_Ref;
    procedure Set_Font_Size (This : in out Context; Size : Float);
    function Font_Size (This : Context) return Float;
    procedure Set_Font_Spacing (This : in out Context; Spacing : Dim);
@@ -199,6 +209,7 @@ package Giza.Graphics is
    procedure Box (This : in out Context;
                   Str : String;
                   Top, Bottom, Left, Right : out Integer);
+
 private
 
    type Backend is abstract tagged null record;
@@ -210,7 +221,7 @@ private
       Bounds         : Rect_T;
       Pos            : Point_T;
       Line_Width     : Positive;
-      Font           : Font_Access := Empty_Font'Access;
+      Font           : Font_Ref := null;
       Font_Size      : Float := 1.0;
       Font_Spacing   : Dim := 1;
       Transform      : HC_Matrix := Id;

@@ -4,19 +4,25 @@ package body Giza.Bitmap_Fonts is
    overriding
    procedure Glyph_Box (This : Bitmap_Font;
                         C    : Character;
-                        Top, Bottom, Left, Right : out Integer) is
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer)
+   is
       Index : constant Integer := Character'Pos (C);
    begin
-      if Index not in Integer (This.First) .. Integer (This.Last) then
-         Top := 0;
-         Bottom := 0;
-         Left := 0;
-         Right := 0;
+      if Index not in This.Glyphs'Range then
+         Width := 0;
+         Height := 0;
+         X_Offset := 0;
+         Y_Offset := 0;
+         X_Advance := 0;
+         return;
       end if;
-      Top := Integer (This.Glyphs (Index).Y_Offset);
-      Left := Integer (This.Glyphs (Index).X_Offset);
-      Bottom := Top + Integer (This.Glyphs (Index).Height);
-      Right := Left + Integer (This.Glyphs (Index).Width);
+
+      Width     := Natural (This.Glyphs (Index).Width);
+      Height    := Natural (This.Glyphs (Index).Height);
+      X_Advance := Natural (This.Glyphs (Index).X_Advance);
+      X_Offset  := Integer (This.Glyphs (Index).X_Offset);
+      Y_Offset  := Integer (This.Glyphs (Index).Y_Offset);
    end Glyph_Box;
 
 --     overriding
@@ -33,29 +39,26 @@ package body Giza.Bitmap_Fonts is
                           Ctx  : in out Context'Class;
                           C    : Character)
    is
-      Index : Integer := Character'Pos (C);
+      Index : constant Integer := Character'Pos (C);
       H, W, Xo, Yo, Xa : Integer;
       Bits : Unsigned_8 := 0;
       Bit  : Unsigned_8 := 0;
       Bitmap_Offset : Integer;
-      Center : constant Point_T := Ctx.Position;
+      Org : constant Point_T := Ctx.Position;
    begin
-      if Index not in Integer (This.First) .. Integer (This.Last) then
+      if Index not in This.Glyphs'Range then
          return;
       end if;
 
-      Index := Index - Integer (This.First) + This.Glyphs'First;
       H := Integer (This.Glyphs (Index).Height);
       W := Integer (This.Glyphs (Index).Width);
       if H > 0 and then W > 0 then
          Xo := Integer (This.Glyphs (Index).X_Offset);
          Yo := Integer (This.Glyphs (Index).Y_Offset);
-         Xa := Integer (This.Glyphs (Index).X_Advance);
          Bitmap_Offset := Integer (This.Glyphs (Index).BitmapOffset) +
            This.Bitmap'First;
-
-         for Y in 1 .. H loop
-            for X in 1 .. W loop
+         for Y in 0 .. H - 1 loop
+            for X in 0 .. W - 1 loop
                if (Bit and 7) = 0 then
                   Bits := This.Bitmap (Bitmap_Offset);
                   Bitmap_Offset := Bitmap_Offset + 1;
@@ -63,16 +66,14 @@ package body Giza.Bitmap_Fonts is
                Bit := Bit + 1;
 
                if (Bits and 16#80#) /= 0 then
-                  Ctx.Set_Pixel
-                    (Center + Point_T'(X, Y) +
-                         Point_T'(Xo, Yo) +
-                         Point_T'(0, 20));
+                  Ctx.Set_Pixel (Org + Point_T'(X, Y) + Point_T'(Xo, Yo));
                end if;
                Bits := Shift_Left (Bits, 1);
             end loop;
          end loop;
-         Ctx.Move_To (Center + Point_T'(Xa, 0));
       end if;
+      Xa := Integer (This.Glyphs (Index).X_Advance);
+      Ctx.Move_To (Org + Point_T'(Xa, 0));
    end Print_Glyph;
 
 --     overriding

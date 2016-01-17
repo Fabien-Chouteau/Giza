@@ -734,8 +734,6 @@ private
    Font_D : aliased constant Bitmap_Font :=
      (FreeMono24pt7bBitmaps'Access,
       FreeMono24pt7bGlyphs'Access,
-      16#20#,
-      16#7E#,
       47);
       Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeMono24pt7b;

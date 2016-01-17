@@ -28,12 +28,6 @@ package body Giza.Graphics is
 
    procedure Free is new Ada.Unchecked_Deallocation (State, State_Ref);
 
-   function Char_To_Glyph_Index (C : Character) return Glyph_Index;
-   function To_Scale (This : Context; A : Integer)
-                      return Integer;
-   procedure Draw_Glyph (This     : in out Context;
-                         Charcode : Positive);
-
    function Transform (This : Context; Pt : Point_T) return Point_T;
 
    ------------
@@ -713,7 +707,7 @@ package body Giza.Graphics is
    -- Set_Font --
    --------------
 
-   procedure Set_Font (This : in out Context; Font : Font_Access) is
+   procedure Set_Font (This : in out Context; Font : Font_Ref) is
    begin
       This.Current_State.Font := Font;
    end Set_Font;
@@ -736,11 +730,11 @@ package body Giza.Graphics is
       This.Current_State.Font_Spacing := Spacing;
    end Set_Font_Spacing;
 
-   ----------
-   -- Font --
-   ----------
+   --------------
+   -- Get_Font --
+   --------------
 
-   function Font (This : Context) return Font_Access is
+   function Get_Font (This : Context) return Font_Ref is
      (This.Current_State.Font);
 
    ---------------
@@ -757,71 +751,16 @@ package body Giza.Graphics is
    function Font_Spacing (This : Context) return Dim is
       (This.Current_State.Font_Spacing);
 
-   -------------------------
-   -- Char_To_Glyph_Index --
-   -------------------------
-
-   function Char_To_Glyph_Index (C : Character) return Glyph_Index is
-   begin
-      return Character'Pos (C) - 31;
-   end Char_To_Glyph_Index;
-
-   --------------
-   -- To_Scale --
-   --------------
-
-   function To_Scale (This : Context; A : Integer)
-                      return Integer
-   is
-   begin
-      return Integer (Float (A) * This.Font_Size);
-   end To_Scale;
-
-   ----------------
-   -- Draw_Glyph --
-   ----------------
-
-   procedure Draw_Glyph (This     : in out Context;
-                         Charcode : Glyph_Index)
-   is
-      Last : Vect := Raise_Pen;
-      G : Glyph_Access := Empty_Glyph'Access;
-      Center : Point_T;
-   begin
-
-      if Charcode not in This.Font.Glyphs'Range then
-         return;
-      end if;
-
-      G := This.Current_State.Font.Glyphs (Charcode);
-      Center := (This.Position.X + To_Scale (This, -G.Left),
-                 This.Position.Y);
-
-      for Vect of G.Vects loop
-         if Vect /= Raise_Pen then
-            if Last /= Raise_Pen then
-               This.Line_To
-                 ((Center.X + To_Scale (This, Vect.X),
-                  Center.Y + To_Scale (This, Vect.Y)));
-            else
-               This.Move_To
-                 ((Center.X + To_Scale (This, Vect.X),
-                  Center.Y + To_Scale (This, Vect.Y)));
-            end if;
-         end if;
-         Last := Vect;
-      end loop;
-      This.Move_To
-        ((Center.X + To_Scale (This, This.Font_Spacing + G.Right), Center.Y));
-   end Draw_Glyph;
-
    -----------
    -- Print --
    -----------
 
    procedure Print (This : in out Context; C : Character) is
    begin
-      Draw_Glyph (This, Char_To_Glyph_Index (C));
+      if This.Get_Font /= null then
+         null;
+         This.Get_Font.Print_Glyph (This, C);
+      end if;
    end Print;
 
    -----------
@@ -830,9 +769,12 @@ package body Giza.Graphics is
 
    procedure Print (This : in out Context; Str : String) is
    begin
-      for C of Str loop
-         Draw_Glyph (This, Char_To_Glyph_Index (C));
-      end loop;
+      if This.Get_Font /= null then
+         for C of Str loop
+            This.Get_Font.Print_Glyph (This, C);
+         end loop;
+         null;
+      end if;
    end Print;
 
    -------------------
@@ -843,27 +785,9 @@ package body Giza.Graphics is
                             Str : String;
                             Box : Rect_T)
    is
-      Top, Bottom, Left, Right : Integer;
-      Pt : Point_T;
-      H, W : Integer;
-      Ratio, Ratio_H, Ratio_W : Float;
+      Pt : constant Point_T := Center (Box);
    begin
-      if Str'Length = 0 then
-         return;
-      end if;
-
-      This.Set_Font_Size (1.0);
-
-      Pt := Center (Box);
-      This.Box (Str, Top, Bottom, Left, Right);
-      H := Bottom - Top;
-      W := Right - Left;
-      Ratio_W := Float (Box.Size.W) / Float (W);
-      Ratio_H := Float (Box.Size.H) / Float (H);
-      Ratio := (if Ratio_H < Ratio_W then  Ratio_H else Ratio_W);
-      Pt.X := Pt.X - Integer ((Float (W) / 2.0) * Ratio);
       This.Move_To (Pt);
-      This.Set_Font_Size (Ratio);
       This.Print (Str);
    end Print_In_Rect;
 
@@ -875,35 +799,8 @@ package body Giza.Graphics is
                   Str : String;
                   Top, Bottom, Left, Right : out Integer)
    is
-      T, B, L, R : Integer := 0;
-      G : Glyph_Access := Empty_Glyph'Access;
-      Index : Glyph_Index;
    begin
-
-      L := 0;
-      R := L;
-
-      for C of Str loop
-         Index := Char_To_Glyph_Index (C);
-
-         if Index in This.Font.Glyphs'Range then
-            G := This.Font.Glyphs (Index);
-            if G.Top < T then
-               T := G.Top;
-            end if;
-
-            if G.Bottom > B then
-               B := G.Bottom;
-            end if;
-
-            R := R + (G.Right - G.Left) + This.Font_Spacing;
-         end if;
-      end loop;
-
-      Top := This.Position.Y + To_Scale (This, T);
-      Bottom := This.Position.Y + To_Scale (This, B);
-      Left := This.Position.X + To_Scale (This, L);
-      Right := This.Position.X + To_Scale (This, R);
+      null;
    end Box;
 
 end Giza.Graphics;

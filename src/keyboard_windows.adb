@@ -113,8 +113,8 @@ package body Keyboard_Windows is
       if Special then
          This.Buttons (Btn_Z).Set_Text ("_");
          This.Buttons (Btn_X).Set_Text ("-");
-         This.Buttons (Btn_C).Set_Text ("=");
-         This.Buttons (Btn_V).Set_Text ("");
+         This.Buttons (Btn_C).Set_Text ("+");
+         This.Buttons (Btn_V).Set_Text ("=");
          This.Buttons (Btn_B).Set_Text ("");
          This.Buttons (Btn_N).Set_Text ("");
          This.Buttons (Btn_M).Set_Text ("");

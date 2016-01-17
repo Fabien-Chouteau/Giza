@@ -22,7 +22,21 @@ See notes at end for glyph nomenclature & other tidbits.
 #include <ctype.h>
 #include <ft2build.h>
 #include FT_GLYPH_H
-#include "../gfxfont.h" // Adafruit_GFX font structures
+//#include "../gfxfont.h" // Adafruit_GFX font structures
+
+typedef struct { // Data stored PER GLYPH
+	uint16_t bitmapOffset;     // Pointer into GFXfont->bitmap
+	uint8_t  width, height;    // Bitmap dimensions in pixels
+	uint8_t  xAdvance;         // Distance to advance cursor (x axis)
+	int8_t   xOffset, yOffset; // Dist from cursor pos to UL corner
+} GFXglyph;
+
+typedef struct { // Data stored for FONT AS A WHOLE:
+	uint8_t  *bitmap;      // Glyph bitmaps, concatenated
+	GFXglyph *glyph;       // Glyph array
+	uint8_t   first, last; // ASCII extents
+	uint8_t   yAdvance;    // Newline distance (y axis)
+} GFXfont;
 
 #define DPI 141 // Approximate res. of Adafruit 2.8" TFT
 
@@ -228,8 +242,6 @@ int main(int argc, char *argv[]) {
 	printf("   Font_D : aliased constant Bitmap_Font :=\n");
         printf("     (%sBitmaps'Access,\n", fontName);
         printf("      %sGlyphs'Access,\n", fontName);
-	printf("      16#%02X#,\n", first);
-	printf("      16#%02X#,\n", last);
 	printf("      %ld);\n", face->size->metrics.height >> 6);
         printf("      Font : constant Font_Ref := Font_D'Access;\n");
 	printf("end Giza.Bitmap_Fonts.%s;\n", fontName);

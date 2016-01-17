@@ -18,10 +18,10 @@ package body Basic_Test_Window is
       --  Add a back button at the bottom of the window
       This.Back := new Gbutton;
       This.Back.Set_Text ("Back");
-      This.Back.Set_Size ((Size.W, Size.H / 10));
+      This.Back.Set_Size ((Size.W, Size.H / 10 - 1));
       This.Back.Set_Foreground (Red);
       This.Add_Child (Widget_Ref (This.Back),
-                      (0, Size.H - Size.H / 10));
+                      (0, Size.H - Size.H / 10 + 1));
    end On_Init;
 
    -----------------------

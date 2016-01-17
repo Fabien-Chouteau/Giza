@@ -7,7 +7,8 @@ package Giza.Hershey_Fonts is
    overriding
    procedure Glyph_Box (This : Hershey_Font;
                         C    : Character;
-                        Top, Bottom, Left, Right : out Integer);
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer);
 
 --     overriding
 --     procedure Print (This : Hershey_Font;
@@ -30,15 +31,15 @@ package Giza.Hershey_Fonts is
 --                    Top, Bottom, Left, Right : out Integer);
 
 private
-   subtype Coord is Integer range -49 .. 40;
+   type Coord is range -49 .. 40 with Size => 8;
 
    type Vect is record
       X, Y : Coord;
-   end record;
+   end record with Pack;
 
    Raise_Pen : constant Vect := (Coord'Last, Coord'Last);
 
-   type Vect_Array is array (Natural range <>) of Vect;
+   type Vect_Array is array (Natural range <>) of Vect with Pack;
 
    type Glyph (Number_Of_Vectors : Natural) is record
       Left, Right, Top, Bottom : Coord;

@@ -3,11 +3,11 @@ with Giza.Widgets.Text; use Giza.Widgets.Text;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Screen_Interface; use Screen_Interface;
 with Giza.Graphics;
-with Engine_Control_UI; use Engine_Control_UI;
+with Question_Windows; use Question_Windows;
 
 package Timer_Callback is
 
-   ECW : aliased Engine_Control_Window;
+   Main_W : aliased Question_Window;
 
    My_Str : access String := new String'("Gtext");
    Str_Button : access String := new String'("Button");

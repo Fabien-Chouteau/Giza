@@ -5,6 +5,8 @@ with Test_Scroll_Window; use Test_Scroll_Window;
 with Test_Button_Window; use Test_Button_Window;
 with Test_Gnumber_Window; use Test_Gnumber_Window;
 with Test_Graphic_Bounds; use Test_Graphic_Bounds;
+with Test_Fonts;
+with Keyboard_Windows;
 
 package body Test_Main_Window is
 
@@ -36,6 +38,14 @@ package body Test_Main_Window is
       This.Sub_Windows (5).Button.Set_Text ("Graphics");
       This.Sub_Windows (5).Win := new Graphic_Bounds_Window;
 
+      This.Sub_Windows (6).Button := new Gbutton;
+      This.Sub_Windows (6).Button.Set_Text ("Keyboard");
+      This.Sub_Windows (6).Win := new Keyboard_Windows.Keyboard_Window;
+
+      This.Sub_Windows (7).Button := new Gbutton;
+      This.Sub_Windows (7).Button.Set_Text ("Fonts");
+      This.Sub_Windows (7).Win := new Test_Fonts.Test_Fonts_Window;
+
       This.Tiles := new Gtile (This.Sub_Windows'Length, Top_Down);
       This.Tiles.Set_Size (This.Get_Size);
       This.Add_Child (Widget_Ref (This.Tiles), (0, 0));
@@ -44,6 +54,7 @@ package body Test_Main_Window is
          This.Tiles.Set_Child (Index,
                                Widget_Ref (This.Sub_Windows (Index).Button));
       end loop;
+      Giza.GUI.Push (This.Sub_Windows (7).Win);
    end On_Init;
 
    ------------------

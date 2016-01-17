@@ -30,7 +30,8 @@ package Giza.Bitmap_Fonts is
    overriding
    procedure Glyph_Box (This : Bitmap_Font;
                         C    : Character;
-                        Top, Bottom, Left, Right : out Integer);
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer);
 
 --     overriding
 --     procedure Print (This : Bitmap_Font;
@@ -63,13 +64,12 @@ private
       X_Offset, Y_Offset : Integer_8;
    end record;
 
-   type Glyph_Array is array (Positive range <>) of Bitmap_Glyph;
+   type Glyph_Array is array (16#20# .. 16#7E#) of Bitmap_Glyph;
    type Glyph_Array_Ref is not null access constant Glyph_Array;
 
    type Bitmap_Font is new Font with record
       Bitmap      : Font_Bitmap_Ref;
       Glyphs      : Glyph_Array_Ref;
-      First, Last : Unsigned_8;
       Y_Advance   : Unsigned_8;
    end record;
 end Giza.Bitmap_Fonts;

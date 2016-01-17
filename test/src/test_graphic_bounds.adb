@@ -3,6 +3,8 @@ with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
 with Giza.Widgets; use Giza.Widgets;
 with Ada.Numerics; use Ada.Numerics;
+with bmp_test_data;
+with hand;
 
 package body Test_Graphic_Bounds is
 
@@ -117,6 +119,14 @@ package body Test_Graphic_Bounds is
       Ctx.Set_Color (Yellow);
       Ctx.Fill_Arc ((8 * Grid, 8 * Grid), 2 * Grid, (3.0 * Pi) / 2.0,
                     Pi * 2.0);
+
+      Ctx.Copy_Bitmap (hand.Data, (0, 0));
+
+      Ctx.Save;
+      Ctx.Translate ((Grid, 5 * Grid));
+      Ctx.Rotate (This.Rotation);
+      Ctx.Copy_Bitmap (bmp_test_data.Data, (0, 0));
+      Ctx.Restore;
 
       This.Rotation := This.Rotation + 0.1;
       Set_Timer (This.Evt'Unchecked_Access, Clock + Milliseconds (200));
