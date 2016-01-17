@@ -20,6 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Interfaces;
 with Giza.Graphics; use Giza.Graphics;
 
 package Giza.Hershey_Fonts is
@@ -41,7 +42,8 @@ package Giza.Hershey_Fonts is
    function Y_Advance (This : Hershey_Font) return Integer;
 
 private
-   type Coord is range -49 .. 40 with Size => 8;
+
+   type Coord is new Interfaces.Integer_8 with Size => 8;
 
    type Vect is record
       X, Y : Coord;
@@ -52,9 +54,8 @@ private
    type Vect_Array is array (Natural range <>) of Vect with Pack;
 
    type Glyph (Number_Of_Vectors : Natural) is record
-      Left, Right, Top, Bottom : Coord;
-      Charcode                 : Integer;
-      Vects                    : Vect_Array (1 .. Number_Of_Vectors);
+      Width, Height, Y_Offset, X_Offset : Coord;
+      Vects                   : Vect_Array (1 .. Number_Of_Vectors);
    end record;
 
    type Glyph_Access is not null access constant Glyph;
@@ -65,15 +66,15 @@ private
 
    type Hershey_Font (Number_Of_Glyphs : Natural) is new Font with record
       Glyphs : Glyph_Access_Array (1 .. Number_Of_Glyphs);
+      Y_Advance : Coord;
    end record;
 
    Empty_Glyph : aliased constant Glyph :=
      (Number_Of_Vectors => 0,
-      Charcode => 0,
-      Left => 0,
-      Right => 0,
-      Top => 0,
-      Bottom => 0,
+      Width => 0,
+      Height => 0,
+      Y_Offset => 0,
+      X_Offset => 0,
       Vects => (others => (Raise_Pen)));
 
 end Giza.Hershey_Fonts;

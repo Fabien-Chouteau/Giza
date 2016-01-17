@@ -54,11 +54,11 @@ package body Giza.Hershey_Fonts is
          return;
       end if;
 
-      Width := Integer (This.Glyphs (Index).Right - This.Glyphs (Index).Left);
-      Height := Integer (This.Glyphs (Index).Bottom - This.Glyphs (Index).Top);
+      Width := Integer (This.Glyphs (Index).Width);
+      Height := Integer (This.Glyphs (Index).Height);
       X_Advance := Width;
       X_Offset := 0;
-      Y_Offset := Integer (This.Glyphs (Index).Top);
+      Y_Offset := Integer (This.Glyphs (Index).Y_Offset);
 
    end Glyph_Box;
 
@@ -83,7 +83,7 @@ package body Giza.Hershey_Fonts is
 
       G := This.Glyphs (Index);
 
-      Offset := Org - Point_T'(Integer (G.Left), 0);
+      Offset := Org - Point_T'(Integer (G.X_Offset), 0);
       for Vect of G.Vects loop
          if Vect /= Raise_Pen then
             if Last /= Raise_Pen then
@@ -96,7 +96,7 @@ package body Giza.Hershey_Fonts is
          end if;
          Last := Vect;
       end loop;
-      Ctx.Move_To ((Org.X + Integer (G.Right) - Integer (G.Left), Org.Y));
+      Ctx.Move_To ((Org.X + Integer (G.Width), Org.Y));
    end Print_Glyph;
 
    ---------------
@@ -104,9 +104,8 @@ package body Giza.Hershey_Fonts is
    ---------------
 
    overriding function Y_Advance (This : Hershey_Font) return Integer is
-      pragma Unreferenced (This);
    begin
-      return 10;
+      return Integer (This.Y_Advance);
    end Y_Advance;
 
 end Giza.Hershey_Fonts;

@@ -11,6 +11,8 @@ import sys
 import os
 import string
 
+max_height = 0
+
 
 def char2val(c):  # data is stored as signed bytes relative to ASCII R
     return ord(c) - ord('R')
@@ -101,6 +103,8 @@ def flatten(list_of_list):
 
 
 def glyph_to_ada(glyph):
+    global max_height
+
     flat = flatten(glyph['lines'])
     flat = map(lambda x: str(x), flat)
     if len(flat) <= 1:
@@ -108,15 +112,24 @@ def glyph_to_ada(glyph):
     glyph_str = "   Glyph_%s : aliased constant Glyph :=\n" \
                 % str(glyph['charcode'])
     glyph_str += '     (Number_Of_Vectors => %d,\n' % len(flat)
-    glyph_str += '      Charcode => %d,\n' % glyph['charcode']
-    glyph_str += '      Left => %d,\n' % glyph['left']
-    glyph_str += '      Right => %d,\n' % glyph['right']
+
+    width = glyph['right'] - glyph['left']
+    glyph_str += '      Width => %d,\n' % width
     if glyph['bbox'] is not None:
-        glyph_str += '      Top => %d,\n' % glyph['bbox'][0][1]
-        glyph_str += '      Bottom => %d,\n' % glyph['bbox'][1][1]
+        # height = Bottom - Top
+        height = glyph['bbox'][1][1] - glyph['bbox'][0][1]
+
+        if height > max_height:
+            max_height = height
+
+        glyph_str += '      Height => %d,\n' % height
+        glyph_str += '      Y_Offset => %d,\n' % glyph['bbox'][0][1]
     else:
-        glyph_str += '      Top => 0,\n'
-        glyph_str += '      Bottom => 0,\n'
+        glyph_str += '      Height => 0,\n'
+        glyph_str += '      Y_Offset => 0,\n'
+
+    glyph_str += '      X_Offset => %d,\n' % glyph['left']
+
     if len(flat) == 0:
         glyph_str += '      Vects => (others => (Raise_Pen)));'
     else:
@@ -141,7 +154,7 @@ pck += '        (\n'
 for glyph in hershey[:-1]:
     pck += '         Glyph_%s\'Access,\n' % glyph['charcode']
 pck += '         Glyph_%s\'Access\n' % hershey[-1]['charcode']
-pck += '        ));\n'
+pck += '        ), Y_Advance => %d);\n' % max_height
 pck += '   Font : constant Font_Ref := Font_D\'Access;\n'
 pck += 'end %s;' % pck_name
 
