@@ -387,13 +387,13 @@ package body Giza.Graphics is
       Angle := From;
       while Angle < To loop
          This.Line (Center, Center +
-                      Size_T'(Dim (Cos (Angle) * Float (Radius)),
+                      Point_T'(Dim (Cos (Angle) * Float (Radius)),
                         Dim (-Sin (Angle) * Float (Radius))));
 
          Angle := Angle + 0.5;
       end loop;
 
-      This.Line (Center, Center + Size_T'(Dim (Cos (To) * Float (Radius)),
+      This.Line (Center, Center + Point_T'(Dim (Cos (To) * Float (Radius)),
                  Dim (-Sin (To) * Float (Radius))));
 
       --  Restore line width
@@ -414,7 +414,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Data (H, W));
-            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
+            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -433,7 +433,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
+            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -448,7 +448,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
+            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -463,7 +463,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
+            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
@@ -478,7 +478,7 @@ package body Giza.Graphics is
       for W in 1 .. Bmp.W loop
          for H in 1 .. Bmp.H loop
             This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Size_T'(W - 1, H - 1));
+            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
          end loop;
       end loop;
    end Copy_Bitmap;
