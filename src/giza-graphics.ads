@@ -197,6 +197,8 @@ package Giza.Graphics is
                           Ctx  : in out Context'Class;
                           C    : Character) is abstract;
 
+   function Y_Advance (This : Font) return Integer is abstract;
+
    procedure Set_Font (This : in out Context; Font : Font_Ref);
    function Get_Font (This : Context) return Font_Ref;
    procedure Set_Font_Size (This : in out Context; Size : Float);
@@ -206,9 +208,10 @@ package Giza.Graphics is
    procedure Print (This : in out Context; C : Character);
    procedure Print (This : in out Context; Str : String);
    procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
-   procedure Box (This : in out Context;
+   procedure Box (This : Context;
                   Str : String;
-                  Top, Bottom, Left, Right : out Integer);
+                  Top, Bottom, Left, Right : out Integer;
+                  Max_Width : Natural := 0);
 
 private
 

@@ -768,12 +768,17 @@ package body Giza.Graphics is
    -----------
 
    procedure Print (This : in out Context; Str : String) is
+      Org : constant Point_T := This.Position;
+      Font : constant Font_Ref := This.Get_Font;
    begin
-      if This.Get_Font /= null then
+      if Font /= null then
          for C of Str loop
-            This.Get_Font.Print_Glyph (This, C);
+            if C = ASCII.LF then
+               This.Move_To ((Org.X, This.Position.Y + Font.Y_Advance));
+            else
+               This.Get_Font.Print_Glyph (This, C);
+            end if;
          end loop;
-         null;
       end if;
    end Print;
 
@@ -785,22 +790,97 @@ package body Giza.Graphics is
                             Str : String;
                             Box : Rect_T)
    is
-      Pt : constant Point_T := Center (Box);
+      Font : constant Font_Ref := This.Get_Font;
+      Org_X : Dim;
+      Top, Bottom, Left, Right : Integer;
+      X_Offset, Y_Offset : Integer;
+      Width, Height, X_Advance : Integer;
    begin
-      This.Move_To (Pt);
-      This.Print (Str);
+      if Font = null then
+         return;
+      end if;
+
+      This.Box (Str, Top, Bottom, Left, Right, Max_Width => Box.Size.W);
+
+      Width := Right - Left;
+      Height := Bottom - Top;
+
+      if Width <= 0 or else Height <= 0 then
+         return;
+      end if;
+
+      --  Center text block in the bounds
+      X_Offset := -Left + (Box.Size.W - Width) / 2;
+      Y_Offset := -Top + (Box.Size.H - Height) / 2;
+      This.Move_To (Box.Org + Point_T'(X_Offset, Y_Offset));
+
+      Org_X := This.Position.X;
+
+      for C of Str loop
+         if C = ASCII.LF then
+            This.Move_To ((Org_X, This.Position.Y + Font.Y_Advance));
+         else
+            Font.Glyph_Box
+              (C, Width, Height, X_Advance, X_Offset, Y_Offset);
+
+            if This.Position.X - Org_X + X_Offset + Width > Box.Size.W then
+               This.Move_To ((Org_X, This.Position.Y + Font.Y_Advance));
+            end if;
+
+            This.Get_Font.Print_Glyph (This, C);
+         end if;
+      end loop;
    end Print_In_Rect;
 
    ---------
    -- Box --
    ---------
 
-   procedure Box (This : in out Context;
+   procedure Box (This : Context;
                   Str : String;
-                  Top, Bottom, Left, Right : out Integer)
+                  Top, Bottom, Left, Right : out Integer;
+                  Max_Width : Natural := 0)
    is
+      Font : constant Font_Ref := This.Get_Font;
+      Width, Height, X_Advance : Natural;
+      X_Offset, Y_Offset : Integer;
+      Pt, TL, BR : Point_T := (0, 0);
    begin
-      null;
+      Left := 0;
+      Right := 0;
+      Top := 0;
+      Bottom := 0;
+      if Font = null then
+         return;
+      end if;
+
+      for C of Str loop
+         if C = ASCII.LF then
+            Pt := (0, Pt.Y + Font.Y_Advance);
+         else
+            Font.Glyph_Box
+              (C, Width, Height, X_Advance, X_Offset, Y_Offset);
+
+            if Width /= 0 and then Height /= 0 then
+               if Max_Width /= 0
+                 and then
+                   Pt.X + X_Offset + Width > Max_Width
+               then
+                  Pt := (0, Pt.Y + Font.Y_Advance);
+               end if;
+
+               TL := Pt + Point_T'(X_Offset, Y_Offset);
+               BR := TL + Point_T'(Width, Height);
+
+               Left   := Integer'Min (Left, TL.X);
+               Top    := Integer'Min (Top, TL.Y);
+               Right  := Integer'Max (Right, BR.X);
+               Bottom := Integer'Max (Bottom, BR.Y);
+            end if;
+
+            Pt := Pt + Point_T'(X_Advance, 0);
+         end if;
+      end loop;
    end Box;
 
 end Giza.Graphics;

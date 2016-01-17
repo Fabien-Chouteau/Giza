@@ -1,11 +1,35 @@
+-------------------------------------------------------------------------------
+--                                                                           --
+--                                   Giza                                    --
+--                                                                           --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
+--                                                                           --
+--                                                                           --
+--    Giza is free software: you can redistribute it and/or modify it        --
+--    under the terms of the GNU General Public License as published by      --
+--    the Free Software Foundation, either version 3 of the License, or      --
+--    (at your option) any later version.                                    --
+--                                                                           --
+--    Giza is distributed in the hope that it will be useful, but WITHOUT    --
+--    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY     --
+--    or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public        --
+--    License for more details.                                              --
+--                                                                           --
+--    You should have received a copy of the GNU General Public License      --
+--    along with Giza. If not, see <http://www.gnu.org/licenses/>.           --
+--                                                                           --
+-------------------------------------------------------------------------------
 
 package body Giza.Bitmap_Fonts is
 
-   overriding
-   procedure Glyph_Box (This : Bitmap_Font;
-                        C    : Character;
-                        Width, Height, X_Advance : out Natural;
-                        X_Offset, Y_Offset : out Integer)
+   ---------------
+   -- Glyph_Box --
+   ---------------
+
+   overriding procedure Glyph_Box (This : Bitmap_Font;
+                                   C    : Character;
+                                   Width, Height, X_Advance : out Natural;
+                                   X_Offset, Y_Offset : out Integer)
    is
       Index : constant Integer := Character'Pos (C);
    begin
@@ -25,19 +49,13 @@ package body Giza.Bitmap_Fonts is
       Y_Offset  := Integer (This.Glyphs (Index).Y_Offset);
    end Glyph_Box;
 
---     overriding
---     procedure Print (This : Bitmap_Font;
---                      Ctx  : in out Context'Class;
---                      Str  : String)
---     is
---     begin
---        null;
---     end Print;
+   -----------------
+   -- Print_Glyph --
+   -----------------
 
-   overriding
-   procedure Print_Glyph (This : Bitmap_Font;
-                          Ctx  : in out Context'Class;
-                          C    : Character)
+   overriding procedure Print_Glyph (This : Bitmap_Font;
+                                     Ctx  : in out Context'Class;
+                                     C    : Character)
    is
       Index : constant Integer := Character'Pos (C);
       H, W, Xo, Yo, Xa : Integer;
@@ -76,22 +94,13 @@ package body Giza.Bitmap_Fonts is
       Ctx.Move_To (Org + Point_T'(Xa, 0));
    end Print_Glyph;
 
---     overriding
---     procedure Print (This   : Bitmap_Font;
---                      Ctx    : in out Context'Class;
---                      Str    : String;
---                      Bounds : Rect_T)
---     is
---     begin
---        null;
---     end Print;
---     overriding
---     procedure Box (This                     : Bitmap_Font;
---                    Str                      : String;
---                    Top, Bottom, Left, Right : out Integer)
---     is
---     begin
---        null;
---     end Box;
+   ---------------
+   -- Y_Advance --
+   ---------------
+
+   overriding function Y_Advance (This : Bitmap_Font) return Integer is
+   begin
+      return Integer (This.Y_Advance);
+   end Y_Advance;
 
 end Giza.Bitmap_Fonts;

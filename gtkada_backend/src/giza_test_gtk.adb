@@ -3,7 +3,7 @@ with Giza.Windows; use Giza.Windows;
 with Screen_Interface; use Screen_Interface;
 with Giza.GUI; use Giza.GUI;
 --  with Hershey_Fonts.Rowmand;
-with Giza.Bitmap_Fonts.FreeMono12pt7b;
+with Giza.Bitmap_Fonts.FreeMono8pt7b;
 with Test_Main_Window; use Test_Main_Window;
 
 procedure Giza_Test_Gtk is
@@ -17,7 +17,7 @@ begin
       Timer_Callback.My_Backend.Disable;
    end if;
 
-   My_Context.Set_Font (Giza.Bitmap_Fonts.FreeMono12pt7b.Font);
+   My_Context.Set_Font (Giza.Bitmap_Fonts.FreeMono8pt7b.Font);
    Giza.GUI.Set_Context (Timer_Callback.My_Context'Access);
    Giza.GUI.Set_Backend (Timer_Callback.My_Backend'Access);
 

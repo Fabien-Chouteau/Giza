@@ -33,25 +33,13 @@ package Giza.Bitmap_Fonts is
                         Width, Height, X_Advance : out Natural;
                         X_Offset, Y_Offset : out Integer);
 
---     overriding
---     procedure Print (This : Bitmap_Font;
---                      Ctx  : in out Context'Class;
---                      Str  : String);
-
    overriding
    procedure Print_Glyph (This : Bitmap_Font;
                           Ctx  : in out Context'Class;
                           C    : Character);
 
---     overriding
---     procedure Print (This   : Bitmap_Font;
---                      Ctx    : in out Context'Class;
---                      Str    : String;
---                      Bounds : Rect_T);
---     overriding
---     procedure Box (This                     : Bitmap_Font;
---                    Str                      : String;
---                    Top, Bottom, Left, Right : out Integer);
+   overriding
+   function Y_Advance (This : Bitmap_Font) return Integer;
 
 private
    type Font_Bitmap is array (Positive range <>) of Unsigned_8;
