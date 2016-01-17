@@ -2,8 +2,8 @@ with Giza.Windows; use Giza.Windows;
 with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Events; use Giza.Events;
-with Giza.Graphics; use Giza.Graphics;
 with Giza.Widgets.Text; use Giza.Widgets.Text;
+with Giza.Types; use Giza.Types;
 
 package Keyboard_Windows is
 

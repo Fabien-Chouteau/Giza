@@ -20,7 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Types; use Giza.Types;
 
 package Giza.Events is
 

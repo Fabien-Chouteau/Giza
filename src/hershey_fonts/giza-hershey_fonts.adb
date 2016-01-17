@@ -20,6 +20,8 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Giza.Types; use Giza.Types;
+
 package body Giza.Hershey_Fonts is
 
    function Char_To_Glyph_Index (C : Character) return Glyph_Index;

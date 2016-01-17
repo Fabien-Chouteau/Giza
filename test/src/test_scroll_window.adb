@@ -1,6 +1,6 @@
 with Giza.Widgets; use Giza.Widgets;
 with Test_Tiles_Window; use Test_Tiles_Window;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Types; use Giza.Types;
 
 ------------------------
 -- Test_Scroll_Window --

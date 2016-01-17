@@ -1,7 +1,7 @@
 with Giza.Colors; use Giza.Colors;
 with Giza.Widgets; use Giza.Widgets;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Types; use Giza.Types;
 
 package body Test_Tiles_Window is
 

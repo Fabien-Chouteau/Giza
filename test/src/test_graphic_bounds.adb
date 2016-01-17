@@ -3,6 +3,7 @@ with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
 with Giza.Widgets; use Giza.Widgets;
 with Ada.Numerics; use Ada.Numerics;
+with Giza.Types; use Giza.Types;
 with bmp_test_data;
 with hand;
 

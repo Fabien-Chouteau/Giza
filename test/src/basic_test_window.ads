@@ -1,7 +1,7 @@
 with Giza.Windows;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
-with Giza.Graphics; use Giza.Graphics;
 with Giza.Events; use Giza.Events;
+with Giza.Types; use Giza.Types;
 
 package Basic_Test_Window is
    type Test_Window is abstract new Giza.Windows.Window with private;

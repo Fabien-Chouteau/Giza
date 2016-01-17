@@ -2,7 +2,7 @@
 --                                                                           --
 --                                   Giza                                    --
 --                                                                           --
---         Copyright (C) 2015 Fabien Chouteau (chouteau@adacore.com)         --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
 --                                                                           --
 --                                                                           --
 --    Giza is free software: you can redistribute it and/or modify it        --
@@ -20,50 +20,22 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Events; use Giza.Events;
-with Giza.Graphics; use Giza.Graphics;
-with Giza.Types; use Giza.Types;
+limited with Giza.Graphics;
 
-package Giza.Widgets is
-   type Widget is abstract tagged private;
-   type Widget_Ref is access all Widget'Class;
-   type Not_Null_Widget_Ref is not null access all Widget'Class;
+package Giza.Fonts is
 
-   type Widget_Ref_Array is array (Positive range <>) of Widget_Ref;
+   type Font is interface;
+   type Font_Ref is access constant Font'Class;
 
-   function Dirty (This : Widget) return Boolean;
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
-   procedure Draw (This : in out Widget;
-                   Ctx : in out Context'Class;
-                   Force : Boolean := True) is null;
+   procedure Glyph_Box (This : Font;
+                        C    : Character;
+                        Width, Height, X_Advance : out Natural;
+                        X_Offset, Y_Offset : out Integer) is abstract;
 
-   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True);
-   --  When a widget is disabled, it will no longer react to events
+   procedure Print_Glyph (This : Font;
+                          Ctx  : in out Giza.Graphics.Context'Class;
+                          C    : Character) is abstract;
 
-   procedure Set_Size (This : in out Widget; Size : Size_T);
-   function Get_Size (This : Widget) return Size_T;
+   function Y_Advance (This : Font) return Integer is abstract;
 
-   function On_Position_Event
-     (This : in out Widget;
-      Evt : Position_Event_Ref;
-      Pos  : Point_T) return Boolean;
-
-   function On_Event
-     (This : in out Widget;
-      Evt : Event_Not_Null_Ref) return Boolean;
-
-   function On_Click
-     (This  : in out Widget;
-      Pos   : Point_T) return Boolean is (False);
-
-   function On_Click_Released
-     (This  : in out Widget) return Boolean is (False);
-
-private
-   type Widget is abstract tagged record
-      Is_Dirty    : Boolean := True;
-      Is_Disabled : Boolean := False;
-      Size : Size_T := (0, 0);
---        Next : access Widget'Class := null;
-   end record;
-end Giza.Widgets;
+end Giza.Fonts;

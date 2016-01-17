@@ -1,6 +1,7 @@
-with Giza.Graphics; use Giza.Graphics;
 with Screen_Parameters; use Screen_Parameters;
 with Giza.Colors;
+with Giza.Types; use Giza.Types;
+with Giza.Backends; use Giza.Backends;
 
 package Screen_Interface is
 

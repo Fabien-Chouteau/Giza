@@ -2,7 +2,7 @@
 --                                                                           --
 --                                   Giza                                    --
 --                                                                           --
---         Copyright (C) 2015 Fabien Chouteau (chouteau@adacore.com)         --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
 --                                                                           --
 --                                                                           --
 --    Giza is free software: you can redistribute it and/or modify it        --
@@ -20,50 +20,26 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Events; use Giza.Events;
-with Giza.Graphics; use Giza.Graphics;
 with Giza.Types; use Giza.Types;
+with Giza.Colors; use Giza.Colors;
 
-package Giza.Widgets is
-   type Widget is abstract tagged private;
-   type Widget_Ref is access all Widget'Class;
-   type Not_Null_Widget_Ref is not null access all Widget'Class;
+package Giza.Backends is
 
-   type Widget_Ref_Array is array (Positive range <>) of Widget_Ref;
+   type Backend is abstract tagged private;
+   type Backend_Ref is access all Backend'Class;
 
-   function Dirty (This : Widget) return Boolean;
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
-   procedure Draw (This : in out Widget;
-                   Ctx : in out Context'Class;
-                   Force : Boolean := True) is null;
+   procedure Set_Pixel (This : in out Backend; Pt : Point_T) is abstract;
+   procedure Set_Color (This : in out Backend; C : Color) is abstract;
+   function Size (This : Backend) return Size_T is abstract;
+   function Has_Double_Buffring (This : Backend) return Boolean is abstract;
+   procedure Swap_Buffers (This : in out Backend) is null;
 
-   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True);
-   --  When a widget is disabled, it will no longer react to events
-
-   procedure Set_Size (This : in out Widget; Size : Size_T);
-   function Get_Size (This : Widget) return Size_T;
-
-   function On_Position_Event
-     (This : in out Widget;
-      Evt : Position_Event_Ref;
-      Pos  : Point_T) return Boolean;
-
-   function On_Event
-     (This : in out Widget;
-      Evt : Event_Not_Null_Ref) return Boolean;
-
-   function On_Click
-     (This  : in out Widget;
-      Pos   : Point_T) return Boolean is (False);
-
-   function On_Click_Released
-     (This  : in out Widget) return Boolean is (False);
+   procedure Line (This : in out Backend; Start, Stop : Point_T);
+   procedure Rectangle (This : in out Backend; Start, Stop : Point_T);
+   procedure Fill_Rectangle (This : in out Backend; Start, Stop : Point_T);
 
 private
-   type Widget is abstract tagged record
-      Is_Dirty    : Boolean := True;
-      Is_Disabled : Boolean := False;
-      Size : Size_T := (0, 0);
---        Next : access Widget'Class := null;
-   end record;
-end Giza.Widgets;
+
+   type Backend is abstract tagged null record;
+
+end Giza.Backends;

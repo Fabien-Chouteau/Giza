@@ -23,6 +23,7 @@
 with Giza.Events; use Giza.Events;
 with Giza.Windows; use Giza.Windows;
 with Giza.Graphics; use Giza.Graphics;
+with Giza.Backends; use Giza.Backends;
 
 package Giza.GUI is
 

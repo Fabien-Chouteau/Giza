@@ -3,6 +3,7 @@ with Giza.Graphics; use Giza.Graphics;
 with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 with Giza.Events; use Giza.Events;
+with Giza.Types; use Giza.Types;
 
 package Test_Fonts is
 

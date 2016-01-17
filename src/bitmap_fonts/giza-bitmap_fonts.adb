@@ -20,6 +20,8 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Giza.Types; use Giza.Types;
+
 package body Giza.Bitmap_Fonts is
 
    ---------------

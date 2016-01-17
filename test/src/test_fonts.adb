@@ -93,6 +93,8 @@ with Giza.Hershey_Fonts.Timesi;
 with Giza.Hershey_Fonts.Timesib;
 with Giza.Hershey_Fonts.Timesr;
 
+with Giza.Fonts; use Giza.Fonts;
+
 package body Test_Fonts is
 
    type Font_Ref_Array is array (Integer range <>) of Font_Ref;

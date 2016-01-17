@@ -22,6 +22,7 @@
 
 with Interfaces; use Interfaces;
 with Giza.Graphics; use Giza.Graphics;
+with Giza.Fonts; use Giza.Fonts;
 
 package Giza.Bitmap_Fonts is
 
