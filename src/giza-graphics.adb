@@ -712,44 +712,12 @@ package body Giza.Graphics is
       This.Current_State.Font := Font;
    end Set_Font;
 
-   -------------------
-   -- Set_Font_Size --
-   -------------------
-
-   procedure Set_Font_Size (This : in out Context; Size : Float) is
-   begin
-      This.Current_State.Font_Size := Size;
-   end Set_Font_Size;
-
-   ----------------------
-   -- Set_Font_Spacing --
-   ----------------------
-
-   procedure Set_Font_Spacing (This : in out Context; Spacing : Dim) is
-   begin
-      This.Current_State.Font_Spacing := Spacing;
-   end Set_Font_Spacing;
-
    --------------
    -- Get_Font --
    --------------
 
    function Get_Font (This : Context) return Font_Ref is
      (This.Current_State.Font);
-
-   ---------------
-   -- Font_Size --
-   ---------------
-
-   function Font_Size (This : Context) return Float is
-      (This.Current_State.Font_Size);
-
-   ------------------
-   -- Font_Spacing --
-   ------------------
-
-   function Font_Spacing (This : Context) return Dim is
-      (This.Current_State.Font_Spacing);
 
    -----------
    -- Print --

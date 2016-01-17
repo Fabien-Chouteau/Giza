@@ -185,6 +185,10 @@ package Giza.Graphics is
       Bmp    : Bitmap_Indexed_8bits;
       Pt     : Point_T);
 
+   --------------------
+   -- Font interface --
+   --------------------
+
    type Font is interface;
    type Font_Ref is access constant Font'class;
 
@@ -199,12 +203,12 @@ package Giza.Graphics is
 
    function Y_Advance (This : Font) return Integer is abstract;
 
+   ----------------------
+   -- Fonts in Context --
+   ----------------------
+
    procedure Set_Font (This : in out Context; Font : Font_Ref);
    function Get_Font (This : Context) return Font_Ref;
-   procedure Set_Font_Size (This : in out Context; Size : Float);
-   function Font_Size (This : Context) return Float;
-   procedure Set_Font_Spacing (This : in out Context; Spacing : Dim);
-   function Font_Spacing (This : Context) return Dim;
    procedure Print (This : in out Context; C : Character);
    procedure Print (This : in out Context; Str : String);
    procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
