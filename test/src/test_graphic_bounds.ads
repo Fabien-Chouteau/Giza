@@ -25,7 +25,5 @@ private
    type Graphic_Bounds_Window is new Test_Window with record
       Evt : aliased Timer_Event;
       Bound_Bnt : Gbutton_Ref;
-      Rot_Bnt : Gbutton_Ref;
-      Rotation : Float := 0.0;
    end record;
 end Test_Graphic_Bounds;

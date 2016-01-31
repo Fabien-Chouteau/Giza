@@ -31,8 +31,13 @@ package body Giza.Hershey_Fonts is
    -------------------------
 
    function Char_To_Glyph_Index (C : Character) return Glyph_Index is
+      Ret : constant Integer := Character'Pos (C) - 31;
    begin
-      return Character'Pos (C) - 31;
+      if Ret not in Glyph_Index then
+         return Glyph_Index'Last;
+      else
+         return Glyph_Index (Ret);
+      end if;
    end Char_To_Glyph_Index;
 
    ---------------

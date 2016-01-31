@@ -32,6 +32,7 @@ package Giza.Graphics is
 
    procedure Save (This : in out Context);
    procedure Restore (This : in out Context);
+   procedure Reset (This : in out Context);
 
    procedure Set_Color (This : in out Context; C : Color);
    procedure Set_Pixel (This : in out Context; Pt : Point_T);
@@ -43,10 +44,7 @@ package Giza.Graphics is
 
    --  Drawing
 
-   procedure Rotate (This : in out Context; Rad : Float);
    procedure Translate (This : in out Context; Pt : Point_T);
-   procedure Scale (This : in out Context; Scale : Float);
-   procedure Scale (This : in out Context; X, Y : Float);
 
    procedure Set_Line_Width (This : in out Context; Width : Positive);
    function Line_Width (This : Context) return Positive;
@@ -114,7 +112,7 @@ package Giza.Graphics is
    procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
    procedure Box (This : Context;
                   Str : String;
-                  Top, Bottom, Left, Right : out Integer;
+                  Rect : out Rect_T;
                   Max_Width : Natural := 0);
 
 private

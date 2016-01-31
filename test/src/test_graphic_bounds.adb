@@ -1,6 +1,4 @@
 with Giza.Colors; use Giza.Colors;
-with Giza.Timers; use Giza.Timers;
-with Ada.Real_Time; use Ada.Real_Time;
 with Giza.Widgets; use Giza.Widgets;
 with Ada.Numerics; use Ada.Numerics;
 with Giza.Types; use Giza.Types;
@@ -19,14 +17,9 @@ package body Test_Graphic_Bounds is
    begin
       On_Init (Test_Window (This));
       This.Bound_Bnt := new Gbutton;
-      This.Bound_Bnt.Set_Size ((This.Get_Size.W / 2, 40));
+      This.Bound_Bnt.Set_Size ((This.Get_Size.W, 40));
       This.Bound_Bnt.Set_Text ("Bounds");
       This.Add_Child (Widget_Ref (This.Bound_Bnt), (0, 0));
-      This.Rot_Bnt := new Gbutton;
-      This.Rot_Bnt.Set_Size ((This.Get_Size.W / 2, 40));
-      This.Rot_Bnt.Set_Text ("Rotation");
-      This.Rot_Bnt.Set_Toggle;
-      This.Add_Child (Widget_Ref (This.Rot_Bnt), (This.Get_Size.W / 2, 0));
    end On_Init;
 
    ------------------
@@ -85,12 +78,6 @@ package body Test_Graphic_Bounds is
             Ctx.Translate ((10, 10));
          end if;
 
-         if This.Rot_Bnt /= null and then This.Rot_Bnt.Active then
-            Ctx.Rotate (This.Rotation);
-         else
-            This.Rotation := 0.0;
-         end if;
-
          --  Set bounds
          if This.Bound_Bnt /= null and then This.Bound_Bnt.Active then
             Ctx.Set_Bounds (((0, 0), This.Get_Size / 10));
@@ -125,12 +112,9 @@ package body Test_Graphic_Bounds is
 
       Ctx.Save;
       Ctx.Translate ((Grid, 5 * Grid));
-      Ctx.Rotate (This.Rotation);
       Ctx.Copy_Bitmap (bmp_test_data.Data, (0, 0));
       Ctx.Restore;
 
-      This.Rotation := This.Rotation + 0.1;
-      Set_Timer (This.Evt'Unchecked_Access, Clock + Milliseconds (200));
    end Draw;
 
 end Test_Graphic_Bounds;

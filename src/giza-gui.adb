@@ -214,6 +214,7 @@ package body Giza.GUI is
             if Drawing_Backend /= null then
                Swap := Drawing_Backend.Has_Double_Buffring;
                Stack.Win.Draw (Drawing_Context.all, Force => Swap);
+               Drawing_Context.Reset;
                if Swap then
                   Drawing_Backend.Swap_Buffers;
                end if;

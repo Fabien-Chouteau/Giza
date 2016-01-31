@@ -292,7 +292,7 @@ package body Test_Fonts is
          when 87 => return "Hershey Timesg";
          when 88 => return "Hershey Timesi";
          when 89 => return "Hershey Timesib";
-         when 90 => return "Hershey Timesr)";
+         when 90 => return "Hershey Timesr";
          when others => return "Unknown font...";
       end case;
    end Font_Name;
@@ -379,19 +379,40 @@ package body Test_Fonts is
                                    This.Get_Size - (0, This.Get_Size.H / 10));
       Pt1 : constant Point_T := Bounds.Org + Point_T'(5, 20);
       Pt2 : constant Point_T := Pt1 + Point_T'(0, 40);
+      Pt3 : constant Point_T := Pt2 + Point_T'(0, 40);
 
       Str : constant String := "C'est un Test!";
-      Str3 : constant String :=
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" & ASCII.LF
-        & "1234567890`~!@#$%^&*()-_=+[]{};:'""<>,.";
+      Str2 : constant String := "Box Test";
+      Str3 : constant String := "Long string with a lot of split points and" &
+        ASCII.LF & "this one was forced (ASCII.LF)..." &
+        " A B C D E F G H I J K L M N O P Q R S T U V W X Y Z" &
+        "abcdefghijklmnopqrstuvwxyz" & ASCII.LF &
+        "1234567890`~!@#$%^&*()-_=+[]{};:'""<>,.";
+      Rect : Rect_T;
    begin
       Ctx.Set_Color (White);
       Ctx.Fill_Rectangle (Bounds);
 
+      --  Print Font's name
       Ctx.Move_To (Pt2);
-      Ctx.Set_Color (Black);
       Ctx.Set_Font (Giza.Bitmap_Fonts.FreeMono8pt7b.Font);
+      Ctx.Set_Color (Black);
       Ctx.Print (Font_Name (This.Font_Index));
+
+      --  Set selected font
+      Ctx.Set_Font (The_Fonts (This.Font_Index));
+
+      --  Test box
+      Ctx.Move_To (Pt3);
+      Ctx.Set_Font (Giza.Bitmap_Fonts.FreeMono8pt7b.Font);
+      Ctx.Box (Str       => Str2,
+               Rect      => Rect,
+               Max_Width => This.Get_Size.W);
+      Ctx.Set_Color (Red);
+      Ctx.Rectangle (Pt3 + Rect);
+      Ctx.Set_Color (Black);
+      Ctx.Move_To (Pt3);
+      Ctx.Print (Str2);
 
       Draw_Glyph_And_Values (Str, The_Fonts (This.Font_Index), Pt1);
 

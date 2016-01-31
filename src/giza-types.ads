@@ -50,6 +50,17 @@ package Giza.Types is
       Size : Size_T;
    end record;
 
+   function "+" (A : Rect_T; B : Size_T) return Rect_T is
+     (A.Org, A.Size + B);
+   function "+" (B : Size_T; A : Rect_T) return Rect_T is
+     (A.Org, A.Size + B);
+
+   function "+" (A : Rect_T; B : Point_T) return Rect_T is
+     (A.Org + B, A.Size);
+
+   function "+" (B : Point_T; A : Rect_T) return Rect_T is
+     (A.Org + B, A.Size);
+
    function "+" (A : Point_T; B : Size_T) return Point_T is
      (A.X + B.W, A.Y + B.H);
    function "+" (A : Size_T; B : Point_T) return Point_T is

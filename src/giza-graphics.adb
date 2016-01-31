@@ -29,6 +29,17 @@ package body Giza.Graphics is
    procedure Free is new Ada.Unchecked_Deallocation (State, State_Ref);
 
    function Transform (This : Context; Pt : Point_T) return Point_T;
+   function In_Bounds (This : Context; Pt : Point_T) return Boolean;
+   procedure Find_Line (This       : Context;
+                        Str        : String;
+                        Start      : Integer;
+                        EOL        : out Integer;
+                        Next_Start : out Integer;
+                        Line_Width : out Integer;
+                        Max_Width  : Natural := 0);
+   function Number_Of_Lines (This : in out Context;
+                             Str : String;
+                             Box : Rect_T) return Natural;
 
    ---------------
    -- Transform --
@@ -36,13 +47,25 @@ package body Giza.Graphics is
 
    function Transform (This : Context; Pt : Point_T) return Point_T is
    begin
-      if This.Current_State.Translate_Only then
-         return ((Pt.X + Dim (This.Current_State.Transform.V13),
-                  Pt.Y + Dim (This.Current_State.Transform.V23)));
-      else
-         return This.Current_State.Transform * Pt;
-      end if;
+      --        if This.Current_State.Translate_Only then
+      return ((Pt.X + Dim (This.Current_State.Transform.V13),
+              Pt.Y + Dim (This.Current_State.Transform.V23)));
+      --        else
+      --           return This.Current_State.Transform * Pt;
+      --        end if;
    end Transform;
+
+   ---------------
+   -- In_Bounds --
+   ---------------
+
+   function In_Bounds (This : Context; Pt : Point_T) return Boolean is
+   begin
+      return
+        Pt.X - This.Bounds.Org.X in 0 .. This.Bounds.Size.W
+        and then
+          Pt.Y - This.Bounds.Org.Y in 0 .. This.Bounds.Size.H;
+   end In_Bounds;
 
    ---------------
    -- Set_Pixel --
@@ -52,22 +75,11 @@ package body Giza.Graphics is
       Target : constant Point_T := Transform (This, Pt);
    begin
 
-      if This.Bounds.Size.W /= 0 and then This.Bounds.Size.H /= 0 then
-         if This.Bck /= null
-           and then
-             Pt.X in This.Bounds.Org.X .. This.Bounds.Size.W
-           and then
-             Pt.Y in This.Bounds.Org.Y .. This.Bounds.Size.H
-         then
-            This.Bck.Set_Pixel (Target);
---           else
---              Put_Line ("Set_Pixel out of bounds: Pt:" & To_String (Pt) &
---                       " bounds: " & To_String (This.Bounds));
-         end if;
-      else
-         if This.Bck /= null then
-            This.Bck.Set_Pixel (Target);
-         end if;
+      if This.Bck /= null
+        and then
+          In_Bounds (This, Pt)
+      then
+         This.Bck.Set_Pixel (Target);
       end if;
    end Set_Pixel;
 
@@ -96,6 +108,34 @@ package body Giza.Graphics is
       end if;
    end Restore;
 
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out Context) is
+      Cnt : Natural := 0;
+      Tmp : State_Ref;
+   begin
+      while This.Current_State.Next /= null loop
+         Tmp := This.Current_State.Next;
+         This.Current_State := Tmp.all;
+         Free (Tmp);
+         Cnt := Cnt + 1;
+      end loop;
+
+      if Cnt /= 0 then
+         Put_Line ("Warning:" & Cnt'Img &
+                     " remaining context state(s) in the stack");
+      end if;
+
+      if This.Bck /= null then
+         This.Current_State.Bounds := ((0, 0), This.Bck.Size);
+         This.Current_State.Pos := (0, 0);
+         This.Current_State.Transform := Id;
+         This.Current_State.Translate_Only := True;
+      end if;
+   end Reset;
+
    ---------------
    -- Set_Color --
    ---------------
@@ -114,7 +154,7 @@ package body Giza.Graphics is
    procedure Set_Bounds (This : in out Context; Bounds : Rect_T) is
    begin
       This.Current_State.Bounds := Intersection (This.Current_State.Bounds,
-                                              Bounds);
+                                                 Bounds);
    end Set_Bounds;
 
    ------------
@@ -154,17 +194,6 @@ package body Giza.Graphics is
       end if;
    end Set_Backend;
 
-   ------------
-   -- Rotate --
-   ------------
-
-   procedure Rotate (This : in out Context; Rad : Float) is
-   begin
-      This.Current_State.Transform :=
-        This.Current_State.Transform * Rotation_Matrix (Rad);
-      This.Current_State.Translate_Only := False;
-   end Rotate;
-
    ---------------
    -- Translate --
    ---------------
@@ -177,26 +206,6 @@ package body Giza.Graphics is
       This.Current_State.Bounds :=
         (This.Current_State.Bounds.Org - Pt, This.Current_State.Bounds.Size);
    end Translate;
-
-   -----------
-   -- Scale --
-   -----------
-
-   procedure Scale (This : in out Context; Scale : Float) is
-   begin
-      This.Scale (Scale, Scale);
-   end Scale;
-
-   -----------
-   -- Scale --
-   -----------
-
-   procedure Scale (This : in out Context; X, Y : Float) is
-   begin
-      This.Current_State.Transform :=
-        This.Current_State.Transform * Scale_Matrix (X, Y);
-      This.Current_State.Translate_Only := False;
-   end Scale;
 
    --------------------
    -- Set_Line_Width --
@@ -238,11 +247,15 @@ package body Giza.Graphics is
    ----------
 
    procedure Line (This : in out Context; Start, Stop : Point_T) is
-      Start_2 : constant Point_T := Transform (This, Start);
-      Stop_2 : constant Point_T := Transform (This, Stop);
    begin
-      if This.Bck /= null then
-         This.Bck.Line (Start_2, Stop_2);
+      if This.Bck /= null
+        and then
+          In_Bounds (This, Start)
+        and then
+          In_Bounds (This, Stop)
+      then
+         This.Bck.Line (Transform (This, Start),
+                        Transform (This, Stop));
       end if;
    end Line;
 
@@ -251,11 +264,17 @@ package body Giza.Graphics is
    ---------------
 
    procedure Rectangle (This : in out Context; Rect : Rect_T) is
-      Start : constant Point_T := Transform (This, Rect.Org);
-      Stop  : constant Point_T := Transform (This, Rect.Org + Rect.Size);
+      Start : constant Point_T := Rect.Org;
+      Stop  : constant Point_T := Rect.Org + Rect.Size;
    begin
-      if This.Bck /= null then
-         This.Bck.Rectangle (Start, Stop);
+      if This.Bck /= null
+        and then
+          In_Bounds (This, Start)
+        and then
+          In_Bounds (This, Stop)
+      then
+         This.Bck.Rectangle (Transform (This, Start),
+                             Transform (This, Stop));
       end if;
    end Rectangle;
 
@@ -264,8 +283,9 @@ package body Giza.Graphics is
    --------------------
 
    procedure Fill_Rectangle (This : in out Context; Rect : Rect_T) is
-      Start : constant Point_T := Transform (This, Rect.Org);
-      Stop  : constant Point_T := Transform (This, Rect.Org + Rect.Size);
+      Inter : constant Rect_T := Intersection (Rect, This.Bounds);
+      Start : constant Point_T := Transform (This, Inter.Org);
+      Stop  : constant Point_T := Transform (This, Inter.Org + Inter.Size);
    begin
       if This.Bck /= null then
          This.Bck.Fill_Rectangle (Start, Stop);
@@ -372,6 +392,10 @@ package body Giza.Graphics is
       This.Set_Line_Width (Line_Width);
    end Fill_Circle;
 
+   --------------
+   -- Fill_Arc --
+   --------------
+
    procedure Fill_Arc
      (This     : in out Context;
       Center   : Point_T;
@@ -438,6 +462,10 @@ package body Giza.Graphics is
       end loop;
    end Copy_Bitmap;
 
+   -----------------
+   -- Copy_Bitmap --
+   -----------------
+
    procedure Copy_Bitmap
      (This   : in out Context;
       Bmp    : Bitmap_Indexed_2bits;
@@ -453,6 +481,10 @@ package body Giza.Graphics is
       end loop;
    end Copy_Bitmap;
 
+   -----------------
+   -- Copy_Bitmap --
+   -----------------
+
    procedure Copy_Bitmap
      (This   : in out Context;
       Bmp    : Bitmap_Indexed_4bits;
@@ -467,6 +499,10 @@ package body Giza.Graphics is
          end loop;
       end loop;
    end Copy_Bitmap;
+
+   -----------------
+   -- Copy_Bitmap --
+   -----------------
 
    procedure Copy_Bitmap
      (This   : in out Context;
@@ -530,6 +566,91 @@ package body Giza.Graphics is
       end if;
    end Print;
 
+   ---------------
+   -- Find_Line --
+   ---------------
+
+   procedure Find_Line (This       : Context;
+                        Str        : String;
+                        Start      : Integer;
+                        EOL        : out Integer;
+                        Next_Start : out Integer;
+                        Line_Width : out Integer;
+                        Max_Width  : Natural := 0)
+   is
+      Font : constant Font_Ref := This.Get_Font;
+
+      Width, Height, X_Advance : Natural;
+      X_Offset, Y_Offset : Integer;
+
+      Current_Width : Natural := 0;
+      Split_Cur     : Integer := -1;
+   begin
+      if Font = null or else Str'Length = 0 then
+         EOL := Start;
+         Next_Start := EOL + 1;
+         Line_Width := Current_Width;
+         return;
+      end if;
+
+      for C in Start .. Str'Last loop
+         Font.Glyph_Box
+           (Str (C), Width, Height, X_Advance, X_Offset, Y_Offset);
+         if Str (C) = ' ' then
+            Split_Cur := C;
+         elsif Str (C) = ASCII.LF then
+            EOL := C - 1;
+            Next_Start := C + 1;
+            Line_Width := Current_Width;
+            return;
+         end if;
+         if Max_Width /= 0
+           and then
+             Current_Width + X_Offset + Width > Max_Width
+         then
+            if Split_Cur = -1 then
+               EOL := Integer'Max (Start, C - 1);
+               Next_Start := EOL + 1;
+               Line_Width := Current_Width;
+               return;
+            else
+               EOL := Split_Cur - 1;
+               Next_Start := Split_Cur + 1;
+               Line_Width := Current_Width;
+               return;
+            end if;
+         end if;
+         Current_Width := Current_Width + X_Advance;
+      end loop;
+      EOL := Str'Last;
+      Next_Start := EOL + 1;
+      Line_Width := Current_Width;
+      return;
+   end Find_Line;
+
+   ---------------------
+   -- Number_Of_Lines --
+   ---------------------
+
+   function Number_Of_Lines (This : in out Context;
+                             Str : String;
+                             Box : Rect_T) return Natural
+   is
+      Nbr : Integer := 0;
+      Index, EOL, Next_Start : Integer := Str'First;
+      Line_Width : Integer := 0;
+   begin
+      while Index <= Str'Last loop
+         Find_Line (This, Str, Index, EOL, Next_Start, Line_Width, Box.Size.W);
+         if EOL = -1 then
+            exit;
+         end if;
+         Nbr := Nbr + 1;
+         Index := Next_Start;
+      end loop;
+      return Nbr;
+   end Number_Of_Lines;
+
    -------------------
    -- Print_In_Rect --
    -------------------
@@ -539,44 +660,31 @@ package body Giza.Graphics is
                             Box : Rect_T)
    is
       Font : constant Font_Ref := This.Get_Font;
-      Org_X : Dim;
-      Top, Bottom, Left, Right : Integer;
-      X_Offset, Y_Offset : Integer;
-      Width, Height, X_Advance : Integer;
+      Org_X : constant Dim := Box.Org.X;
+      Index, EOL, Next_Start : Integer := Str'First;
+      Line_Width : Integer := 0;
+      Text_Height : Integer;
    begin
       if Font = null then
          return;
       end if;
 
-      This.Box (Str, Top, Bottom, Left, Right, Max_Width => Box.Size.W);
+      Text_Height := (Number_Of_Lines (This, Str, Box) - 1) * Font.Y_Advance;
 
-      Width := Right - Left;
-      Height := Bottom - Top;
+      This.Move_To (Box.Org +
+                      Point_T'(0,
+                        (Box.Size.H - Text_Height) / 2));
 
-      if Width <= 0 or else Height <= 0 then
-         return;
-      end if;
-
-      --  Center text block in the bounds
-      X_Offset := -Left + (Box.Size.W - Width) / 2;
-      Y_Offset := -Top + (Box.Size.H - Height) / 2;
-      This.Move_To (Box.Org + Point_T'(X_Offset, Y_Offset));
-
-      Org_X := This.Position.X;
-
-      for C of Str loop
-         if C = ASCII.LF then
-            This.Move_To ((Org_X, This.Position.Y + Font.Y_Advance));
-         else
-            Font.Glyph_Box
-              (C, Width, Height, X_Advance, X_Offset, Y_Offset);
-
-            if This.Position.X - Org_X + X_Offset + Width > Box.Size.W then
-               This.Move_To ((Org_X, This.Position.Y + Font.Y_Advance));
-            end if;
-
-            This.Get_Font.Print_Glyph (This, C);
+      while Index <= Str'Last loop
+         Find_Line (This, Str, Index, EOL, Next_Start, Line_Width, Box.Size.W);
+         if EOL = -1 then
+            exit;
          end if;
+         This.Move_To ((Org_X + (Box.Size.W - Line_Width) / 2,
+                       This.Position.Y));
+         This.Print (Str (Index .. EOL));
+         Index := Next_Start;
+         This.Move_To ((Org_X, This.Position.Y + Font.Y_Advance));
       end loop;
    end Print_In_Rect;
 
@@ -586,40 +694,45 @@ package body Giza.Graphics is
 
    procedure Box (This : Context;
                   Str : String;
-                  Top, Bottom, Left, Right : out Integer;
+                  Rect : out Rect_T;
                   Max_Width : Natural := 0)
    is
       Font : constant Font_Ref := This.Get_Font;
+      Index, EOL, Next_Start : Integer := Str'First;
+      Line_Width : Integer := 0;
+      Pt, TL, BR : Point_T := (0, 0);
+
+      Top, Left, Bottom, Right : Dim;
       Width, Height, X_Advance : Natural;
       X_Offset, Y_Offset : Integer;
-      Pt, TL, BR : Point_T := (0, 0);
    begin
-      Left := 0;
-      Right := 0;
-      Top := 0;
-      Bottom := 0;
       if Font = null then
+         Rect := ((0, 0), (0, 0));
          return;
       end if;
 
-      for C of Str loop
-         if C = ASCII.LF then
-            Pt := (0, Pt.Y + Font.Y_Advance);
-         else
+      Top    := Dim'Last;
+      Left   := Dim'Last;
+      Bottom := Dim'First;
+      Right  := Dim'First;
+
+      while Index <= Str'Last loop
+         Find_Line (This, Str, Index, EOL, Next_Start, Line_Width, Max_Width);
+         if EOL = -1 then
+            exit;
+         end if;
+
+         if Max_Width /= 0 then
+            Pt.X := (Max_Width - Line_Width) / 2;
+         end if;
+
+         for C of Str (Index .. EOL) loop
             Font.Glyph_Box
               (C, Width, Height, X_Advance, X_Offset, Y_Offset);
 
             if Width /= 0 and then Height /= 0 then
-               if Max_Width /= 0
-                 and then
-                   Pt.X + X_Offset + Width > Max_Width
-               then
-                  Pt := (0, Pt.Y + Font.Y_Advance);
-               end if;
-
                TL := Pt + Point_T'(X_Offset, Y_Offset);
-               BR := TL + Point_T'(Width, Height);
-
+               BR := TL + Size_T'(Width, Height);
                Left   := Integer'Min (Left, TL.X);
                Top    := Integer'Min (Top, TL.Y);
                Right  := Integer'Max (Right, BR.X);
@@ -627,8 +740,12 @@ package body Giza.Graphics is
             end if;
 
             Pt := Pt + Point_T'(X_Advance, 0);
-         end if;
+         end loop;
+         Index := Next_Start;
+         Pt := Point_T'(0, Pt.Y + Font.Y_Advance);
       end loop;
+      Rect.Org := (Left, Top);
+      Rect.Size := (Right - Left, Bottom - Top);
    end Box;
 
 end Giza.Graphics;

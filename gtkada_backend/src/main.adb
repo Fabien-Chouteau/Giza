@@ -4,7 +4,7 @@ with Timer_Callback; use Timer_Callback;
 with Screen_Interface; use Screen_Interface;
 with Giza.GUI; use Giza.GUI;
 --  with Hershey_Fonts.Rowmand;
-with Giza.Bitmap_Fonts.FreeSerifItalic12pt7b;
+with Giza.Bitmap_Fonts.FreeSerifItalic24pt7b;
 
 procedure Main is
 begin
@@ -12,7 +12,7 @@ begin
    Screen_Interface.Initialize;
 
    --  My_Context.Set_Font (Hershey_Fonts.Rowmand.Font);
-   My_Context.Set_Font (Giza.Bitmap_Fonts.FreeSerifItalic12pt7b.Font);
+   My_Context.Set_Font (Giza.Bitmap_Fonts.FreeSerifItalic24pt7b.Font);
    Giza.GUI.Set_Context (Timer_Callback.My_Context'Access);
    Giza.GUI.Set_Backend (Timer_Callback.My_Backend'Access);
 
