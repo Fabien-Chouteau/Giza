@@ -37,12 +37,30 @@ package body Giza.GUI is
    end record;
 
    procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
+   procedure Redraw;
 
    Drawing_Context : Context_Ref := null;
    Drawing_Backend : Backend_Ref := null;
 
    --  Window stack
    Stack : Wrapper_Ref := null;
+
+   ------------
+   -- Redraw --
+   ------------
+
+   procedure Redraw is
+      Swap : Boolean;
+   begin
+      if Drawing_Backend /= null then
+         Swap := Drawing_Backend.Has_Double_Buffring;
+         Stack.Win.Draw (Drawing_Context.all, Force => Swap);
+         Drawing_Context.Reset;
+         if Swap then
+            Drawing_Backend.Swap_Buffers;
+         end if;
+      end if;
+   end Redraw;
 
    ----------
    -- Push --
@@ -63,7 +81,7 @@ package body Giza.GUI is
       Win.On_Pushed;
 
       if Drawing_Context /= null then
-         Stack.Win.Draw (Drawing_Context.all, True);
+         Redraw;
       end if;
    end Push;
 
@@ -181,7 +199,6 @@ package body Giza.GUI is
    procedure Event_Loop is
       Event : Event_Ref;
       Event_Handled : Boolean;
-      Swap : Boolean;
    begin
       loop
          Event_Sync.Wait_For_Event (Event);
@@ -211,14 +228,7 @@ package body Giza.GUI is
            and then
             Event_Handled
          then
-            if Drawing_Backend /= null then
-               Swap := Drawing_Backend.Has_Double_Buffring;
-               Stack.Win.Draw (Drawing_Context.all, Force => Swap);
-               Drawing_Context.Reset;
-               if Swap then
-                  Drawing_Backend.Swap_Buffers;
-               end if;
-            end if;
+            Redraw;
          end if;
       end loop;
    end Event_Loop;
