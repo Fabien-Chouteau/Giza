@@ -21,17 +21,11 @@
 -------------------------------------------------------------------------------
 
 with Giza.Widgets.Composite; use Giza.Widgets.Composite;
-with Giza.Graphics; use Giza.Graphics;
 
 package Giza.Windows is
 
    type Window is abstract new Composite_Widget with private;
    type Window_Ref is access all Window'Class;
-
-   overriding
-   procedure Draw (This : in out Window;
-                   Ctx : in out Context'Class;
-                   Force : Boolean := True);
 
    procedure On_Pushed (This : in out Window);
 

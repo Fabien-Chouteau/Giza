@@ -22,19 +22,9 @@
 
 package body Giza.Windows is
 
-   ----------
-   -- Draw --
-   ----------
-
-   overriding
-   procedure Draw (This : in out Window;
-                   Ctx : in out Context'Class;
-                   Force : Boolean := True)
-   is
-   begin
-      --  TODO: Fill background
-      Draw (Composite_Widget (This), Ctx, Force);
-   end Draw;
+   ---------------
+   -- On_Pushed --
+   ---------------
 
    procedure On_Pushed (This : in out Window) is
    begin
