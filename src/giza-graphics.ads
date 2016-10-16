@@ -58,7 +58,15 @@ package Giza.Graphics is
 
    procedure Rectangle (This : in out Context; Rect : Rect_T);
 
+   procedure Rounded_Rectangle (This   : in out Context;
+                                Rect   : Rect_T;
+                                Radius : Dim);
+
    procedure Fill_Rectangle (This : in out Context; Rect : Rect_T);
+
+   procedure Fill_Rounded_Rectangle (This   : in out Context;
+                                     Rect   : Rect_T;
+                                     Radius : Dim);
 
    procedure Cubic_Bezier
      (This : in out Context;

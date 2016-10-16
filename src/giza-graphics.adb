@@ -278,6 +278,77 @@ package body Giza.Graphics is
       end if;
    end Rectangle;
 
+   -----------------------
+   -- Rounded_Rectangle --
+   -----------------------
+
+   procedure Rounded_Rectangle (This   : in out Context;
+                                Rect   : Rect_T;
+                                Radius : Dim)
+   is
+      F          : Integer := 1 - Radius;
+      ddF_X      : Integer := 0;
+      ddF_Y      : Integer := (-2) * Radius;
+      X          : Integer := 0;
+      Y          : Integer := Radius;
+      R_Center   : constant Point_T := Center (Rect);
+      Offset_X   : constant Dim := (Rect.Size.W / 2) - Radius;
+      Offset_Y   : constant Dim := (Rect.Size.H / 2) - Radius;
+      Line_Width : Positive;
+   begin
+
+      if Radius = 0 then
+         This.Rectangle (Rect);
+         return;
+      end if;
+
+      Line_Width := This.Line_Width;
+      This.Set_Line_Width (1);
+
+      This.Line (Rect.Org + Point_T'(Radius, 0),
+                 Rect.Org + Point_T'(Rect.Size.W - Radius, 0));
+
+      This.Line (Rect.Org + Point_T'(0, Radius),
+                 Rect.Org + Point_T'(0, Rect.Size.H - Radius));
+
+      This.Line (Rect.Org + Point_T'(Radius, Rect.Size.H),
+                 Rect.Org + Point_T'(Rect.Size.W - Radius, Rect.Size.H));
+
+      This.Line (Rect.Org + Point_T'(Rect.Size.W, Radius),
+                 Rect.Org + Point_T'(Rect.Size.W, Rect.Size.H - Radius));
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+         This.Set_Pixel
+           ((R_Center.X + X + Offset_X, R_Center.Y + Y + Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X - X - Offset_X, R_Center.Y + Y + Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X + X + Offset_X, R_Center.Y - Y - Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X - X - Offset_X, R_Center.Y - Y - Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X + Y + Offset_X, R_Center.Y + X + Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X - Y - Offset_X, R_Center.Y + X + Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X + Y + Offset_X, R_Center.Y - X - Offset_Y));
+         This.Set_Pixel
+           ((R_Center.X - Y - Offset_X, R_Center.Y - X - Offset_Y));
+      end loop;
+
+      --  Restore line width
+      This.Set_Line_Width (Line_Width);
+   end Rounded_Rectangle;
+
    --------------------
    -- Fill_Rectangle --
    --------------------
@@ -291,6 +362,61 @@ package body Giza.Graphics is
          This.Bck.Fill_Rectangle (Start, Stop);
       end if;
    end Fill_Rectangle;
+
+   ----------------------------
+   -- Fill_Rounded_Rectangle --
+   ----------------------------
+
+   procedure Fill_Rounded_Rectangle (This   : in out Context;
+                                     Rect   : Rect_T;
+                                     Radius : Dim)
+   is
+      F          : Integer := 1 - Radius;
+      ddF_X      : Integer := 0;
+      ddF_Y      : Integer := (-2) * Radius;
+      X          : Integer := 0;
+      Y          : Integer := Radius;
+      Line_Width : Positive;
+      R_Center     : constant Point_T := Center (Rect);
+      Offset_X   : constant Dim := (Rect.Size.W / 2) - Radius;
+      Offset_Y   : constant Dim := (Rect.Size.H / 2) - Radius;
+   begin
+
+      if Radius = 0 then
+         This.Fill_Rectangle (Rect);
+         return;
+      end if;
+
+      Line_Width := This.Line_Width;
+      This.Set_Line_Width (1);
+
+      --  Draw every horizontal lines of the circle
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+         This.Line ((R_Center.X - X - Offset_X, R_Center.Y + Y + Offset_Y),
+                    (R_Center.X + X + Offset_X, R_Center.Y + Y + Offset_Y));
+         This.Line ((R_Center.X - X - Offset_X, R_Center.Y - Y - Offset_Y),
+                    (R_Center.X + X + Offset_X, R_Center.Y - Y - Offset_Y));
+         This.Line ((R_Center.X - Y - Offset_X, R_Center.Y + X + Offset_Y),
+                    (R_Center.X + Y + Offset_X, R_Center.Y + X + Offset_Y));
+         This.Line ((R_Center.X - Y - Offset_X, R_Center.Y - X - Offset_Y),
+                    (R_Center.X + Y + Offset_X, R_Center.Y - X - Offset_Y));
+      end loop;
+
+      This.Fill_Rectangle ((Rect.Org + Point_T'(0, Radius),
+                           Rect.Size - (0, Radius * 2)));
+
+      --  Restore line width
+      This.Set_Line_Width (Line_Width);
+   end Fill_Rounded_Rectangle;
 
    ------------------
    -- Cubic_Bezier --
@@ -375,18 +501,39 @@ package body Giza.Graphics is
       Center : Point_T;
       Radius : Dim)
    is
-      R2 : constant Dim := Radius ** 2;
-      Cx : Dim;
-      Line_Width : constant Positive := This.Line_Width;
+      F          : Integer := 1 - Radius;
+      ddF_X      : Integer := 0;
+      ddF_Y      : Integer := (-2) * Radius;
+      X          : Integer := 0;
+      Y          : Integer := Radius;
+      Line_Width : Positive;
    begin
+      Line_Width := This.Line_Width;
       This.Set_Line_Width (1);
 
       --  Draw every horizontal lines of the circle
-      for Cy in -Radius .. Radius loop
-         Cx := Dim (Sqrt (Float (R2 - Cy ** 2)));
-         This.Line (Start => (Center.X - Cx, Center.Y + Cy),
-                    Stop  => (Center.X + Cx, Center.Y + Cy));
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+         This.Line ((Center.X - X, Center.Y + Y),
+                    (Center.X + X, Center.Y + Y));
+         This.Line ((Center.X - X, Center.Y - Y),
+                    (Center.X + X, Center.Y - Y));
+         This.Line ((Center.X - Y, Center.Y + X),
+                    (Center.X + Y, Center.Y + X));
+         This.Line ((Center.X - Y, Center.Y - X),
+                    (Center.X + Y, Center.Y - X));
       end loop;
+
+      This.Line ((Center.X - Radius, Center.Y),
+                 (Center.X + Radius, Center.Y));
 
       --  Restore line width
       This.Set_Line_Width (Line_Width);
