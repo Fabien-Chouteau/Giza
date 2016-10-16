@@ -37,7 +37,10 @@ package body Giza.Widgets.Frame is
          end if;
          if not This.Frame_Disabled then
             Ctx.Set_Color (This.FG);
-            Ctx.Rectangle (((0, 0), This.Get_Size));
+            Ctx.Rounded_Rectangle (((0, 0), This.Get_Size), This.Radius);
+         end if;
+         if not This.Img_Disabled and then This.Img /= null then
+            This.Img.Draw (Ctx);
          end if;
          This.Set_Dirty (False);
       end if;
@@ -63,12 +66,41 @@ package body Giza.Widgets.Frame is
    -------------------
 
    procedure Invert_Colors (This : in out Gframe) is
-      Tmp : Color;
+      Tmp_C : Color;
+      Tmp_Img : Image_Ref;
    begin
-      Tmp := This.FG;
+      Tmp_C := This.FG;
       This.FG := This.Background;
-      This.Set_Background (Tmp);
+      This.Set_Background (Tmp_C);
+
+      Tmp_Img := This.Invert_Img;
+      This.Invert_Img := This.Img;
+      This.Img := Tmp_Img;
    end Invert_Colors;
+
+   ---------------
+   -- Set_Image --
+   ---------------
+
+   procedure Set_Image (This : in out Gframe;
+                        Img  : not null Image_Ref)
+   is
+   begin
+      This.Img := Img;
+      This.Img_Disabled := False;
+   end Set_Image;
+
+   ----------------------
+   -- Set_Invert_Image --
+   ----------------------
+
+   procedure Set_Invert_Image (This : in out Gframe;
+                               Img  : not null Image_Ref)
+   is
+   begin
+      This.Invert_Img := Img;
+      This.Img_Disabled := False;
+   end Set_Invert_Image;
 
    ------------------------
    -- Disable_Background --
@@ -79,12 +111,21 @@ package body Giza.Widgets.Frame is
       This.BG_Disabled := True;
    end Disable_Background;
 
-   ------------------------
-   -- Disable_Foreground --
-   ------------------------
+   -------------------
+   -- Disable_Frame --
+   -------------------
 
    procedure Disable_Frame (This : in out Gframe) is
    begin
       This.Frame_Disabled := True;
    end Disable_Frame;
+
+   -------------------
+   -- Disable_Image --
+   -------------------
+
+   procedure Disable_Image (This : in out Gframe) is
+   begin
+      This.Img_Disabled := True;
+   end Disable_Image;
 end Giza.Widgets.Frame;

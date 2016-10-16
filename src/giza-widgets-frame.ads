@@ -20,8 +20,9 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Colors; use Giza.Colors;
+with Giza.Colors;             use Giza.Colors;
 with Giza.Widgets.Background; use Giza.Widgets.Background;
+with Giza.Images;             use Giza.Images;
 
 package Giza.Widgets.Frame is
    type Gframe is new Gbackground with private;
@@ -37,12 +38,22 @@ package Giza.Widgets.Frame is
    function Foreground (This : Gframe) return Color;
    procedure Invert_Colors (This : in out Gframe);
 
+   procedure Set_Image (This : in out Gframe;
+                        Img  : not null Image_Ref);
+   procedure Set_Invert_Image (This : in out Gframe;
+                               Img  : not null Image_Ref);
+
    procedure Disable_Background (This : in out Gframe);
    procedure Disable_Frame (This : in out Gframe);
+   procedure Disable_Image (This : in out Gframe);
+
 private
    type Gframe is new Gbackground with record
-      FG : Color := Black;
-      BG_Disabled : Boolean := False;
+      FG             : Color := Black;
+      BG_Disabled    : Boolean := False;
       Frame_Disabled : Boolean := False;
+      Img_Disabled   : Boolean := False;
+      Img            : Image_Ref := null;
+      Invert_Img     : Image_Ref := null;
    end record;
 end Giza.Widgets.Frame;
