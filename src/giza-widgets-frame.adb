@@ -40,6 +40,8 @@ package body Giza.Widgets.Frame is
             Ctx.Rounded_Rectangle (((0, 0), This.Get_Size), This.Radius);
          end if;
          if not This.Img_Disabled and then This.Img /= null then
+            Ctx.Translate (((This.Get_Size.W - This.Img.Size.W) / 2,
+                           (This.Get_Size.H - This.Img.Size.H) / 2));
             This.Img.Draw (Ctx);
          end if;
          This.Set_Dirty (False);
