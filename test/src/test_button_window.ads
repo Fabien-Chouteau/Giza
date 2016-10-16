@@ -14,6 +14,6 @@ package Test_Button_Window is
 
 private
    type Button_Window is new Test_Window with record
-      Button_1, Button_2 : Gbutton_Ref;
+      Button_1, Button_2, Button_3 : Gbutton_Ref;
    end record;
 end Test_Button_Window;

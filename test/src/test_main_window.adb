@@ -51,6 +51,7 @@ package body Test_Main_Window is
       This.Add_Child (Widget_Ref (This.Tiles), (0, 0));
 
       for Index in This.Sub_Windows'Range loop
+         This.Sub_Windows (Index).Button.Set_Rounded (20);
          This.Tiles.Set_Child (Index,
                                Widget_Ref (This.Sub_Windows (Index).Button));
       end loop;

@@ -111,9 +111,16 @@ package body Test_Graphic_Bounds is
       Ctx.Copy_Bitmap (hand.Data, (0, 0));
 
       Ctx.Save;
-      Ctx.Translate ((Grid, 5 * Grid));
+      Ctx.Translate ((4 * Grid, 5 * Grid));
       Ctx.Copy_Bitmap (bmp_test_data.Data, (0, 0));
       Ctx.Restore;
+
+      Ctx.Set_Color (Green);
+      Ctx.Fill_Rounded_Rectangle (((Grid, 3 * Grid), (2 * Grid, 3 * Grid)),
+                                  Grid / 2);
+      Ctx.Set_Color (Red);
+      Ctx.Rounded_Rectangle (((Grid, 3 * Grid), (2 * Grid, 3 * Grid)),
+                            Grid / 2);
 
    end Draw;
 

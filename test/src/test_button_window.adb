@@ -1,4 +1,6 @@
 with Giza.Widgets; use Giza.Widgets;
+with hand;
+with hand_2;
 
 package body Test_Button_Window is
 
@@ -14,17 +16,25 @@ package body Test_Button_Window is
 
       This.Button_1 := new Gbutton;
       This.Button_1.Set_Text ("Button");
-      This.Button_1.Set_Size ((This.Get_Size.W, This.Get_Size.H / 2));
+      This.Button_1.Set_Size ((This.Get_Size.W, This.Get_Size.H / 3));
 
       This.Add_Child (Widget_Ref (This.Button_1), (0, 0));
 
       This.Button_2 := new Gbutton;
       This.Button_2.Set_Text ("Toggle");
       This.Button_2.Set_Toggle;
-      This.Button_2.Set_Size ((This.Get_Size.W, This.Get_Size.H / 2));
+      This.Button_2.Set_Size ((This.Get_Size.W, This.Get_Size.H / 3));
 
       This.Add_Child (Widget_Ref (This.Button_2),
                       (0, This.Button_1.Get_Size.H));
+
+      This.Button_3 := new Gbutton;
+      This.Button_3.Set_Image (hand.Image'Access);
+      This.Button_3.Set_Invert_Image (hand_2.Image'Access);
+      This.Button_3.Set_Size ((This.Get_Size.W, This.Get_Size.H / 3));
+
+      This.Add_Child (Widget_Ref (This.Button_3),
+                      (0, This.Button_1.Get_Size.H * 2));
    end On_Init;
 
    ------------------
