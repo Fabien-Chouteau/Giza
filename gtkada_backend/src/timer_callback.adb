@@ -1,13 +1,10 @@
 with Giza.Timers; use Giza.Timers;
 with Ada.Real_Time; use Ada.Real_Time;
 with Giza.GUI; use Giza.GUI;
-with Engine_Control_Events; use Engine_Control_Events;
 
 package body Timer_Callback is
 
    Cnt : Integer := 0;
-
-   RPM_Evt : aliased Set_RPM_Event;
 
    --------------
    -- Callback --
@@ -17,8 +14,6 @@ package body Timer_Callback is
    begin
       --  Put_Line ("Here comes the callback:" & Cnt'Img);
       Cnt := Cnt + 1;
-      RPM_Evt.RPM := Cnt * 10;
-      Emit (RPM_Evt'Access);
       Set_Timer (My_Timer'Unchecked_Access, Clock + Milliseconds (500));
       return True;
    end Callback;
