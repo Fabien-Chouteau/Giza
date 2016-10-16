@@ -20,9 +20,10 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Colors; use Giza.Colors;
-with Giza.Types; use Giza.Types;
-with Giza.Fonts; use Giza.Fonts;
+with Giza.Colors;   use Giza.Colors;
+with Giza.Bitmaps;  use Giza.Bitmaps;
+with Giza.Types;    use Giza.Types;
+with Giza.Fonts;    use Giza.Fonts;
 with Giza.Backends; use Giza.Backends;
 
 package Giza.Graphics is
@@ -87,22 +88,22 @@ package Giza.Graphics is
 
    procedure Copy_Bitmap
      (This   : in out Context;
-      Bmp    : Bitmap_Indexed_1bit;
+      Bmp    : Indexed_1bit.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
      (This   : in out Context;
-      Bmp    : Bitmap_Indexed_2bits;
+      Bmp    : Indexed_2bits.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
      (This   : in out Context;
-      Bmp    : Bitmap_Indexed_4bits;
+      Bmp    : Indexed_4bits.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
      (This   : in out Context;
-      Bmp    : Bitmap_Indexed_8bits;
+      Bmp    : Indexed_8bits.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Set_Font (This : in out Context; Font : Font_Ref);
