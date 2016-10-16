@@ -34,8 +34,16 @@ package Giza.Widgets.Background is
 
    procedure Set_Background (This : in out Gbackground; BG : Color);
    function Background (This : Gbackground) return Color;
+
+   procedure Set_Rounded (This   : in out Gbackground;
+                          Radius : Dim);
+   --  Set to 0 (default) to disable rounded corners
+
+   function Radius (This : Gbackground) return Dim;
+
 private
    type Gbackground is new Widget with record
-      BG : Color := White;
+      BG     : Color := White;
+      Radius : Dim   := 0;
    end record;
 end Giza.Widgets.Background;

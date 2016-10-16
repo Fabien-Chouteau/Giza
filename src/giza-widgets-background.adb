@@ -34,7 +34,7 @@ package body Giza.Widgets.Background is
    begin
       if This.Is_Dirty or else Force then
          Ctx.Set_Color (This.BG);
-         Ctx.Fill_Rectangle (((0, 0), This.Get_Size));
+         Ctx.Fill_Rounded_Rectangle (((0, 0), This.Get_Size), This.Radius);
          This.Set_Dirty (False);
       end if;
    end Draw;
@@ -53,5 +53,22 @@ package body Giza.Widgets.Background is
    ----------------
 
    function Background (This : Gbackground) return Color is (This.BG);
+
+   -----------------
+   -- Set_Rounded --
+   -----------------
+
+   procedure Set_Rounded (This   : in out Gbackground;
+                          Radius : Dim)
+   is
+   begin
+      This.Radius := Radius;
+   end Set_Rounded;
+
+   ------------
+   -- Radius --
+   ------------
+
+   function Radius (This : Gbackground) return Dim is (This.Radius);
 
 end Giza.Widgets.Background;
