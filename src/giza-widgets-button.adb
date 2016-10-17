@@ -28,7 +28,7 @@ package body Giza.Widgets.Button is
 
    overriding
    function On_Click
-     (This  : in out Gbutton;
+     (This  : in out Instance;
       Pos   : Point_T) return Boolean
    is
       pragma Unreferenced (Pos);
@@ -43,7 +43,7 @@ package body Giza.Widgets.Button is
    -----------------------
 
    overriding
-   function On_Click_Released (This  : in out Gbutton) return Boolean is
+   function On_Click_Released (This  : in out Instance) return Boolean is
       Active_Old : constant Boolean := This.Active;
    begin
       if not This.Is_Toggle then
@@ -56,13 +56,13 @@ package body Giza.Widgets.Button is
    -- Active --
    ------------
 
-   function Active (This : Gbutton) return Boolean is (This.Is_Active);
+   function Active (This : Instance) return Boolean is (This.Is_Active);
 
    ----------------
    -- Set_Active --
    ----------------
 
-   procedure Set_Active (This : in out Gbutton; Active : Boolean := True) is
+   procedure Set_Active (This : in out Instance; Active : Boolean := True) is
    begin
       if This.Active /= Active then
          This.Is_Active := Active;
@@ -75,7 +75,7 @@ package body Giza.Widgets.Button is
    -- Set_Toggle --
    ----------------
 
-   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean := True) is
+   procedure Set_Toggle (This : in out Instance; Toggle : Boolean := True) is
    begin
       This.Is_Toggle := Toggle;
    end Set_Toggle;

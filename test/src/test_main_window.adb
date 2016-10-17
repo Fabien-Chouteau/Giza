@@ -1,5 +1,7 @@
 with Giza.GUI;
-with Giza.Widgets; use Giza.Widgets;
+with Giza.Widgets;
+with Giza.Widgets.Button; use Giza.Widgets.Button;
+use Giza;
 with Test_Tiles_Window; use Test_Tiles_Window;
 with Test_Scroll_Window; use Test_Scroll_Window;
 with Test_Button_Window; use Test_Button_Window;
@@ -18,42 +20,42 @@ package body Test_Main_Window is
      (This : in out Main_Window)
    is
    begin
-      This.Sub_Windows (1).Button := new Gbutton;
-      This.Sub_Windows (1).Button.Set_Text ("Gtile");
+      This.Sub_Windows (1).Btn := new Button.Instance;
+      This.Sub_Windows (1).Btn.Set_Text ("Gtile");
       This.Sub_Windows (1).Win := new Tiles_Window;
 
-      This.Sub_Windows (2).Button := new Gbutton;
-      This.Sub_Windows (2).Button.Set_Text ("Gscroll");
+      This.Sub_Windows (2).Btn := new Button.Instance;
+      This.Sub_Windows (2).Btn.Set_Text ("Gscroll");
       This.Sub_Windows (2).Win := new Scroll_Window;
 
-      This.Sub_Windows (3).Button := new Gbutton;
-      This.Sub_Windows (3).Button.Set_Text ("Button");
+      This.Sub_Windows (3).Btn := new Button.Instance;
+      This.Sub_Windows (3).Btn.Set_Text ("Button");
       This.Sub_Windows (3).Win := new Button_Window;
 
-      This.Sub_Windows (4).Button := new Gbutton;
-      This.Sub_Windows (4).Button.Set_Text ("Number_Select");
+      This.Sub_Windows (4).Btn := new Button.Instance;
+      This.Sub_Windows (4).Btn.Set_Text ("Number_Select");
       This.Sub_Windows (4).Win := new Gnumber_Window;
 
-      This.Sub_Windows (5).Button := new Gbutton;
-      This.Sub_Windows (5).Button.Set_Text ("Graphics");
+      This.Sub_Windows (5).Btn := new Button.Instance;
+      This.Sub_Windows (5).Btn.Set_Text ("Graphics");
       This.Sub_Windows (5).Win := new Graphic_Bounds_Window;
 
-      This.Sub_Windows (6).Button := new Gbutton;
-      This.Sub_Windows (6).Button.Set_Text ("Keyboard");
+      This.Sub_Windows (6).Btn := new Button.Instance;
+      This.Sub_Windows (6).Btn.Set_Text ("Keyboard");
       This.Sub_Windows (6).Win := new Test_Keyboard_Window.Keyboard_Window;
 
-      This.Sub_Windows (7).Button := new Gbutton;
-      This.Sub_Windows (7).Button.Set_Text ("Fonts");
+      This.Sub_Windows (7).Btn := new Button.Instance;
+      This.Sub_Windows (7).Btn.Set_Text ("Fonts");
       This.Sub_Windows (7).Win := new Test_Fonts.Test_Fonts_Window;
 
-      This.Tiles := new Gtile (This.Sub_Windows'Length, Top_Down);
-      This.Tiles.Set_Size (This.Get_Size);
-      This.Add_Child (Widget_Ref (This.Tiles), (0, 0));
+      This.Btn_Tile := new Tiles.Instance (This.Sub_Windows'Length, Top_Down);
+      This.Btn_Tile.Set_Size (This.Get_Size);
+      This.Add_Child (Widgets.Reference (This.Btn_Tile), (0, 0));
 
       for Index in This.Sub_Windows'Range loop
-         This.Sub_Windows (Index).Button.Set_Rounded (20);
-         This.Tiles.Set_Child (Index,
-                               Widget_Ref (This.Sub_Windows (Index).Button));
+         This.Sub_Windows (Index).Btn.Set_Rounded (20);
+         This.Btn_Tile.Set_Child
+           (Index, Widgets.Reference (This.Sub_Windows (Index).Btn));
       end loop;
 
       --  Uncomment to directly open a specific test window
@@ -94,18 +96,18 @@ package body Test_Main_Window is
       Pos  : Point_T) return Boolean
    is
    begin
-      if not On_Position_Event (Window (This), Evt, Pos) then
+      if not On_Position_Event (Parent (This), Evt, Pos) then
          return False;
       end if;
 
       for Sub of This.Sub_Windows loop
          if Sub.Win /= null
            and then
-            Sub.Button /= null
+            Sub.Btn /= null
            and then
-            Sub.Button.Active
+            Sub.Btn.Active
          then
-            Sub.Button.Set_Active (False);
+            Sub.Btn.Set_Active (False);
             Giza.GUI.Push (Sub.Win);
             return True;
          end if;

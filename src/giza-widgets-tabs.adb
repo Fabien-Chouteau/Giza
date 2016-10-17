@@ -27,7 +27,7 @@ package body Giza.Widgets.Tabs is
    ---------------
 
    overriding
-   procedure Set_Dirty (This : in out Gtabs;
+   procedure Set_Dirty (This : in out Instance;
                         Dirty : Boolean := True)
    is
    begin
@@ -39,7 +39,7 @@ package body Giza.Widgets.Tabs is
    ----------
 
    overriding
-   procedure Draw (This : in out Gtabs;
+   procedure Draw (This : in out Instance;
                    Ctx : in out Context'Class;
                    Force : Boolean := True) is
    begin
@@ -52,7 +52,7 @@ package body Giza.Widgets.Tabs is
 
    overriding
    function On_Position_Event
-     (This : in out Gtabs;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean
    is
@@ -61,13 +61,13 @@ package body Giza.Widgets.Tabs is
          for Index in This.Tabs'Range loop
             if Index /= This.Selected
               and then
-                This.Tabs (Index).Button.Active
+                This.Tabs (Index).Btn.Active
             then
                This.Set_Selected (Index);
                exit;
             end if;
          end loop;
-         This.Tabs (This.Selected).Button.Set_Active;
+         This.Tabs (This.Selected).Btn.Set_Active;
          return True;
       else
          return False;
@@ -80,7 +80,7 @@ package body Giza.Widgets.Tabs is
 
    overriding
    function On_Event
-     (This : in out Gtabs;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean
    is
    begin
@@ -92,10 +92,10 @@ package body Giza.Widgets.Tabs is
    -------------
 
    procedure Set_Tab
-     (This  : in out Gtabs;
+     (This  : in out Instance;
       Index : Natural;
       Title : String;
-      Child : not null Widget_Ref)
+      Child : not null Widgets.Reference)
    is
       Tabs_H : constant Integer := This.Get_Size.H / 4;
    begin
@@ -103,7 +103,7 @@ package body Giza.Widgets.Tabs is
          --  Initialization (This could/should be done only once...)
          This.Root.Set_Size (This.Get_Size);
          This.Tabs_Group.Set_Size ((This.Get_Size.W, Tabs_H));
-         This.Tabs_Group.Set_Background (This.Foreground);
+         This.Tabs_Group.Set_Background (This.Get_Foreground);
          This.Root.Add_Child (This.Tabs_Group'Unchecked_Access, (0, 0));
          This.Init := True;
       end if;
@@ -112,14 +112,14 @@ package body Giza.Widgets.Tabs is
          This.Tabs (Index).Widg := Child;
          Child.Set_Size (This.Get_Size - (0, Tabs_H + 1));
          Child.Set_Dirty;
-         This.Tabs (Index).Button.Set_Text (Title);
-         This.Tabs (Index).Button.Set_Foreground (This.Foreground);
-         This.Tabs (Index).Button.Set_Background (This.Background);
-         This.Tabs (Index).Button.Disable_Frame;
-         This.Tabs (Index).Button.Set_Toggle (True);
+         This.Tabs (Index).Btn.Set_Text (Title);
+         This.Tabs (Index).Btn.Set_Foreground (This.Get_Foreground);
+         This.Tabs (Index).Btn.Set_Background (This.Get_Background);
+         This.Tabs (Index).Btn.Disable_Frame;
+         This.Tabs (Index).Btn.Set_Toggle (True);
 
          This.Tabs_Group.Set_Child (Index,
-                                    This.Tabs (Index).Button'Unchecked_Access);
+                                    This.Tabs (Index).Btn'Unchecked_Access);
          This.Set_Selected (Index);
       end if;
    end Set_Tab;
@@ -128,13 +128,13 @@ package body Giza.Widgets.Tabs is
    -- Selected --
    --------------
 
-   function Selected (This : Gtabs) return Natural is (This.Selected);
+   function Selected (This : Instance) return Natural is (This.Selected);
 
    ------------------
    -- Set_Selected --
    ------------------
 
-   procedure Set_Selected (This : in out Gtabs; Selected : Natural) is
+   procedure Set_Selected (This : in out Instance; Selected : Natural) is
    begin
       if Selected in This.Tabs'Range
         and then
@@ -147,8 +147,8 @@ package body Giza.Widgets.Tabs is
                               (0, This.Tabs_Group.Get_Size.H + 1));
 
          for Index in This.Tabs'Range loop
-            This.Tabs (Index).Button.Set_Active (Index = Selected);
-            This.Tabs (Index).Button.Set_Disabled (Index = Selected);
+            This.Tabs (Index).Btn.Set_Active (Index = Selected);
+            This.Tabs (Index).Btn.Set_Disabled (Index = Selected);
          end loop;
       end if;
    end Set_Selected;

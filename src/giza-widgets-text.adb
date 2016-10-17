@@ -31,7 +31,7 @@ package body Giza.Widgets.Text is
    ----------
 
    overriding
-   procedure Draw (This : in out Gtext;
+   procedure Draw (This : in out Instance;
                    Ctx : in out Context'Class;
                    Force : Boolean := True)
    is
@@ -42,10 +42,10 @@ package body Giza.Widgets.Text is
          return;
       end if;
 
-      Draw (Gframe (This), Ctx, Force => True);
+      Draw (Parent (This), Ctx, Force => True);
 
       if This.Str /= null then
-         Ctx.Set_Color (This.Foreground);
+         Ctx.Set_Color (This.Get_Foreground);
          Ctx.Print_In_Rect (This.Str.all,
                             ((Margin_W, Margin_H),
                              This.Get_Size - (Margin_W * 2, Margin_H * 2)));
@@ -56,7 +56,7 @@ package body Giza.Widgets.Text is
    -- Set_Text --
    --------------
 
-   procedure Set_Text (This : in out Gtext; Str : String) is
+   procedure Set_Text (This : in out Instance; Str : String) is
    begin
       if This.Str /= null then
          Free (This.Str);
@@ -70,7 +70,7 @@ package body Giza.Widgets.Text is
    -- Text --
    ----------
 
-   function Text (This : Gtext) return String is
+   function Text (This : Instance) return String is
    begin
       if This.Str /= null then
          return This.Str.all;

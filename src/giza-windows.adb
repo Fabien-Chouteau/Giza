@@ -26,14 +26,14 @@ package body Giza.Windows is
    -- On_Pushed --
    ---------------
 
-   procedure On_Pushed (This : in out Window) is
+   procedure On_Pushed (This : in out Instance) is
    begin
       if not This.Initialized then
-         On_Init (Window'Class (This));
+         On_Init (Class (This));
          This.Initialized := True;
       end if;
 
-      On_Displayed (Window'Class (This));
+      On_Displayed (Class (This));
    end On_Pushed;
 
 end Giza.Windows;

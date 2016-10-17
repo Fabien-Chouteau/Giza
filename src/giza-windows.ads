@@ -20,21 +20,24 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Widgets.Composite; use Giza.Widgets.Composite;
+with Giza.Widgets.Composite;
+use Giza.Widgets;
 
 package Giza.Windows is
 
-   type Window is abstract new Composite_Widget with private;
-   type Window_Ref is access all Window'Class;
+   subtype Parent is Composite.Instance;
+   type Instance is abstract new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
-   procedure On_Pushed (This : in out Window);
+   procedure On_Pushed (This : in out Instance);
 
-   procedure On_Init (This : in out Window) is abstract;
-   procedure On_Displayed (This : in out Window) is abstract;
-   procedure On_Hidden (This : in out Window) is abstract;
+   procedure On_Init (This : in out Instance) is abstract;
+   procedure On_Displayed (This : in out Instance) is abstract;
+   procedure On_Hidden (This : in out Instance) is abstract;
 
 private
-   type Window is abstract new Composite_Widget with record
+   type Instance is abstract new Parent with record
       Initialized : Boolean := False;
    end record;
 end Giza.Windows;

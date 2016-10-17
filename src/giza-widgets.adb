@@ -26,13 +26,13 @@ package body Giza.Widgets is
    -- Dirty --
    -----------
 
-   function Dirty (This : Widget) return Boolean is (This.Is_Dirty);
+   function Dirty (This : Instance) return Boolean is (This.Is_Dirty);
 
    ---------------
    -- Set_Dirty --
    ---------------
 
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True) is
+   procedure Set_Dirty (This : in out Instance; Dirty : Boolean := True) is
    begin
       This.Is_Dirty := Dirty;
    end Set_Dirty;
@@ -41,7 +41,9 @@ package body Giza.Widgets is
    -- Set_Disabled --
    ------------------
 
-   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True) is
+   procedure Set_Disabled (This     : in out Instance;
+                           Disabled : Boolean := True)
+   is
    begin
       This.Is_Disabled := Disabled;
    end Set_Disabled;
@@ -50,7 +52,7 @@ package body Giza.Widgets is
    -- Set_Size --
    --------------
 
-   procedure Set_Size (This : in out Widget; Size : Size_T) is
+   procedure Set_Size (This : in out Instance; Size : Size_T) is
    begin
       This.Size := Size;
    end Set_Size;
@@ -59,14 +61,14 @@ package body Giza.Widgets is
    -- Get_Size --
    --------------
 
-   function Get_Size (This : Widget) return Size_T is (This.Size);
+   function Get_Size (This : Instance) return Size_T is (This.Size);
 
    -----------------------
    -- On_Position_Event --
    -----------------------
 
    function On_Position_Event
-     (This : in out Widget;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean is
    begin
@@ -75,7 +77,7 @@ package body Giza.Widgets is
       end if;
 
       if Evt.all in Click_Event'Class then
-         return On_Click (Widget'Class (This), Pos);
+         return On_Click (Class (This), Pos);
       end if;
       return False;
    end On_Position_Event;
@@ -85,7 +87,7 @@ package body Giza.Widgets is
    --------------
 
    function On_Event
-     (This : in out Widget;
+     (This : in out Instance;
       Evt : Event_Not_Null_Ref) return Boolean is
    begin
       if This.Is_Disabled then
@@ -93,7 +95,7 @@ package body Giza.Widgets is
       end if;
 
       if Evt.all in Click_Released_Event'Class then
-         return On_Click_Released (Widget'Class (This));
+         return On_Click_Released (Class (This));
       end if;
       return False;
    end On_Event;

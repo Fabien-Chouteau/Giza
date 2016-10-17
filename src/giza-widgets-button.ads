@@ -20,30 +20,32 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Widgets.Text; use Giza.Widgets.Text;
+with Giza.Widgets.Text;
+use Giza.Widgets;
 
 package Giza.Widgets.Button is
 
-   type Gbutton is new Gtext with private;
-
-   type Gbutton_Ref is access all Gbutton'Class;
+   subtype Parent is Text.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
    overriding
    function On_Click
-     (This  : in out Gbutton;
+     (This  : in out Instance;
       Pos   : Point_T) return Boolean;
 
    overriding
    function On_Click_Released
-     (This  : in out Gbutton) return Boolean;
+     (This  : in out Instance) return Boolean;
 
-   function Active (This : Gbutton) return Boolean;
+   function Active (This : Instance) return Boolean;
 
-   procedure Set_Active (This : in out Gbutton; Active : Boolean := True);
-   procedure Set_Toggle (This : in out Gbutton; Toggle : Boolean := True);
+   procedure Set_Active (This : in out Instance; Active : Boolean := True);
+   procedure Set_Toggle (This : in out Instance; Toggle : Boolean := True);
 
 private
-   type Gbutton is new Gtext with record
+   type Instance is new Parent with record
       Is_Active : Boolean := False;
       Is_Toggle : Boolean := False;
    end record;

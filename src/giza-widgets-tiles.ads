@@ -26,42 +26,43 @@ package Giza.Widgets.Tiles is
 
    type Tile_Direction is (Top_Down, Bottom_Up, Right_Left, Left_Right);
 
-   type Gtile (Number_Of_Widget : Positive; Dir : Tile_Direction) is
-     new Gbackground with private;
-
-   type Gtile_Ref is access all Gtile'Class;
+   subtype Parent is Background.Instance;
+   type Instance (Number_Of_Widget : Positive; Dir : Tile_Direction) is
+     new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
    overriding
-   procedure Set_Dirty (This : in out Gtile;
+   procedure Set_Dirty (This : in out Instance;
                         Dirty : Boolean := True);
 
    overriding
-   procedure Draw (This : in out Gtile;
+   procedure Draw (This : in out Instance;
                    Ctx : in out Context'Class;
                    Force : Boolean := True);
 
    overriding
    function On_Position_Event
-     (This : in out Gtile;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
    overriding
    function On_Event
-     (This : in out Gtile;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Set_Child
-     (This  : in out Gtile;
+     (This  : in out Instance;
       Index : Positive;
-      Child : Widget_Ref);
+      Child : Widgets.Reference);
 
-   procedure Set_Spacing (This : in out Gtile; Spacing : Natural);
-   procedure Set_Margin (This : in out Gtile; Margin : Natural);
+   procedure Set_Spacing (This : in out Instance; Spacing : Natural);
+   procedure Set_Margin (This : in out Instance; Margin : Natural);
 private
 
-   type Gtile (Number_Of_Widget : Positive; Dir : Tile_Direction) is
-     new Gbackground with record
+   type Instance (Number_Of_Widget : Positive; Dir : Tile_Direction) is
+     new Parent with record
       Widgs   : Widget_Ref_Array (1 .. Number_Of_Widget) := (others => null);
       Spacing : Natural := 2;
       Margin  : Natural := 1;

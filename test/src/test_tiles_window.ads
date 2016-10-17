@@ -1,4 +1,5 @@
-with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
+with Giza.Widgets.Tiles;
+use Giza.Widgets;
 with Basic_Test_Window; use Basic_Test_Window;
 
 package Test_Tiles_Window is
@@ -14,9 +15,9 @@ package Test_Tiles_Window is
 
 private
    type Tiles_Window is new Test_Window with record
-      Tile_Top_Down   : Gtile_Ref;
-      Tile_Bottom_Up  : Gtile_Ref;
-      Tile_Right_Left : Gtile_Ref;
-      Tile_Left_Right : Gtile_Ref;
+      Tile_Top_Down   : Tiles.Ref;
+      Tile_Bottom_Up  : Tiles.Ref;
+      Tile_Right_Left : Tiles.Ref;
+      Tile_Left_Right : Tiles.Ref;
    end record;
 end Test_Tiles_Window;

@@ -25,45 +25,46 @@ with Giza.Graphics; use Giza.Graphics;
 with Giza.Types; use Giza.Types;
 
 package Giza.Widgets is
-   type Widget is abstract tagged private;
-   type Widget_Ref is access all Widget'Class;
-   type Not_Null_Widget_Ref is not null access all Widget'Class;
 
-   type Widget_Ref_Array is array (Positive range <>) of Widget_Ref;
+   type Instance is abstract tagged private;
+   subtype Class is Instance'Class;
+   type Reference is access all Class;
 
-   function Dirty (This : Widget) return Boolean;
-   procedure Set_Dirty (This : in out Widget; Dirty : Boolean := True);
-   procedure Draw (This : in out Widget;
+   type Widget_Ref_Array is array (Positive range <>) of Reference;
+
+   function Dirty (This : Instance) return Boolean;
+   procedure Set_Dirty (This : in out Instance; Dirty : Boolean := True);
+   procedure Draw (This : in out Instance;
                    Ctx : in out Context'Class;
                    Force : Boolean := True) is null;
 
-   procedure Set_Disabled (This : in out Widget; Disabled : Boolean := True);
-   --  When a widget is disabled, it will no longer react to events
+   procedure Set_Disabled (This : in out Instance; Disabled : Boolean := True);
+   --  When a Instance is disabled, it will no longer react to events
 
-   procedure Set_Size (This : in out Widget; Size : Size_T);
-   function Get_Size (This : Widget) return Size_T;
+   procedure Set_Size (This : in out Instance; Size : Size_T);
+   function Get_Size (This : Instance) return Size_T;
 
    function On_Position_Event
-     (This : in out Widget;
+     (This : in out Instance;
       Evt : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
    function On_Event
-     (This : in out Widget;
+     (This : in out Instance;
       Evt : Event_Not_Null_Ref) return Boolean;
 
    function On_Click
-     (This  : in out Widget;
+     (This  : in out Instance;
       Pos   : Point_T) return Boolean is (False);
 
    function On_Click_Released
-     (This  : in out Widget) return Boolean is (False);
+     (This  : in out Instance) return Boolean is (False);
 
 private
-   type Widget is abstract tagged record
+   type Instance is abstract tagged record
       Is_Dirty    : Boolean := True;
       Is_Disabled : Boolean := False;
       Size : Size_T := (0, 0);
---        Next : access Widget'Class := null;
+--        Next : access Instance'Class := null;
    end record;
 end Giza.Widgets;

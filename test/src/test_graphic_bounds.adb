@@ -1,7 +1,9 @@
+with Giza; use Giza;
 with Giza.Colors; use Giza.Colors;
-with Giza.Widgets; use Giza.Widgets;
-with Ada.Numerics; use Ada.Numerics;
+with Giza.Widgets;
+with Giza.Widgets.Button; use Giza.Widgets.Button;
 with Giza.Types; use Giza.Types;
+with Ada.Numerics; use Ada.Numerics;
 with bmp_test_data;
 with hand;
 
@@ -16,10 +18,10 @@ package body Test_Graphic_Bounds is
    is
    begin
       On_Init (Test_Window (This));
-      This.Bound_Bnt := new Gbutton;
-      This.Bound_Bnt.Set_Size ((This.Get_Size.W, 40));
-      This.Bound_Bnt.Set_Text ("Bounds");
-      This.Add_Child (Widget_Ref (This.Bound_Bnt), (0, 0));
+      This.Bound_Btn := new Button.Instance;
+      This.Bound_Btn.Set_Size ((This.Get_Size.W, 40));
+      This.Bound_Btn.Set_Text ("Bounds");
+      This.Add_Child (Widgets.Reference (This.Bound_Btn), (0, 0));
    end On_Init;
 
    ------------------
@@ -79,7 +81,7 @@ package body Test_Graphic_Bounds is
          end if;
 
          --  Set bounds
-         if This.Bound_Bnt /= null and then This.Bound_Bnt.Active then
+         if This.Bound_Btn /= null and then This.Bound_Btn.Active then
             Ctx.Set_Bounds (((0, 0), This.Get_Size / 10));
          end if;
 

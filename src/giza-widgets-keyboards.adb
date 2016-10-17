@@ -22,14 +22,14 @@
 
 package body Giza.Widgets.Keyboards is
 
-   procedure Set_Keymap (This : in out GKeyboard;
+   procedure Set_Keymap (This    : in out Instance;
                          Special : Boolean := False;
                          Caps    : Boolean := False);
    ----------------
    -- Set_Keymap --
    ----------------
 
-   procedure Set_Keymap (This : in out GKeyboard;
+   procedure Set_Keymap (This    : in out Instance;
                          Special : Boolean := False;
                          Caps    : Boolean := False) is
    begin
@@ -170,7 +170,7 @@ package body Giza.Widgets.Keyboards is
    -------------
 
    procedure On_Init
-     (This : in out GKeyboard)
+     (This : in out Instance)
    is
       Win_Size : constant Size_T := This.Get_Size;
       Keyboard_Size : constant Size_T := (Win_Size.W, Win_Size.H / 2);
@@ -212,8 +212,8 @@ package body Giza.Widgets.Keyboards is
    -- Draw --
    ----------
 
-   overriding procedure Draw (This : in out GKeyboard;
-                              Ctx : in out Context'Class;
+   overriding procedure Draw (This  : in out Instance;
+                              Ctx   : in out Context'Class;
                               Force : Boolean := True)
    is
    begin
@@ -229,7 +229,7 @@ package body Giza.Widgets.Keyboards is
    -----------------------
 
    overriding function On_Position_Event
-     (This  : in out GKeyboard;
+     (This  : in out Instance;
       Evt   : Position_Event_Ref;
       Pos   : Point_T)
       return Boolean
@@ -282,7 +282,7 @@ package body Giza.Widgets.Keyboards is
    -- Set_Max_Entry_Length --
    --------------------------
 
-   procedure Set_Max_Entry_Length (This : in out GKeyboard; Len : Natural) is
+   procedure Set_Max_Entry_Length (This : in out Instance; Len : Natural) is
    begin
       This.Max_Text_Len := Len;
    end Set_Max_Entry_Length;
@@ -291,7 +291,7 @@ package body Giza.Widgets.Keyboards is
    -- Get_Text --
    --------------
 
-   function Get_Text (This : GKeyboard) return String is
+   function Get_Text (This : Instance) return String is
    begin
       return This.Text_Display.Text;
    end Get_Text;

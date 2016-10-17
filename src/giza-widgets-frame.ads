@@ -25,30 +25,32 @@ with Giza.Widgets.Background; use Giza.Widgets.Background;
 with Giza.Images;             use Giza.Images;
 
 package Giza.Widgets.Frame is
-   type Gframe is new Gbackground with private;
 
-   type Gframe_Ref is access all Gframe'Class;
+   subtype Parent is Background.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
    overriding
-   procedure Draw (This : in out Gframe;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Foreground (This : in out Gframe; FG : Color);
-   function Foreground (This : Gframe) return Color;
-   procedure Invert_Colors (This : in out Gframe);
+   procedure Set_Foreground (This : in out Instance; FG : Color);
+   function Get_Foreground (This : Instance) return Color;
+   procedure Invert_Colors (This : in out Instance);
 
-   procedure Set_Image (This : in out Gframe;
+   procedure Set_Image (This : in out Instance;
                         Img  : not null Image_Ref);
-   procedure Set_Invert_Image (This : in out Gframe;
+   procedure Set_Invert_Image (This : in out Instance;
                                Img  : not null Image_Ref);
 
-   procedure Disable_Background (This : in out Gframe);
-   procedure Disable_Frame (This : in out Gframe);
-   procedure Disable_Image (This : in out Gframe);
+   procedure Disable_Background (This : in out Instance);
+   procedure Disable_Frame (This : in out Instance);
+   procedure Disable_Image (This : in out Instance);
 
 private
-   type Gframe is new Gbackground with record
+   type Instance is new Parent with record
       FG             : Color := Black;
       BG_Disabled    : Boolean := False;
       Frame_Disabled : Boolean := False;

@@ -24,22 +24,25 @@ with Giza.Widgets.Frame; use Giza.Widgets.Frame;
 
 package Giza.Widgets.Text is
 
-   type Gtext is new Gframe with private;
+   subtype Parent is Frame.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
-   type Gtext_Ref is access all Gtext'Class;
+   type Instance_Ref is access all Instance'Class;
 
    overriding
-   procedure Draw (This : in out Gtext;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Text (This : in out Gtext; Str : String);
-   function Text (This : Gtext) return String;
+   procedure Set_Text (This : in out Instance; Str : String);
+   function Text (This : Instance) return String;
 
 private
    type String_Access is access all String;
 
-   type Gtext is new Gframe with record
+   type Instance is new Parent with record
       Str : String_Access := null;
    end record;
 end Giza.Widgets.Text;

@@ -39,7 +39,7 @@ package Giza.GUI is
    procedure Set_Backend (Bck : Backend_Ref);
    --  Set the graphical backend that will be used for widgets rendering
 
-   procedure Push (Win : not null Window_Ref);
+   procedure Push (Win : not null Giza.Windows.Ref);
    --  Push a Window to the stack and display it
 
    procedure Pop;

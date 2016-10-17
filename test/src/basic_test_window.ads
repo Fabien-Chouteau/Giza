@@ -1,10 +1,12 @@
 with Giza.Windows;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widgets.Button;
+use Giza.Widgets;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
 
 package Basic_Test_Window is
-   type Test_Window is abstract new Giza.Windows.Window with private;
+   subtype Parent is  Giza.Windows.Instance;
+   type Test_Window is abstract new Parent with private;
    type Test_Window_Ref is access all Test_Window;
 
    overriding
@@ -20,7 +22,7 @@ package Basic_Test_Window is
    function Get_Size (This : Test_Window) return Size_T;
 
 private
-   type Test_Window is abstract new Giza.Windows.Window with record
-      Back           : Gbutton_Ref;
+   type Test_Window is abstract new Parent with record
+      Back : Button.Ref;
    end record;
 end Basic_Test_Window;

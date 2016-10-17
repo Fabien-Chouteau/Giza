@@ -1,7 +1,8 @@
 with Giza.Colors; use Giza.Colors;
-with Giza.Widgets; use Giza.Widgets;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widgets;
+with Giza.Widgets.Button;
 with Giza.Types; use Giza.Types;
+use Giza;
 
 package body Test_Tiles_Window is
 
@@ -12,30 +13,30 @@ package body Test_Tiles_Window is
    overriding procedure On_Init
      (This : in out Tiles_Window)
    is
-      function New_Text (Str : String) return Widget_Ref;
+      function New_Text (Str : String) return Widgets.Reference;
 
       --------------
       -- New_Text --
       --------------
 
-      function New_Text (Str : String) return Widget_Ref is
-         Txt : Gbutton_Ref;
+      function New_Text (Str : String) return Widgets.Reference is
+         Txt : Button.Ref;
       begin
-         Txt := new Gbutton;
+         Txt := new Button.Instance;
          Txt.Set_Text (Str);
          Txt.Set_Background (White);
          Txt.Set_Foreground (Black);
-         return Widget_Ref (Txt);
+         return Widgets.Reference (Txt);
       end New_Text;
 
       Size : constant Size_T := This.Get_Size;
    begin
       On_Init (Test_Window (This));
 
-      This.Tile_Top_Down   := new Gtile (3, Top_Down);
-      This.Tile_Bottom_Up  := new Gtile (3, Bottom_Up);
-      This.Tile_Right_Left := new Gtile (3, Right_Left);
-      This.Tile_Left_Right := new Gtile (3, Left_Right);
+      This.Tile_Top_Down   := new Tiles.Instance (3, Tiles.Top_Down);
+      This.Tile_Bottom_Up  := new Tiles.Instance (3, Tiles.Bottom_Up);
+      This.Tile_Right_Left := new Tiles.Instance (3, Tiles.Right_Left);
+      This.Tile_Left_Right := new Tiles.Instance (3, Tiles.Left_Right);
 
       This.Tile_Top_Down.Set_Size ((Size.W / 2,
                              Size.H / 2));
@@ -50,16 +51,16 @@ package body Test_Tiles_Window is
          This.Tile_Left_Right.Set_Child (Index, New_Text ("LR" & Index'Img));
       end loop;
 
-      This.Add_Child (Widget_Ref (This.Tile_Top_Down),
+      This.Add_Child (Widgets.Reference (This.Tile_Top_Down),
                       (0, 0));
 
-      This.Add_Child (Widget_Ref (This.Tile_Bottom_Up),
+      This.Add_Child (Widgets.Reference (This.Tile_Bottom_Up),
                       (Size.W / 2, 0));
 
-      This.Add_Child (Widget_Ref (This.Tile_Right_Left),
+      This.Add_Child (Widgets.Reference (This.Tile_Right_Left),
                       (0, Size.H / 2));
 
-      This.Add_Child (Widget_Ref (This.Tile_Left_Right),
+      This.Add_Child (Widgets.Reference (This.Tile_Left_Right),
                       (Size.W / 2,  Size.H / 2));
    end On_Init;
 

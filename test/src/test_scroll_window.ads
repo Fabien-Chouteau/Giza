@@ -1,4 +1,5 @@
-with Giza.Widgets.Scrolling; use Giza.Widgets.Scrolling;
+with Giza.Widgets.Scrolling;
+use Giza.Widgets;
 with Basic_Test_Window; use Basic_Test_Window;
 
 package Test_Scroll_Window is
@@ -14,8 +15,8 @@ package Test_Scroll_Window is
 
 private
    type Scroll_Window is new Test_Window with record
-      Scroll_Vert    : Gscroll_Ref;
-      Scroll_Horizon : Gscroll_Ref;
-      Scroll_Both    : Gscroll_Ref;
+      Scroll_Vert    : Scrolling.Ref;
+      Scroll_Horizon : Scrolling.Ref;
+      Scroll_Both    : Scrolling.Ref;
    end record;
 end Test_Scroll_Window;

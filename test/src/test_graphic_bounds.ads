@@ -1,7 +1,8 @@
 with Basic_Test_Window; use Basic_Test_Window;
 with Giza.Graphics; use Giza.Graphics;
 with Giza.Events; use Giza.Events;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widgets.Button;
+use Giza.Widgets;
 
 package Test_Graphic_Bounds is
 
@@ -23,7 +24,7 @@ package Test_Graphic_Bounds is
 private
 
    type Graphic_Bounds_Window is new Test_Window with record
-      Evt : aliased Timer_Event;
-      Bound_Bnt : Gbutton_Ref;
+      Evt       : aliased Timer_Event;
+      Bound_Btn : Button.Ref;
    end record;
 end Test_Graphic_Bounds;

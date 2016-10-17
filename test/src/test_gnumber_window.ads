@@ -1,5 +1,6 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Widgets.Number_Selection; use Giza.Widgets.Number_Selection;
+with Giza.Widgets.Number_Selection;
+use Giza.Widgets;
 
 package Test_Gnumber_Window is
    type Gnumber_Window is new Test_Window with private;
@@ -14,6 +15,6 @@ package Test_Gnumber_Window is
 
 private
    type Gnumber_Window is new Test_Window with record
-      Nbr_1, Nbr_2 : Gnumber_Select_Ref;
+      Nbr_1, Nbr_2 : Number_Selection.Ref;
    end record;
 end Test_Gnumber_Window;

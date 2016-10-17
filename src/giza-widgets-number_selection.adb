@@ -35,7 +35,7 @@ package body Giza.Widgets.Number_Selection is
    ---------------
 
    overriding
-   procedure Set_Dirty (This : in out Gnumber_Select;
+   procedure Set_Dirty (This : in out Instance;
                         Dirty : Boolean := True)
    is
    begin
@@ -47,7 +47,7 @@ package body Giza.Widgets.Number_Selection is
    ----------
 
    overriding procedure Draw
-     (This : in out Gnumber_Select;
+     (This : in out Instance;
       Ctx : in out Context'Class;
       Force : Boolean := True)
    is
@@ -77,12 +77,12 @@ package body Giza.Widgets.Number_Selection is
 
          This.Root.Set_Size (This.Get_Size);
 
-         This.Minus := new Gbutton;
+         This.Minus := new Button.Instance;
          This.Minus.Set_Text ("-");
          This.Minus.Set_Size ((W1, W1));
          This.Root.Add_Child (This.Minus, (0, H1));
 
-         This.Plus := new Gbutton;
+         This.Plus := new Button.Instance;
          This.Plus.Set_Text ("+");
          This.Plus.Set_Size ((W1, W1));
          This.Root.Add_Child (This.Plus, (W2, H1));
@@ -94,19 +94,19 @@ package body Giza.Widgets.Number_Selection is
             declare
                Str : constant String := This.Value'Img;
             begin
-               Ctx.Set_Color (This.Background);
+               Ctx.Set_Color (This.Get_Background);
                Ctx.Fill_Rectangle (Value_Rect);
 
-               Ctx.Set_Color (This.Foreground);
+               Ctx.Set_Color (This.Get_Foreground);
                Ctx.Print_In_Rect (Str, Value_Rect);
             end;
          end if;
 
          if This.Str /= null then
-            Ctx.Set_Color (This.Background);
+            Ctx.Set_Color (This.Get_Background);
             Ctx.Fill_Rectangle (Lable_Rect);
 
-            Ctx.Set_Color (This.Foreground);
+            Ctx.Set_Color (This.Get_Foreground);
             Ctx.Print_In_Rect (This.Str.all, Lable_Rect);
          end if;
       end if;
@@ -118,7 +118,7 @@ package body Giza.Widgets.Number_Selection is
    -----------------------
 
    overriding function On_Position_Event
-     (This : in out Gnumber_Select;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean
    is
@@ -145,7 +145,7 @@ package body Giza.Widgets.Number_Selection is
 
    overriding
    function On_Event
-     (This : in out Gnumber_Select;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean is
    begin
       return This.Root.On_Event (Evt);
@@ -155,7 +155,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Value --
    ---------------
 
-   procedure Set_Value (This : in out Gnumber_Select; Val : Integer) is
+   procedure Set_Value (This : in out Instance; Val : Integer) is
    begin
       This.Value := Val;
       This.Set_Dirty;
@@ -165,7 +165,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Step --
    --------------
 
-   procedure Set_Step (This : in out Gnumber_Select; Step : Integer) is
+   procedure Set_Step (This : in out Instance; Step : Integer) is
    begin
       This.Step := Step;
    end Set_Step;
@@ -174,7 +174,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Min --
    -------------
 
-   procedure Set_Min (This : in out Gnumber_Select; Min : Integer) is
+   procedure Set_Min (This : in out Instance; Min : Integer) is
    begin
       This.Min := Min;
    end Set_Min;
@@ -183,7 +183,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Max --
    -------------
 
-   procedure Set_Max (This : in out Gnumber_Select; Max : Integer) is
+   procedure Set_Max (This : in out Instance; Max : Integer) is
    begin
       This.Max := Max;
    end Set_Max;
@@ -192,7 +192,7 @@ package body Giza.Widgets.Number_Selection is
    -- Value --
    -----------
 
-   function Value (This : Gnumber_Select) return Integer is
+   function Value (This : Instance) return Integer is
    begin
       return This.Value;
    end Value;
@@ -201,7 +201,7 @@ package body Giza.Widgets.Number_Selection is
    -- Set_Label --
    ---------------
 
-   procedure Set_Label (This : in out Gnumber_Select; Label : String) is
+   procedure Set_Label (This : in out Instance; Label : String) is
    begin
       This.Str := new String'(Label);
    end Set_Label;
@@ -210,7 +210,7 @@ package body Giza.Widgets.Number_Selection is
    -- Show_Value --
    ----------------
 
-   procedure Show_Value (This : in out Gnumber_Select;
+   procedure Show_Value (This : in out Instance;
                          Show : Boolean := True)
    is
    begin
@@ -221,7 +221,7 @@ package body Giza.Widgets.Number_Selection is
    -- Do_Plus --
    -------------
 
-   procedure Do_Plus (This : in out Gnumber_Select) is
+   procedure Do_Plus (This : in out Instance) is
    begin
       This.Value := This.Value + This.Step;
       if This.Value > This.Max then
@@ -233,7 +233,7 @@ package body Giza.Widgets.Number_Selection is
    -- Do_Minus --
    --------------
 
-   procedure Do_Minus (This : in out Gnumber_Select) is
+   procedure Do_Minus (This : in out Instance) is
    begin
       This.Value := This.Value - This.Step;
       if This.Value < This.Min then

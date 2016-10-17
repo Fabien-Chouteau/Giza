@@ -23,26 +23,28 @@
 with Giza.Colors; use Giza.Colors;
 
 package Giza.Widgets.Background is
-   type Gbackground is new Widget with private;
 
-   type Gbackground_Ref is access all Gbackground'Class;
+   subtype Parent is Widgets.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Reference is access all Class;
 
    overriding
-   procedure Draw (This : in out Gbackground;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Background (This : in out Gbackground; BG : Color);
-   function Background (This : Gbackground) return Color;
+   procedure Set_Background (This : in out Instance; BG : Color);
+   function Get_Background (This : Instance) return Color;
 
-   procedure Set_Rounded (This   : in out Gbackground;
+   procedure Set_Rounded (This   : in out Instance;
                           Radius : Dim);
    --  Set to 0 (default) to disable rounded corners
 
-   function Radius (This : Gbackground) return Dim;
+   function Radius (This : Instance) return Dim;
 
 private
-   type Gbackground is new Widget with record
+   type Instance is new Parent with record
       BG     : Color := White;
       Radius : Dim   := 0;
    end record;

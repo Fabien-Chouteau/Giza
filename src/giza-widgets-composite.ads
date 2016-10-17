@@ -20,41 +20,43 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Widgets.Background; use Giza.Widgets.Background;
+with Giza.Widgets.Background;
 
 package Giza.Widgets.Composite is
-   type Composite_Widget is new Gbackground with private;
 
-   type Composite_Widget_Ref is access all Composite_Widget'Class;
+   subtype Parent is Background.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
    overriding
-   procedure Set_Dirty (This : in out Composite_Widget;
+   procedure Set_Dirty (This  : in out Instance;
                         Dirty : Boolean := True);
 
    overriding
-   procedure Draw (This : in out Composite_Widget;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
    overriding
    function On_Position_Event
-     (This : in out Composite_Widget;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
    overriding
    function On_Event
-     (This : in out Composite_Widget;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Add_Child
-     (This  : in out Composite_Widget;
-      Child : not null Widget_Ref;
+     (This  : in out Instance;
+      Child : not null Widgets.Reference;
       Pos   : Point_T);
 
    procedure Remove_Child
-     (This  : in out Composite_Widget;
-      Child : not null Widget_Ref);
+     (This  : in out Instance;
+      Child : not null Widgets.Reference);
 
 private
 
@@ -63,11 +65,11 @@ private
 
    type Wrapper is record
       Pos  : Point_T := (0, 0);
-      Widg : not null Widget_Ref;
+      Widg : not null Widgets.Reference;
       Next : Wrapper_Ref := null;
    end record;
 
-   type Composite_Widget is new Gbackground with record
+   type Instance is new Parent with record
       List : Wrapper_Ref := null;
    end record;
 

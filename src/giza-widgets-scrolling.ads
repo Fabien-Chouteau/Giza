@@ -22,54 +22,59 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 with Giza.Widgets.Frame; use Giza.Widgets.Frame;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widgets.Button;
+use Giza;
+use Giza.Widgets;
 
 package Giza.Widgets.Scrolling is
-   type Gscroll is new Gframe with private;
 
-   type Gscroll_Ref is access all Gscroll'Class;
+   subtype Parent is Frame.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
    overriding
-   procedure Set_Dirty (This : in out Gscroll;
+   procedure Set_Dirty (This  : in out Instance;
                         Dirty : Boolean := True);
 
    overriding
    function On_Position_Event
-     (This : in out Gscroll;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
    overriding
    function On_Event
-     (This : in out Gscroll;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean;
 
    overriding
-   procedure Draw (This : in out Gscroll;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
-   procedure Set_Child (This : in out Gscroll; Child : not null Widget_Ref);
+   procedure Set_Child (This  : in out Instance;
+                        Child : not null Widgets.Reference);
 
-   procedure Go_Up (This : in out Gscroll);
-   procedure Go_Down (This : in out Gscroll);
-   procedure Go_Left (This : in out Gscroll);
-   procedure Go_Right (This : in out Gscroll);
+   procedure Go_Up (This : in out Instance);
+   procedure Go_Down (This : in out Instance);
+   procedure Go_Left (This : in out Instance);
+   procedure Go_Right (This : in out Instance);
 
 private
 
    type Repeat_Event is new Timer_Event with record
-      Scroll : Gscroll_Ref;
+      Scroll : Ref;
    end record;
 
    overriding
    function Triggered (This : Repeat_Event) return Boolean;
 
-   type Gscroll is new Gframe with record
+   type Instance is new Parent with record
       Repeat_Time : Time_Span := Milliseconds (100);
       Repeat_Evt  : aliased Repeat_Event;
-      Child       : Widget_Ref := null;
-      Up, Down    : Gbutton;
+      Child       : Widgets.Reference := null;
+      Up, Down    : Button.Instance;
       Child_Pos   : Point_T := (0, 0);
    end record;
 end Giza.Widgets.Scrolling;

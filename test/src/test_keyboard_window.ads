@@ -14,6 +14,6 @@ package Test_Keyboard_Window is
 
 private
    type Keyboard_Window is new Test_Window with record
-      Keyboard : aliased Giza.Widgets.Keyboards.GKeyboard;
+      Keyboard : aliased Giza.Widgets.Keyboards.Instance;
    end record;
 end Test_Keyboard_Window;

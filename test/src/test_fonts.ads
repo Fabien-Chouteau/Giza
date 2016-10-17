@@ -1,9 +1,10 @@
 with Basic_Test_Window; use Basic_Test_Window;
 with Giza.Graphics; use Giza.Graphics;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
-with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
+with Giza.Widgets.Button;
+with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
+use Giza.Widgets;
 
 package Test_Fonts is
 
@@ -34,8 +35,8 @@ package Test_Fonts is
 private
 
    type Test_Fonts_Window is new Test_Window with record
-      Tile : aliased Gtile (3, Left_Right);
-      Prev, Next, Boxes : aliased Gbutton;
+      Tile : aliased Tiles.Instance (3, Left_Right);
+      Prev, Next, Boxes : aliased Button.Instance;
       Font_Index : Integer := 1;
    end record;
 end Test_Fonts;

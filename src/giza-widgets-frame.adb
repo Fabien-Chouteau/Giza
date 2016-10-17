@@ -27,13 +27,13 @@ package body Giza.Widgets.Frame is
    ----------
 
    overriding
-   procedure Draw (This : in out Gframe;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True) is
    begin
       if This.Dirty or else Force then
          if not This.BG_Disabled then
-            Draw (Gbackground (This), Ctx, Force);
+            Draw (Background.Instance (This), Ctx, Force);
          end if;
          if not This.Frame_Disabled then
             Ctx.Set_Color (This.FG);
@@ -52,27 +52,27 @@ package body Giza.Widgets.Frame is
    -- Set_Foreground --
    --------------------
 
-   procedure Set_Foreground (This : in out Gframe; FG : Color) is
+   procedure Set_Foreground (This : in out Instance; FG : Color) is
    begin
       This.FG := FG;
    end Set_Foreground;
 
-   ----------------
-   -- Foreground --
-   ----------------
+   --------------------
+   -- Get_Foreground --
+   --------------------
 
-   function Foreground (This : Gframe) return Color is (This.FG);
+   function Get_Foreground (This : Instance) return Color is (This.FG);
 
    -------------------
    -- Invert_Colors --
    -------------------
 
-   procedure Invert_Colors (This : in out Gframe) is
+   procedure Invert_Colors (This : in out Instance) is
       Tmp_C : Color;
       Tmp_Img : Image_Ref;
    begin
       Tmp_C := This.FG;
-      This.FG := This.Background;
+      This.FG := This.Get_Background;
       This.Set_Background (Tmp_C);
 
       Tmp_Img := This.Invert_Img;
@@ -84,7 +84,7 @@ package body Giza.Widgets.Frame is
    -- Set_Image --
    ---------------
 
-   procedure Set_Image (This : in out Gframe;
+   procedure Set_Image (This : in out Instance;
                         Img  : not null Image_Ref)
    is
    begin
@@ -96,7 +96,7 @@ package body Giza.Widgets.Frame is
    -- Set_Invert_Image --
    ----------------------
 
-   procedure Set_Invert_Image (This : in out Gframe;
+   procedure Set_Invert_Image (This : in out Instance;
                                Img  : not null Image_Ref)
    is
    begin
@@ -108,7 +108,7 @@ package body Giza.Widgets.Frame is
    -- Disable_Background --
    ------------------------
 
-   procedure Disable_Background (This : in out Gframe) is
+   procedure Disable_Background (This : in out Instance) is
    begin
       This.BG_Disabled := True;
    end Disable_Background;
@@ -117,7 +117,7 @@ package body Giza.Widgets.Frame is
    -- Disable_Frame --
    -------------------
 
-   procedure Disable_Frame (This : in out Gframe) is
+   procedure Disable_Frame (This : in out Instance) is
    begin
       This.Frame_Disabled := True;
    end Disable_Frame;
@@ -126,7 +126,7 @@ package body Giza.Widgets.Frame is
    -- Disable_Image --
    -------------------
 
-   procedure Disable_Image (This : in out Gframe) is
+   procedure Disable_Image (This : in out Instance) is
    begin
       This.Img_Disabled := True;
    end Disable_Image;

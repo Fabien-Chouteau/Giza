@@ -26,55 +26,59 @@ with Giza.Widgets.Composite; use Giza.Widgets.Composite;
 with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
 
 package Giza.Widgets.Tabs is
-   type Gtabs (Tab_Number : Natural) is new Gframe with private;
 
-   type Gtabs_Ref is access all Gtabs'Class;
+   subtype Parent is Frame.Instance;
+   type Instance (Tab_Number : Natural) is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
+
+   type Instance_Ref is access all Instance'Class;
 
    overriding
-   procedure Set_Dirty (This : in out Gtabs;
+   procedure Set_Dirty (This  : in out Instance;
                         Dirty : Boolean := True);
 
    overriding
-   procedure Draw (This : in out Gtabs;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
    overriding
    function On_Position_Event
-     (This : in out Gtabs;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean;
 
    overriding
    function On_Event
-     (This : in out Gtabs;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean;
 
    procedure Set_Tab
-     (This  : in out Gtabs;
+     (This  : in out Instance;
       Index : Natural;
       Title : String;
-      Child : not null Widget_Ref);
+      Child : not null Widgets.Reference);
 
-   function Selected (This : Gtabs) return Natural;
-   procedure Set_Selected (This : in out Gtabs; Selected : Natural);
+   function Selected (This : Instance) return Natural;
+   procedure Set_Selected (This : in out Instance; Selected : Natural);
 
 private
 
    type Tab_Wrapper is record
-      Widg   : Widget_Ref := null;
-      Button : aliased Gbutton;
+      Widg   : Widgets.Reference := null;
+      Btn    : aliased Button.Instance;
       Pos    : Point_T;
    end record;
 
    type Wrapper_Array is array (Positive range <>) of Tab_Wrapper;
 
-   type Gtabs (Tab_Number : Natural) is new Gframe with record
+   type Instance (Tab_Number : Natural) is new Parent with record
       Init : Boolean := False;
       Selected   : Natural := 1;
       Tabs       : Wrapper_Array (1 .. Tab_Number);
 
-      Root : aliased Composite_Widget;
-      Tabs_Group : aliased Gtile (Tab_Number, Left_Right);
+      Root : aliased Composite.Instance;
+      Tabs_Group : aliased Tiles.Instance (Tab_Number, Left_Right);
    end record;
 end Giza.Widgets.Tabs;

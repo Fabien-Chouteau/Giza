@@ -31,7 +31,7 @@ package body Giza.Widgets.Composite is
    ---------------
 
    overriding
-   procedure Set_Dirty (This : in out Composite_Widget;
+   procedure Set_Dirty (This  : in out Instance;
                         Dirty : Boolean := True)
    is
       Ref : Wrapper_Ref := This.List;
@@ -47,8 +47,8 @@ package body Giza.Widgets.Composite is
    ----------
 
    overriding procedure Draw
-     (This : in out Composite_Widget;
-      Ctx : in out Context'Class;
+     (This  : in out Instance;
+      Ctx   : in out Context'Class;
       Force : Boolean := True)
    is
       Ref : Wrapper_Ref := This.List;
@@ -70,7 +70,7 @@ package body Giza.Widgets.Composite is
 
    overriding
    function On_Position_Event
-     (This : in out Composite_Widget;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean
    is
@@ -98,7 +98,7 @@ package body Giza.Widgets.Composite is
 
    overriding
    function On_Event
-     (This : in out Composite_Widget;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean
    is
       Ref     : Wrapper_Ref := This.List;
@@ -117,8 +117,8 @@ package body Giza.Widgets.Composite is
    ---------------
 
    procedure Add_Child
-     (This  : in out Composite_Widget;
-      Child : not null Widget_Ref;
+     (This  : in out Instance;
+      Child : not null Widgets.Reference;
       Pos   : Point_T)
    is
    begin
@@ -144,8 +144,8 @@ package body Giza.Widgets.Composite is
    ------------------
 
    procedure Remove_Child
-     (This  : in out Composite_Widget;
-      Child : not null Widget_Ref)
+     (This  : in out Instance;
+      Child : not null Widgets.Reference)
    is
       Curr, Prev : Wrapper_Ref := null;
    begin
@@ -164,4 +164,5 @@ package body Giza.Widgets.Composite is
          Free (Curr);
       end if;
    end Remove_Child;
+
 end Giza.Widgets.Composite;

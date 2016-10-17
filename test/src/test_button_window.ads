@@ -1,5 +1,6 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widgets.Button;
+use Giza.Widgets;
 
 package Test_Button_Window is
    type Button_Window is new Test_Window with private;
@@ -14,6 +15,6 @@ package Test_Button_Window is
 
 private
    type Button_Window is new Test_Window with record
-      Button_1, Button_2, Button_3 : Gbutton_Ref;
+      Button_1, Button_2, Button_3 : Button.Ref;
    end record;
 end Test_Button_Window;

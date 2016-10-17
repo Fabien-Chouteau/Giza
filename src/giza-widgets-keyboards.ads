@@ -21,31 +21,33 @@
 -------------------------------------------------------------------------------
 
 with Giza.Widgets.Composite; use Giza.Widgets.Composite;
-with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
-with Giza.Widgets.Text; use Giza.Widgets.Text;
+with Giza.Widgets.Tiles;
+with Giza.Widgets.Button;
+with Giza.Widgets.Text;
+use Giza.Widgets;
 
 package Giza.Widgets.Keyboards is
 
-   subtype Parent is Giza.Widgets.Composite.Composite_Widget;
-   type GKeyboard is new Parent with private;
-   type GKeyboard_Ref is access all GKeyboard'Class;
+   subtype Parent is Giza.Widgets.Composite.Instance;
+   type Instance is new Parent with private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
-   procedure On_Init (This : in out GKeyboard);
+   procedure On_Init (This : in out Instance);
 
    overriding
-   procedure Draw (This : in out GKeyboard;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Instance;
+                   Ctx   : in out Context'Class;
                    Force : Boolean := True);
 
    overriding
    function On_Position_Event
-     (This  : in out GKeyboard;
+     (This  : in out Instance;
       Evt   : Position_Event_Ref;
       Pos   : Point_T) return Boolean;
 
-   procedure Set_Max_Entry_Length (This : in out GKeyboard; Len : Natural);
-   function Get_Text (This : GKeyboard) return String;
+   procedure Set_Max_Entry_Length (This : in out Instance; Len : Natural);
+   function Get_Text (This : Instance) return String;
 
 private
 
@@ -78,19 +80,19 @@ private
       Btn_Del => (4, 9), Btn_Return => (4, 10),
       Btn_Special => (5, 1), Btn_Space => (5, 2), Btn_OK => (5, 3));
 
-   type Gtile_10_Array is array (Integer range <>) of
-     aliased Gtile (10, Left_Right);
+   type Tiles_10_Array is array (Integer range <>) of
+     aliased Tiles.Instance (10, Tiles.Left_Right);
    type Gbutton_Array is array (Button_Type) of
-     aliased Gbutton;
+     aliased Button.Instance;
 
-   type GKeyboard is new Parent with record
+   type Instance is new Parent with record
       Initialised  : Boolean := False;
       Max_Text_Len : Natural := 100;
-      Text_Display : aliased Gtext;
+      Text_Display : aliased Text.Instance;
       Cursor       : Natural;
-      Root         : aliased Gtile (5, Top_Down);
-      Lines        : Gtile_10_Array (1 .. 4);
-      Last_Line    : aliased Gtile (3, Left_Right);
+      Root         : aliased Tiles.Instance (5, Tiles.Top_Down);
+      Lines        : Tiles_10_Array (1 .. 4);
+      Last_Line    : aliased Tiles.Instance (3, Tiles.Left_Right);
       Buttons      : Gbutton_Array;
       Caps         : Boolean := False;
       Special      : Boolean := False;

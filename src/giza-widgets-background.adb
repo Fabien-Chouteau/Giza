@@ -27,7 +27,7 @@ package body Giza.Widgets.Background is
    ----------
 
    overriding procedure Draw
-     (This : in out Gbackground;
+     (This : in out Instance;
       Ctx : in out Context'Class;
       Force : Boolean := True)
    is
@@ -43,22 +43,22 @@ package body Giza.Widgets.Background is
    -- Set_Background --
    --------------------
 
-   procedure Set_Background (This : in out Gbackground; BG : Color) is
+   procedure Set_Background (This : in out Instance; BG : Color) is
    begin
       This.BG := BG;
    end Set_Background;
 
-   ----------------
-   -- Background --
-   ----------------
+   --------------------
+   -- Get_Background --
+   --------------------
 
-   function Background (This : Gbackground) return Color is (This.BG);
+   function Get_Background (This : Instance) return Color is (This.BG);
 
    -----------------
    -- Set_Rounded --
    -----------------
 
-   procedure Set_Rounded (This   : in out Gbackground;
+   procedure Set_Rounded (This   : in out Instance;
                           Radius : Dim)
    is
    begin
@@ -69,6 +69,6 @@ package body Giza.Widgets.Background is
    -- Radius --
    ------------
 
-   function Radius (This : Gbackground) return Dim is (This.Radius);
+   function Radius (This : Instance) return Dim is (This.Radius);
 
 end Giza.Widgets.Background;

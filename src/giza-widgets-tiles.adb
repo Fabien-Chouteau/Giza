@@ -27,7 +27,7 @@ package body Giza.Widgets.Tiles is
    ---------------
 
    overriding
-   procedure Set_Dirty (This : in out Gtile;
+   procedure Set_Dirty (This  : in out Instance;
                         Dirty : Boolean := True)
    is
    begin
@@ -43,11 +43,11 @@ package body Giza.Widgets.Tiles is
    ----------
 
    overriding procedure Draw
-     (This : in out Gtile;
-      Ctx : in out Context'Class;
+     (This  : in out Instance;
+      Ctx   : in out Context'Class;
       Force : Boolean := True)
    is
-      W, H : Integer;
+      W, H   : Integer;
       Margin : constant Integer := 1;
 
       procedure Draw_Tile (Index : Integer);
@@ -79,7 +79,7 @@ package body Giza.Widgets.Tiles is
       end Draw_Tile;
    begin
       if This.Dirty or else Force then
-         Draw (Gbackground (This), Ctx, Force);
+         Draw (Parent (This), Ctx, Force);
       end if;
 
       case This.Dir is
@@ -121,7 +121,7 @@ package body Giza.Widgets.Tiles is
 
    overriding
    function On_Position_Event
-     (This : in out Gtile;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T)
       return Boolean
@@ -179,7 +179,7 @@ package body Giza.Widgets.Tiles is
 
    overriding
    function On_Event
-     (This : in out Gtile;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean
    is
       Handled : Boolean := False;
@@ -197,9 +197,9 @@ package body Giza.Widgets.Tiles is
    ---------------
 
    procedure Set_Child
-     (This  : in out Gtile;
+     (This  : in out Instance;
       Index : Positive;
-      Child : Widget_Ref)
+      Child : Widgets.Reference)
    is
    begin
       if Index in This.Widgs'Range then
@@ -211,7 +211,7 @@ package body Giza.Widgets.Tiles is
    -- Set_Spacing --
    -----------------
 
-   procedure Set_Spacing (This : in out Gtile; Spacing : Natural) is
+   procedure Set_Spacing (This : in out Instance; Spacing : Natural) is
    begin
       This.Spacing := Spacing;
    end Set_Spacing;
@@ -220,7 +220,7 @@ package body Giza.Widgets.Tiles is
    -- Set_Margin --
    ----------------
 
-   procedure Set_Margin (This : in out Gtile; Margin : Natural) is
+   procedure Set_Margin (This : in out Instance; Margin : Natural) is
    begin
       This.Margin := Margin;
    end Set_Margin;

@@ -58,7 +58,7 @@ package body Giza.Widgets.Scrolling is
    ---------------
 
    overriding
-   procedure Set_Dirty (This : in out Gscroll;
+   procedure Set_Dirty (This : in out Instance;
                         Dirty : Boolean := True)
    is
    begin
@@ -74,7 +74,7 @@ package body Giza.Widgets.Scrolling is
    ----------
 
    overriding
-   procedure Draw (This : in out Gscroll;
+   procedure Draw (This : in out Instance;
                    Ctx : in out Context'Class;
                    Force : Boolean := True)
    is
@@ -114,7 +114,7 @@ package body Giza.Widgets.Scrolling is
 
    overriding
    function On_Position_Event
-     (This : in out Gscroll;
+     (This : in out Instance;
       Evt  : Position_Event_Ref;
       Pos  : Point_T) return Boolean
    is
@@ -163,7 +163,7 @@ package body Giza.Widgets.Scrolling is
 
    overriding
    function On_Event
-     (This : in out Gscroll;
+     (This : in out Instance;
       Evt  : Event_Not_Null_Ref) return Boolean
    is
    begin
@@ -176,7 +176,8 @@ package body Giza.Widgets.Scrolling is
    -- Set_Child --
    ---------------
 
-   procedure Set_Child (This : in out Gscroll; Child : not null Widget_Ref) is
+   procedure Set_Child (This  : in out Instance;
+                        Child : not null Widgets.Reference) is
    begin
       This.Child := Child;
 
@@ -188,7 +189,7 @@ package body Giza.Widgets.Scrolling is
    -- Go_Up --
    -----------
 
-   procedure Go_Up (This : in out Gscroll) is
+   procedure Go_Up (This : in out Instance) is
    begin
       if This.Child /= null then
          This.Child_Pos := This.Child_Pos + Size_T'(0, 5);
@@ -202,7 +203,7 @@ package body Giza.Widgets.Scrolling is
    -- Go_Down --
    -------------
 
-   procedure Go_Down (This : in out Gscroll) is
+   procedure Go_Down (This : in out Instance) is
    begin
       if This.Child /= null then
          This.Child_Pos := This.Child_Pos - (0, 5);
@@ -216,7 +217,7 @@ package body Giza.Widgets.Scrolling is
    -- Go_Left --
    -------------
 
-   procedure Go_Left (This : in out Gscroll) is
+   procedure Go_Left (This : in out Instance) is
    begin
       if This.Child /= null then
          This.Child_Pos := This.Child_Pos + Size_T'(5, 0);
@@ -230,7 +231,7 @@ package body Giza.Widgets.Scrolling is
    -- Go_Right --
    --------------
 
-   procedure Go_Right (This : in out Gscroll) is
+   procedure Go_Right (This : in out Instance) is
    begin
       if This.Child /= null then
          This.Child_Pos := This.Child_Pos - (5, 0);
