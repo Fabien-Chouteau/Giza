@@ -56,7 +56,7 @@ package body Giza.Image.Editable_Bitmap is
       Bmp  : Giza.Bitmaps.Bitmap)
    is
    begin
-      This.Ctx.Set_Backend (This.Data'Access);
+      This.Ctx.Set_Backend (This.Data'Unchecked_Access);
       This.Ctx.Copy_Bitmap (Bmp, (0, 0));
    end Set;
 

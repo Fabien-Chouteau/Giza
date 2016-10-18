@@ -24,7 +24,7 @@ with Giza.Colors;   use Giza.Colors;
 with Giza.Bitmaps;  use Giza.Bitmaps;
 with Giza.Types;    use Giza.Types;
 with Giza.Font;    use Giza.Font;
-with Giza.Backends; use Giza.Backends;
+with Giza.Backend; use Giza.Backend;
 
 package Giza.Graphics is
 
@@ -41,7 +41,7 @@ package Giza.Graphics is
    function Bounds (This : Context) return Rect_T;
    procedure Set_Position (This : in out Context; Pt : Point_T);
    function Position (This : Context) return Point_T;
-   procedure Set_Backend (This : in out Context; Bck : access Backend'Class);
+   procedure Set_Backend (This : in out Context; Bck : Backend.Ref);
 
    --  Drawing
 
@@ -146,7 +146,7 @@ private
    end record;
 
    type Context is tagged record
-      Bck  : access Backend'Class := null;
+      Bck           : Backend.Ref := null;
       Current_State : State;
    end record;
 

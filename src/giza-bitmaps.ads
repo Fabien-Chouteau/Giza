@@ -21,7 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Giza.Colors;   use Giza.Colors;
-with Giza.Backends; use Giza.Backends;
+with Giza.Backend; use Giza.Backend;
 with Giza.Types;    use Giza.Types;
 
 package Giza.Bitmaps is
@@ -41,7 +41,7 @@ package Giza.Bitmaps is
    --  Used with a Gcontext, this backend allows to draw on bitmap as if it was
    --  a screen.
 
-   type Bitmap_Backend (W, H : Integer) is new Backend with record
+   type Bitmap_Backend (W, H : Integer) is new Backend.Instance with record
       Data          : Bitmap (W, H);
       Current_Color : Color;
    end record;

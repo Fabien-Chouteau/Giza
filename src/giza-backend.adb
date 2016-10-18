@@ -20,13 +20,13 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-package body Giza.Backends is
+package body Giza.Backend is
 
    ----------
    -- Line --
    ----------
 
-   procedure Line (This : in out Backend; Start, Stop : Point_T) is
+   procedure Line (This : in out Instance; Start, Stop : Point_T) is
       DX     : constant Float := abs Float (Stop.X - Start.X);
       DY     : constant Float := abs Float (Stop.Y - Start.Y);
       Err    : Float;
@@ -47,7 +47,7 @@ package body Giza.Backends is
       if DX > DY then
          Err := DX / 2.0;
          while X /= Stop.X loop
-            Set_Pixel (Backend'Class (This), (X, Y));
+            Set_Pixel (Instance'Class (This), (X, Y));
             Err := Err - DY;
             if Err < 0.0 then
                Y := Y + Step_Y;
@@ -58,7 +58,7 @@ package body Giza.Backends is
       else
          Err := DY / 2.0;
          while Y /= Stop.Y loop
-            Set_Pixel (Backend'Class (This), (X, Y));
+            Set_Pixel (Instance'Class (This), (X, Y));
             Err := Err - DX;
             if Err < 0.0 then
                X := X + Step_X;
@@ -68,14 +68,14 @@ package body Giza.Backends is
          end loop;
       end if;
 
-      Set_Pixel (Backend'Class (This), (X, Y));
+      Set_Pixel (Instance'Class (This), (X, Y));
    end Line;
 
    ---------------
    -- Rectangle --
    ---------------
 
-   procedure Rectangle (This : in out Backend; Start, Stop : Point_T) is
+   procedure Rectangle (This : in out Instance; Start, Stop : Point_T) is
    begin
       This.Line (Start, (Stop.X, Start.Y));
       This.Line ((Stop.X, Start.Y), Stop);
@@ -87,7 +87,7 @@ package body Giza.Backends is
    -- Fill_Rectangle --
    --------------------
 
-   procedure Fill_Rectangle (This : in out Backend; Start, Stop : Point_T) is
+   procedure Fill_Rectangle (This : in out Instance; Start, Stop : Point_T) is
       P1 : Point_T := Start;
       P2 : Point_T := (Start.X, Stop.Y);
    begin
@@ -99,4 +99,4 @@ package body Giza.Backends is
       end loop;
    end Fill_Rectangle;
 
-end Giza.Backends;
+end Giza.Backend;

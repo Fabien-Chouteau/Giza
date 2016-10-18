@@ -186,7 +186,7 @@ package body Giza.Graphics is
    -- Set_Backend --
    -----------------
 
-   procedure Set_Backend (This : in out Context; Bck : access Backend'Class) is
+   procedure Set_Backend (This : in out Context; Bck : Backend.Ref) is
    begin
       This.Bck := Bck;
       if Bck /= null then

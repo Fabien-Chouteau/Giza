@@ -40,7 +40,7 @@ package body Giza.GUI is
    procedure Redraw;
 
    Drawing_Context : Context_Ref := null;
-   Drawing_Backend : Backend_Ref := null;
+   Drawing_Backend : Backend.Ref := null;
 
    --  Window stack
    Stack : Wrapper_Ref := null;
@@ -120,7 +120,7 @@ package body Giza.GUI is
    -- Set_Backend --
    -----------------
 
-   procedure Set_Backend (Bck : Backend_Ref) is
+   procedure Set_Backend (Bck : Backend.Ref) is
 
    begin
       Drawing_Backend := Bck;

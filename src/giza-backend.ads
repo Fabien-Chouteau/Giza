@@ -23,23 +23,24 @@
 with Giza.Types; use Giza.Types;
 with Giza.Colors; use Giza.Colors;
 
-package Giza.Backends is
+package Giza.Backend is
 
-   type Backend is abstract tagged private;
-   type Backend_Ref is access all Backend'Class;
+   type Instance is abstract tagged private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
-   procedure Set_Pixel (This : in out Backend; Pt : Point_T) is abstract;
-   procedure Set_Color (This : in out Backend; C : Color) is abstract;
-   function Size (This : Backend) return Size_T is abstract;
-   function Has_Double_Buffring (This : Backend) return Boolean is abstract;
-   procedure Swap_Buffers (This : in out Backend) is null;
+   procedure Set_Pixel (This : in out Instance; Pt : Point_T) is abstract;
+   procedure Set_Color (This : in out Instance; C : Color) is abstract;
+   function Size (This : Instance) return Size_T is abstract;
+   function Has_Double_Buffring (This : Instance) return Boolean is abstract;
+   procedure Swap_Buffers (This : in out Instance) is null;
 
-   procedure Line (This : in out Backend; Start, Stop : Point_T);
-   procedure Rectangle (This : in out Backend; Start, Stop : Point_T);
-   procedure Fill_Rectangle (This : in out Backend; Start, Stop : Point_T);
+   procedure Line (This : in out Instance; Start, Stop : Point_T);
+   procedure Rectangle (This : in out Instance; Start, Stop : Point_T);
+   procedure Fill_Rectangle (This : in out Instance; Start, Stop : Point_T);
 
 private
 
-   type Backend is abstract tagged null record;
+   type Instance is abstract tagged null record;
 
-end Giza.Backends;
+end Giza.Backend;

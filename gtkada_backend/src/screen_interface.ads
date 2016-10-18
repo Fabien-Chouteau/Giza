@@ -1,11 +1,13 @@
 with Screen_Parameters; use Screen_Parameters;
 with Giza.Colors;
 with Giza.Types; use Giza.Types;
-with Giza.Backends; use Giza.Backends;
+with Giza.Backend;
+use Giza;
 
 package Screen_Interface is
 
-   type GTKada_Backend is new Backend with record
+   subtype Parent is Backend.Instance;
+   type GTKada_Backend is new Parent with record
       Enabled : Boolean := True;
    end record;
 
