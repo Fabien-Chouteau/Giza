@@ -1,6 +1,6 @@
 with Giza.Colors;         use Giza.Colors;
-with Giza.Windows;        use Giza.Windows;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Window;        use Giza.Window;
+with Giza.Widget.Button; use Giza.Widget.Button;
 with Giza.GUI;
 use Giza;
 
@@ -21,7 +21,7 @@ package body Basic_Test_Window is
       This.Back.Set_Text ("Back");
       This.Back.Set_Size ((Size.W, Size.H / 10 - 1));
       This.Back.Set_Foreground (Red);
-      This.Add_Child (Widgets.Reference (This.Back),
+      This.Add_Child (Widget.Reference (This.Back),
                       (0, Size.H - Size.H / 10 + 1));
    end On_Init;
 

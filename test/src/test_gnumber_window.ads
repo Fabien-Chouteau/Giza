@@ -1,6 +1,6 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Widgets.Number_Selection;
-use Giza.Widgets;
+with Giza.Widget.Number_Selection;
+use Giza.Widget;
 
 package Test_Gnumber_Window is
    type Gnumber_Window is new Test_Window with private;

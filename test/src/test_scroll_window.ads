@@ -1,5 +1,5 @@
-with Giza.Widgets.Scrolling;
-use Giza.Widgets;
+with Giza.Widget.Scrolling;
+use Giza.Widget;
 with Basic_Test_Window; use Basic_Test_Window;
 
 package Test_Scroll_Window is

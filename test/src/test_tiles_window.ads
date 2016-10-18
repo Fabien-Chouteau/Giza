@@ -1,5 +1,5 @@
-with Giza.Widgets.Tiles;
-use Giza.Widgets;
+with Giza.Widget.Tiles;
+use Giza.Widget;
 with Basic_Test_Window; use Basic_Test_Window;
 
 package Test_Tiles_Window is

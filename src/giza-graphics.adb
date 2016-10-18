@@ -670,7 +670,7 @@ package body Giza.Graphics is
    -- Set_Font --
    --------------
 
-   procedure Set_Font (This : in out Context; Font : Font_Ref) is
+   procedure Set_Font (This : in out Context; Font : Giza.Font.Ref_Const) is
    begin
       This.Current_State.Font := Font;
    end Set_Font;
@@ -679,7 +679,7 @@ package body Giza.Graphics is
    -- Get_Font --
    --------------
 
-   function Get_Font (This : Context) return Font_Ref is
+   function Get_Font (This : Context) return Giza.Font.Ref_Const is
      (This.Current_State.Font);
 
    -----------
@@ -700,7 +700,7 @@ package body Giza.Graphics is
 
    procedure Print (This : in out Context; Str : String) is
       Org : constant Point_T := This.Position;
-      Font : constant Font_Ref := This.Get_Font;
+      Font : constant Giza.Font.Ref_Const := This.Get_Font;
    begin
       if Font /= null then
          for C of Str loop
@@ -725,7 +725,7 @@ package body Giza.Graphics is
                         Line_Width : out Integer;
                         Max_Width  : Natural := 0)
    is
-      Font : constant Font_Ref := This.Get_Font;
+      Font : constant Giza.Font.Ref_Const := This.Get_Font;
 
       Width, Height, X_Advance : Natural;
       X_Offset, Y_Offset : Integer;
@@ -806,7 +806,7 @@ package body Giza.Graphics is
                             Str : String;
                             Box : Rect_T)
    is
-      Font : constant Font_Ref := This.Get_Font;
+      Font : constant Giza.Font.Ref_Const := This.Get_Font;
       Org_X : constant Dim := Box.Org.X;
       Index, EOL, Next_Start : Integer := Str'First;
       Line_Width : Integer := 0;
@@ -844,7 +844,7 @@ package body Giza.Graphics is
                   Rect : out Rect_T;
                   Max_Width : Natural := 0)
    is
-      Font : constant Font_Ref := This.Get_Font;
+      Font : constant Giza.Font.Ref_Const := This.Get_Font;
       Index, EOL, Next_Start : Integer := Str'First;
       Line_Width : Integer := 0;
       Pt, TL, BR : Point_T := (0, 0);

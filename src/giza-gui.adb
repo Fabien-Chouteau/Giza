@@ -32,7 +32,7 @@ package body Giza.GUI is
    type Wrapper_Ref is access all Wrapper;
 
    type Wrapper is record
-      Win  : not null Giza.Windows.Ref;
+      Win  : not null Giza.Window.Ref;
       Next : Wrapper_Ref := null;
    end record;
 
@@ -66,7 +66,7 @@ package body Giza.GUI is
    -- Push --
    ----------
 
-   procedure Push (Win : not null Giza.Windows.Ref) is
+   procedure Push (Win : not null Giza.Window.Ref) is
    begin
 
       if Stack /= null then

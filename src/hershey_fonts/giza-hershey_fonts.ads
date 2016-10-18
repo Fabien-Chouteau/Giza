@@ -22,11 +22,12 @@
 
 with Interfaces;
 with Giza.Graphics; use Giza.Graphics;
-with Giza.Fonts; use Giza.Fonts;
+with Giza.Font; use Giza.Font;
 
 package Giza.Hershey_Fonts is
 
-   type Hershey_Font (Number_Of_Glyphs : Natural) is new Font with private;
+   subtype Parent is Font.Instance;
+   type Hershey_Font (Number_Of_Glyphs : Natural) is new Parent with private;
 
    overriding
    procedure Glyph_Box (This : Hershey_Font;
@@ -65,7 +66,7 @@ private
 
    type Glyph_Access_Array is array (Positive range <>) of Glyph_Access;
 
-   type Hershey_Font (Number_Of_Glyphs : Natural) is new Font with record
+   type Hershey_Font (Number_Of_Glyphs : Natural) is new Parent with record
       Glyphs : Glyph_Access_Array (1 .. Number_Of_Glyphs);
       Y_Advance : Coord;
    end record;

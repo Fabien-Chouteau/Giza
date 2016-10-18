@@ -1,5 +1,5 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Widgets.Keyboards;
+with Giza.Widget.Keyboards;
 
 package Test_Keyboard_Window is
    type Keyboard_Window is new Test_Window with private;
@@ -14,6 +14,6 @@ package Test_Keyboard_Window is
 
 private
    type Keyboard_Window is new Test_Window with record
-      Keyboard : aliased Giza.Widgets.Keyboards.Instance;
+      Keyboard : aliased Giza.Widget.Keyboards.Instance;
    end record;
 end Test_Keyboard_Window;

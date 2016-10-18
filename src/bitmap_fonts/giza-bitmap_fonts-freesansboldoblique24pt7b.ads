@@ -1,6 +1,6 @@
 package Giza.Bitmap_Fonts.FreeSansBoldOblique24pt7b is
 
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
 
    FreeSansBoldOblique24pt7bBitmaps : aliased constant Font_Bitmap := (
@@ -1156,5 +1156,5 @@ private
      (FreeSansBoldOblique24pt7bBitmaps'Access,
       FreeSansBoldOblique24pt7bGlyphs'Access,
       56);
-      Font : constant Font_Ref := Font_D'Access;
+      Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSansBoldOblique24pt7b;

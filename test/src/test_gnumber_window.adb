@@ -1,4 +1,4 @@
-with Giza.Widgets;
+with Giza.Widget;
 use Giza;
 
 package body Test_Gnumber_Window is
@@ -20,7 +20,7 @@ package body Test_Gnumber_Window is
       This.Nbr_1.Set_Step (1);
       This.Nbr_1.Set_Size ((This.Get_Size.W, This.Get_Size.H / 3));
 
-      This.Add_Child (Widgets.Reference (This.Nbr_1), (0, 0));
+      This.Add_Child (Widget.Reference (This.Nbr_1), (0, 0));
 
       This.Nbr_2 := new Number_Selection.Instance;
       This.Nbr_2.Set_Label ("Big Integer");
@@ -30,7 +30,7 @@ package body Test_Gnumber_Window is
       This.Nbr_2.Set_Step (1000);
       This.Nbr_2.Set_Size ((This.Get_Size.W, (This.Get_Size.H / 3) * 2));
 
-      This.Add_Child (Widgets.Reference (This.Nbr_2),
+      This.Add_Child (Widget.Reference (This.Nbr_2),
                       (0, This.Nbr_1.Get_Size.H));
    end On_Init;
 

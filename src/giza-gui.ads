@@ -21,7 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Giza.Events; use Giza.Events;
-with Giza.Windows; use Giza.Windows;
+with Giza.Window; use Giza.Window;
 with Giza.Graphics; use Giza.Graphics;
 with Giza.Backends; use Giza.Backends;
 
@@ -39,7 +39,7 @@ package Giza.GUI is
    procedure Set_Backend (Bck : Backend_Ref);
    --  Set the graphical backend that will be used for widgets rendering
 
-   procedure Push (Win : not null Giza.Windows.Ref);
+   procedure Push (Win : not null Giza.Window.Ref);
    --  Push a Window to the stack and display it
 
    procedure Pop;

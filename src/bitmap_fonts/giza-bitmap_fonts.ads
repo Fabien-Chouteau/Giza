@@ -22,11 +22,12 @@
 
 with Interfaces; use Interfaces;
 with Giza.Graphics; use Giza.Graphics;
-with Giza.Fonts; use Giza.Fonts;
+with Giza.Font; use Giza.Font;
 
 package Giza.Bitmap_Fonts is
 
-   type Bitmap_Font is new Font with private;
+   subtype Parent is Font.Instance;
+   type Bitmap_Font is new Parent with private;
 
    overriding
    procedure Glyph_Box (This : Bitmap_Font;
@@ -56,7 +57,7 @@ private
    type Glyph_Array is array (16#20# .. 16#7E#) of Bitmap_Glyph;
    type Glyph_Array_Ref is not null access constant Glyph_Array;
 
-   type Bitmap_Font is new Font with record
+   type Bitmap_Font is new Parent with record
       Bitmap      : Font_Bitmap_Ref;
       Glyphs      : Glyph_Array_Ref;
       Y_Advance   : Unsigned_8;

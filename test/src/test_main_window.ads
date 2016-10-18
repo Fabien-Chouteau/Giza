@@ -1,13 +1,13 @@
-with Giza.Windows; use Giza.Windows;
-with Giza.Widgets.Button;
-with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
+with Giza.Window; use Giza.Window;
+with Giza.Widget.Button;
+with Giza.Widget.Tiles; use Giza.Widget.Tiles;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
-use Giza.Widgets;
+use Giza.Widget;
 
 package Test_Main_Window is
 
-   subtype Parent is Giza.Windows.Instance;
+   subtype Parent is Giza.Window.Instance;
    type Main_Window is new Parent with private;
    type Main_Window_Ref is access all Main_Window;
 
@@ -26,7 +26,7 @@ package Test_Main_Window is
 private
    type Sub_Window is record
       Btn : Button.Ref := null;
-      Win : Giza.Windows.Ref := null;
+      Win : Giza.Window.Ref := null;
    end record;
 
    type Sub_Window_Array is array (Positive range <>) of Sub_Window;

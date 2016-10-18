@@ -1,4 +1,4 @@
-with Giza.Widgets;
+with Giza.Widget;
 with Test_Tiles_Window; use Test_Tiles_Window;
 with Giza.Types; use Giza.Types;
 use Giza;
@@ -30,29 +30,29 @@ package body Test_Scroll_Window is
       Object.Set_Size ((This.Scroll_Vert.Get_Size.W,
                        This.Scroll_Vert.Get_Size.H * 2));
       Object.On_Init;
-      This.Scroll_Vert.Set_Child (Widgets.Reference (Object));
+      This.Scroll_Vert.Set_Child (Widget.Reference (Object));
 
       This.Scroll_Horizon.Set_Size ((Size.W / 2, Size.H / 2));
       Object := new Tiles_Window;
       Object.Set_Size ((This.Scroll_Horizon.Get_Size.W * 2,
                        This.Scroll_Horizon.Get_Size.H));
       Object.On_Init;
-      This.Scroll_Horizon.Set_Child (Widgets.Reference (Object));
+      This.Scroll_Horizon.Set_Child (Widget.Reference (Object));
 
       This.Scroll_Both.Set_Size ((Size.W, Size.H / 2));
       Object := new Tiles_Window;
       Object.Set_Size ((This.Scroll_Horizon.Get_Size.W * 2,
                        This.Scroll_Horizon.Get_Size.H * 2));
       Object.On_Init;
-      This.Scroll_Both.Set_Child (Widgets.Reference (Object));
+      This.Scroll_Both.Set_Child (Widget.Reference (Object));
 
-      This.Add_Child (Widgets.Reference (This.Scroll_Vert),
+      This.Add_Child (Widget.Reference (This.Scroll_Vert),
                       (0, 0));
 
-      This.Add_Child (Widgets.Reference (This.Scroll_Horizon),
+      This.Add_Child (Widget.Reference (This.Scroll_Horizon),
                       (Size.W / 2, 0));
 
-      This.Add_Child (Widgets.Reference (This.Scroll_Both),
+      This.Add_Child (Widget.Reference (This.Scroll_Both),
                       (0, Size.H / 2));
 
    end On_Init;

@@ -1,5 +1,5 @@
 package Giza.Hershey_Fonts.Markers is
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
    Glyph_0 : aliased constant Glyph :=
      (Number_Of_Vectors => 0,
@@ -1193,5 +1193,5 @@ Raise_Pen,
          Glyph_95'Access,
          Glyph_96'Access
         ), Y_Advance => 20);
-   Font : constant Font_Ref := Font_D'Access;
+   Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Hershey_Fonts.Markers;

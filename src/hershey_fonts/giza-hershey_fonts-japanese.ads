@@ -1,5 +1,5 @@
 package Giza.Hershey_Fonts.Japanese is
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
    Glyph_0 : aliased constant Glyph :=
      (Number_Of_Vectors => 6,
@@ -8292,5 +8292,5 @@ Raise_Pen,
          Glyph_191'Access,
          Glyph_192'Access
         ), Y_Advance => 23);
-   Font : constant Font_Ref := Font_D'Access;
+   Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Hershey_Fonts.Japanese;

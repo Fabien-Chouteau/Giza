@@ -93,11 +93,11 @@ with Giza.Hershey_Fonts.Timesi;
 with Giza.Hershey_Fonts.Timesib;
 with Giza.Hershey_Fonts.Timesr;
 
-with Giza.Fonts; use Giza.Fonts;
+with Giza.Font; use Giza.Font;
 
 package body Test_Fonts is
 
-   type Font_Ref_Array is array (Integer range <>) of Font_Ref;
+   type Font_Ref_Array is array (Integer range <>) of Giza.Font.Ref_Const;
 
    The_Fonts : constant Font_Ref_Array :=
      (Giza.Bitmap_Fonts.FreeMono12pt7b.Font,
@@ -331,7 +331,7 @@ package body Test_Fonts is
    is
       pragma Unreferenced (Force);
       procedure Draw_Glyph_And_Values (Str  : String;
-                                       Font : Font_Ref;
+                                       Font : Giza.Font.Ref_Const;
                                        Pt   : Point_T);
 
       -----------------------
@@ -339,7 +339,7 @@ package body Test_Fonts is
       -----------------------
 
       procedure Draw_Glyph_And_Values (Str  : String;
-                                       Font : Font_Ref;
+                                       Font : Giza.Font.Ref_Const;
                                        Pt   : Point_T)
       is
          Width, Height, X_Advance : Natural;

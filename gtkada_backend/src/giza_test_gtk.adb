@@ -1,5 +1,6 @@
 with Timer_Callback; use Timer_Callback;
-with Giza.Windows; use Giza.Windows;
+with Giza.Window;
+use Giza;
 with Screen_Interface; use Screen_Interface;
 with Giza.GUI; use Giza.GUI;
 --  with Hershey_Fonts.Rowmand;
@@ -21,7 +22,7 @@ begin
    Giza.GUI.Set_Context (Timer_Callback.My_Context'Access);
    Giza.GUI.Set_Backend (Timer_Callback.My_Backend'Access);
 
-   Push (Window_Ref (Main_W));
+   Push (Window.Ref (Main_W));
 
    Event_Loop;
 

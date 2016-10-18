@@ -1,7 +1,7 @@
 with Giza; use Giza;
 with Giza.Colors; use Giza.Colors;
-with Giza.Widgets;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widget;
+with Giza.Widget.Button; use Giza.Widget.Button;
 with Giza.Types; use Giza.Types;
 with Ada.Numerics; use Ada.Numerics;
 with bmp_test_data;
@@ -21,7 +21,7 @@ package body Test_Graphic_Bounds is
       This.Bound_Btn := new Button.Instance;
       This.Bound_Btn.Set_Size ((This.Get_Size.W, 40));
       This.Bound_Btn.Set_Text ("Bounds");
-      This.Add_Child (Widgets.Reference (This.Bound_Btn), (0, 0));
+      This.Add_Child (Widget.Reference (This.Bound_Btn), (0, 0));
    end On_Init;
 
    ------------------

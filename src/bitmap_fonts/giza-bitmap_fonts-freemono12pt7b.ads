@@ -1,6 +1,5 @@
 package Giza.Bitmap_Fonts.FreeMono12pt7b is
 
-   Font : constant Font_Ref;
 private
 
    FreeMono12pt7bBitmaps : aliased constant Font_Bitmap := (
@@ -269,5 +268,4 @@ private
      (FreeMono12pt7bBitmaps'Access,
       FreeMono12pt7bGlyphs'Access,
       24);
-      Font : constant Font_Ref := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeMono12pt7b;

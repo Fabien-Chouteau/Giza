@@ -1,11 +1,11 @@
-with Giza.Windows;
-with Giza.Widgets.Button;
-use Giza.Widgets;
+with Giza.Window;
+with Giza.Widget.Button;
+use Giza.Widget;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
 
 package Basic_Test_Window is
-   subtype Parent is  Giza.Windows.Instance;
+   subtype Parent is  Giza.Window.Instance;
    type Test_Window is abstract new Parent with private;
    type Test_Window_Ref is access all Test_Window;
 

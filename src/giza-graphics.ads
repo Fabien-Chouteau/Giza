@@ -23,7 +23,7 @@
 with Giza.Colors;   use Giza.Colors;
 with Giza.Bitmaps;  use Giza.Bitmaps;
 with Giza.Types;    use Giza.Types;
-with Giza.Fonts;    use Giza.Fonts;
+with Giza.Font;    use Giza.Font;
 with Giza.Backends; use Giza.Backends;
 
 package Giza.Graphics is
@@ -114,8 +114,8 @@ package Giza.Graphics is
       Bmp    : Indexed_8bits.Bitmap_Indexed;
       Pt     : Point_T);
 
-   procedure Set_Font (This : in out Context; Font : Font_Ref);
-   function Get_Font (This : Context) return Font_Ref;
+   procedure Set_Font (This : in out Context; Font : Giza.Font.Ref_Const);
+   function Get_Font (This : Context) return Font.Ref_Const;
    procedure Print (This : in out Context; C : Character);
    procedure Print (This : in out Context; Str : String);
    procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
@@ -133,7 +133,7 @@ private
       Bounds         : Rect_T;
       Pos            : Point_T;
       Line_Width     : Positive;
-      Font           : Font_Ref := null;
+      Font           : Giza.Font.Ref_Const := null;
       Font_Size      : Float := 1.0;
       Font_Spacing   : Dim := 1;
       Transform      : HC_Matrix := Id;

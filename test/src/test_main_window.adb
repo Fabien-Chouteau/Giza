@@ -1,6 +1,6 @@
 with Giza.GUI;
-with Giza.Widgets;
-with Giza.Widgets.Button; use Giza.Widgets.Button;
+with Giza.Widget;
+with Giza.Widget.Button; use Giza.Widget.Button;
 use Giza;
 with Test_Tiles_Window; use Test_Tiles_Window;
 with Test_Scroll_Window; use Test_Scroll_Window;
@@ -50,12 +50,12 @@ package body Test_Main_Window is
 
       This.Btn_Tile := new Tiles.Instance (This.Sub_Windows'Length, Top_Down);
       This.Btn_Tile.Set_Size (This.Get_Size);
-      This.Add_Child (Widgets.Reference (This.Btn_Tile), (0, 0));
+      This.Add_Child (Widget.Reference (This.Btn_Tile), (0, 0));
 
       for Index in This.Sub_Windows'Range loop
          This.Sub_Windows (Index).Btn.Set_Rounded (20);
          This.Btn_Tile.Set_Child
-           (Index, Widgets.Reference (This.Sub_Windows (Index).Btn));
+           (Index, Widget.Reference (This.Sub_Windows (Index).Btn));
       end loop;
 
       --  Uncomment to directly open a specific test window

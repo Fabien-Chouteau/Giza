@@ -1,6 +1,6 @@
 package Giza.Bitmap_Fonts.FreeSans18pt7b is
 
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
 
    FreeSans18pt7bBitmaps : aliased constant Font_Bitmap := (
@@ -569,5 +569,5 @@ private
      (FreeSans18pt7bBitmaps'Access,
       FreeSans18pt7bGlyphs'Access,
       42);
-      Font : constant Font_Ref := Font_D'Access;
+      Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeSans18pt7b;

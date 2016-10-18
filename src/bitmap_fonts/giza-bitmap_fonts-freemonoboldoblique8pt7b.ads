@@ -1,6 +1,6 @@
 package Giza.Bitmap_Fonts.FreeMonoBoldOblique8pt7b is
 
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
 
    FreeMonoBoldOblique8pt7bBitmaps : aliased constant Font_Bitmap := (
@@ -210,5 +210,5 @@ private
      (FreeMonoBoldOblique8pt7bBitmaps'Access,
       FreeMonoBoldOblique8pt7bGlyphs'Access,
       16);
-      Font : constant Font_Ref := Font_D'Access;
+      Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Bitmap_Fonts.FreeMonoBoldOblique8pt7b;

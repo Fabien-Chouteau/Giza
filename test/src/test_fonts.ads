@@ -2,9 +2,9 @@ with Basic_Test_Window; use Basic_Test_Window;
 with Giza.Graphics; use Giza.Graphics;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
-with Giza.Widgets.Button;
-with Giza.Widgets.Tiles; use Giza.Widgets.Tiles;
-use Giza.Widgets;
+with Giza.Widget.Button;
+with Giza.Widget.Tiles; use Giza.Widget.Tiles;
+use Giza.Widget;
 
 package Test_Fonts is
 

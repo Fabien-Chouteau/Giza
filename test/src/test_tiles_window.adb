@@ -1,6 +1,6 @@
 with Giza.Colors; use Giza.Colors;
-with Giza.Widgets;
-with Giza.Widgets.Button;
+with Giza.Widget;
+with Giza.Widget.Button;
 with Giza.Types; use Giza.Types;
 use Giza;
 
@@ -13,20 +13,20 @@ package body Test_Tiles_Window is
    overriding procedure On_Init
      (This : in out Tiles_Window)
    is
-      function New_Text (Str : String) return Widgets.Reference;
+      function New_Text (Str : String) return Widget.Reference;
 
       --------------
       -- New_Text --
       --------------
 
-      function New_Text (Str : String) return Widgets.Reference is
+      function New_Text (Str : String) return Widget.Reference is
          Txt : Button.Ref;
       begin
          Txt := new Button.Instance;
          Txt.Set_Text (Str);
          Txt.Set_Background (White);
          Txt.Set_Foreground (Black);
-         return Widgets.Reference (Txt);
+         return Widget.Reference (Txt);
       end New_Text;
 
       Size : constant Size_T := This.Get_Size;
@@ -51,16 +51,16 @@ package body Test_Tiles_Window is
          This.Tile_Left_Right.Set_Child (Index, New_Text ("LR" & Index'Img));
       end loop;
 
-      This.Add_Child (Widgets.Reference (This.Tile_Top_Down),
+      This.Add_Child (Widget.Reference (This.Tile_Top_Down),
                       (0, 0));
 
-      This.Add_Child (Widgets.Reference (This.Tile_Bottom_Up),
+      This.Add_Child (Widget.Reference (This.Tile_Bottom_Up),
                       (Size.W / 2, 0));
 
-      This.Add_Child (Widgets.Reference (This.Tile_Right_Left),
+      This.Add_Child (Widget.Reference (This.Tile_Right_Left),
                       (0, Size.H / 2));
 
-      This.Add_Child (Widgets.Reference (This.Tile_Left_Right),
+      This.Add_Child (Widget.Reference (This.Tile_Left_Right),
                       (Size.W / 2,  Size.H / 2));
    end On_Init;
 

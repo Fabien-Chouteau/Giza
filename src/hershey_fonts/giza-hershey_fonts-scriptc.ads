@@ -1,5 +1,5 @@
 package Giza.Hershey_Fonts.Scriptc is
-   Font : constant Font_Ref;
+   Font : constant Giza.Font.Ref_Const;
 private
    Glyph_0 : aliased constant Glyph :=
      (Number_Of_Vectors => 0,
@@ -3540,5 +3540,5 @@ Raise_Pen,
          Glyph_94'Access,
          Glyph_95'Access
         ), Y_Advance => 33);
-   Font : constant Font_Ref := Font_D'Access;
+   Font : constant Giza.Font.Ref_Const := Font_D'Access;
 end Giza.Hershey_Fonts.Scriptc;
