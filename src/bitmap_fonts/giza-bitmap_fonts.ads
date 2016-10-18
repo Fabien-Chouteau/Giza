@@ -21,7 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Interfaces; use Interfaces;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Context; use Giza.Context;
 with Giza.Font; use Giza.Font;
 
 package Giza.Bitmap_Fonts is
@@ -37,7 +37,7 @@ package Giza.Bitmap_Fonts is
 
    overriding
    procedure Print_Glyph (This : Bitmap_Font;
-                          Ctx  : in out Context'Class;
+                          Ctx  : in out Context.Class;
                           C    : Character);
 
    overriding

@@ -48,7 +48,7 @@ package body Giza.Widget.Composite is
 
    overriding procedure Draw
      (This  : in out Instance;
-      Ctx   : in out Context'Class;
+      Ctx   : in out Context.Class;
       Force : Boolean := True)
    is
       Ref : Wrapper_Ref := This.List;

@@ -2,7 +2,7 @@
 --                                                                           --
 --                                   Giza                                    --
 --                                                                           --
---         Copyright (C) 2015 Fabien Chouteau (chouteau@adacore.com)         --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
 --                                                                           --
 --                                                                           --
 --    Giza is free software: you can redistribute it and/or modify it        --
@@ -26,100 +26,103 @@ with Giza.Types;    use Giza.Types;
 with Giza.Font;    use Giza.Font;
 with Giza.Backend; use Giza.Backend;
 
-package Giza.Graphics is
+package Giza.Context is
 
-   type Context is tagged private;
-   type Context_Ref is access all Context'Class;
+   type Instance is tagged private;
+   subtype Class is Instance'Class;
+   type Ref is access all Class;
 
-   procedure Save (This : in out Context);
-   procedure Restore (This : in out Context);
-   procedure Reset (This : in out Context);
+   procedure Save (This : in out Instance);
+   procedure Restore (This : in out Instance);
+   procedure Reset (This : in out Instance);
 
-   procedure Set_Color (This : in out Context; C : Color);
-   procedure Set_Pixel (This : in out Context; Pt : Point_T);
-   procedure Set_Bounds (This : in out Context; Bounds : Rect_T);
-   function Bounds (This : Context) return Rect_T;
-   procedure Set_Position (This : in out Context; Pt : Point_T);
-   function Position (This : Context) return Point_T;
-   procedure Set_Backend (This : in out Context; Bck : Backend.Ref);
+   procedure Set_Color (This : in out Instance; C : Color);
+   procedure Set_Pixel (This : in out Instance; Pt : Point_T);
+   procedure Set_Bounds (This : in out Instance; Bounds : Rect_T);
+   function Bounds (This : Instance) return Rect_T;
+   procedure Set_Position (This : in out Instance; Pt : Point_T);
+   function Position (This : Instance) return Point_T;
+   procedure Set_Backend (This : in out Instance; Bck : Backend.Ref);
 
    --  Drawing
 
-   procedure Translate (This : in out Context; Pt : Point_T);
+   procedure Translate (This : in out Instance; Pt : Point_T);
 
-   procedure Set_Line_Width (This : in out Context; Width : Positive);
-   function Line_Width (This : Context) return Positive;
+   procedure Set_Line_Width (This : in out Instance; Width : Positive);
+   function Line_Width (This : Instance) return Positive;
 
-   procedure Move_To (This : in out Context; Pt : Point_T);
+   procedure Move_To (This : in out Instance; Pt : Point_T);
 
-   procedure Line_To (This : in out Context; Pt : Point_T);
+   procedure Line_To (This : in out Instance; Pt : Point_T);
 
-   procedure Line (This : in out Context; Start, Stop : Point_T);
+   procedure Line (This : in out Instance; Start, Stop : Point_T);
 
-   procedure Rectangle (This : in out Context; Rect : Rect_T);
+   procedure Rectangle (This : in out Instance; Rect : Rect_T);
 
-   procedure Rounded_Rectangle (This   : in out Context;
+   procedure Rounded_Rectangle (This   : in out Instance;
                                 Rect   : Rect_T;
                                 Radius : Dim);
 
-   procedure Fill_Rectangle (This : in out Context; Rect : Rect_T);
+   procedure Fill_Rectangle (This : in out Instance; Rect : Rect_T);
 
-   procedure Fill_Rounded_Rectangle (This   : in out Context;
+   procedure Fill_Rounded_Rectangle (This   : in out Instance;
                                      Rect   : Rect_T;
                                      Radius : Dim);
 
    procedure Cubic_Bezier
-     (This : in out Context;
+     (This : in out Instance;
       P1, P2, P3, P4 : Point_T;
       N              : Positive := 20);
 
    procedure Circle
-     (This : in out Context;
+     (This : in out Instance;
       Center : Point_T;
       Radius : Dim);
 
    procedure Fill_Circle
-     (This : in out Context;
+     (This : in out Instance;
       Center : Point_T;
       Radius : Dim);
 
    procedure Fill_Arc
-     (This     : in out Context;
+     (This     : in out Instance;
       Center   : Point_T;
       Radius   : Dim;
       From, To : Float);
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Bitmap;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_1bit.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_2bits.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_4bits.Bitmap_Indexed;
       Pt     : Point_T);
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_8bits.Bitmap_Indexed;
       Pt     : Point_T);
 
-   procedure Set_Font (This : in out Context; Font : Giza.Font.Ref_Const);
-   function Get_Font (This : Context) return Font.Ref_Const;
-   procedure Print (This : in out Context; C : Character);
-   procedure Print (This : in out Context; Str : String);
-   procedure Print_In_Rect (This : in out Context; Str : String; Box : Rect_T);
-   procedure Box (This : Context;
+   procedure Set_Font (This : in out Instance; Font : Giza.Font.Ref_Const);
+   function Get_Font (This : Instance) return Font.Ref_Const;
+   procedure Print (This : in out Instance; C : Character);
+   procedure Print (This : in out Instance; Str : String);
+   procedure Print_In_Rect (This : in out Instance;
+                            Str  : String;
+                            Box  : Rect_T);
+   procedure Box (This : Instance;
                   Str : String;
                   Rect : out Rect_T;
                   Max_Width : Natural := 0);
@@ -145,9 +148,9 @@ private
       Next           : State_Ref := null;
    end record;
 
-   type Context is tagged record
+   type Instance is tagged record
       Bck           : Backend.Ref := null;
       Current_State : State;
    end record;
 
-end Giza.Graphics;
+end Giza.Context;

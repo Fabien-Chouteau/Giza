@@ -17,7 +17,7 @@ package Giza.Widget.Number_Selection is
                         Dirty : Boolean := True);
    overriding
    procedure Draw (This  : in out Instance;
-                   Ctx   : in out Context'Class;
+                   Ctx   : in out Context.Class;
                    Force : Boolean := True);
 
    overriding

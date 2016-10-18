@@ -2,7 +2,7 @@
 --                                                                           --
 --                                   Giza                                    --
 --                                                                           --
---         Copyright (C) 2015 Fabien Chouteau (chouteau@adacore.com)         --
+--         Copyright (C) 2016 Fabien Chouteau (chouteau@adacore.com)         --
 --                                                                           --
 --                                                                           --
 --    Giza is free software: you can redistribute it and/or modify it        --
@@ -24,20 +24,20 @@ with Ada.Unchecked_Deallocation;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-package body Giza.Graphics is
+package body Giza.Context is
 
    procedure Free is new Ada.Unchecked_Deallocation (State, State_Ref);
 
-   function Transform (This : Context; Pt : Point_T) return Point_T;
-   function In_Bounds (This : Context; Pt : Point_T) return Boolean;
-   procedure Find_Line (This       : Context;
+   function Transform (This : Instance; Pt : Point_T) return Point_T;
+   function In_Bounds (This : Instance; Pt : Point_T) return Boolean;
+   procedure Find_Line (This       : Instance;
                         Str        : String;
                         Start      : Integer;
                         EOL        : out Integer;
                         Next_Start : out Integer;
                         Line_Width : out Integer;
                         Max_Width  : Natural := 0);
-   function Number_Of_Lines (This : in out Context;
+   function Number_Of_Lines (This : in out Instance;
                              Str : String;
                              Box : Rect_T) return Natural;
 
@@ -45,7 +45,7 @@ package body Giza.Graphics is
    -- Transform --
    ---------------
 
-   function Transform (This : Context; Pt : Point_T) return Point_T is
+   function Transform (This : Instance; Pt : Point_T) return Point_T is
    begin
       --        if This.Current_State.Translate_Only then
       return ((Pt.X + Dim (This.Current_State.Transform.V13),
@@ -59,7 +59,7 @@ package body Giza.Graphics is
    -- In_Bounds --
    ---------------
 
-   function In_Bounds (This : Context; Pt : Point_T) return Boolean is
+   function In_Bounds (This : Instance; Pt : Point_T) return Boolean is
    begin
       return
         Pt.X - This.Bounds.Org.X in 0 .. This.Bounds.Size.W
@@ -71,7 +71,7 @@ package body Giza.Graphics is
    -- Set_Pixel --
    ---------------
 
-   procedure Set_Pixel (This : in out Context; Pt : Point_T) is
+   procedure Set_Pixel (This : in out Instance; Pt : Point_T) is
       Target : constant Point_T := Transform (This, Pt);
    begin
 
@@ -87,7 +87,7 @@ package body Giza.Graphics is
    -- Save --
    ----------
 
-   procedure Save (This : in out Context) is
+   procedure Save (This : in out Instance) is
    begin
       This.Current_State.Next := new State'(This.Current_State);
    end Save;
@@ -96,7 +96,7 @@ package body Giza.Graphics is
    -- Restore --
    -------------
 
-   procedure Restore (This : in out Context) is
+   procedure Restore (This : in out Instance) is
       Tmp : State_Ref;
    begin
       Tmp := This.Current_State.Next;
@@ -104,7 +104,7 @@ package body Giza.Graphics is
          This.Current_State := Tmp.all;
          Free (Tmp);
       else
-         Put_Line ("Invalid graphic context Restore...");
+         Put_Line ("Invalid graphic Instance Restore...");
       end if;
    end Restore;
 
@@ -112,7 +112,7 @@ package body Giza.Graphics is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out Context) is
+   procedure Reset (This : in out Instance) is
       Cnt : Natural := 0;
       Tmp : State_Ref;
    begin
@@ -125,7 +125,7 @@ package body Giza.Graphics is
 
       if Cnt /= 0 then
          Put_Line ("Warning:" & Cnt'Img &
-                     " remaining context state(s) in the stack");
+                     " remaining Instance state(s) in the stack");
       end if;
 
       if This.Bck /= null then
@@ -140,7 +140,7 @@ package body Giza.Graphics is
    -- Set_Color --
    ---------------
 
-   procedure Set_Color (This : in out Context; C : Color) is
+   procedure Set_Color (This : in out Instance; C : Color) is
    begin
       if This.Bck /= null then
          This.Bck.Set_Color (C);
@@ -151,7 +151,7 @@ package body Giza.Graphics is
    -- Set_Bounds --
    ----------------
 
-   procedure Set_Bounds (This : in out Context; Bounds : Rect_T) is
+   procedure Set_Bounds (This : in out Instance; Bounds : Rect_T) is
    begin
       This.Current_State.Bounds := Intersection (This.Current_State.Bounds,
                                                  Bounds);
@@ -161,14 +161,14 @@ package body Giza.Graphics is
    -- Bounds --
    ------------
 
-   function Bounds (This : Context) return Rect_T is
+   function Bounds (This : Instance) return Rect_T is
      (This.Current_State.Bounds);
 
    ------------------
    -- Set_Position --
    ------------------
 
-   procedure Set_Position (This : in out Context; Pt : Point_T) is
+   procedure Set_Position (This : in out Instance; Pt : Point_T) is
    begin
       This.Current_State.Pos := Pt;
    end Set_Position;
@@ -177,7 +177,7 @@ package body Giza.Graphics is
    -- Position --
    --------------
 
-   function Position (This : Context) return Point_T is
+   function Position (This : Instance) return Point_T is
    begin
       return This.Current_State.Pos;
    end Position;
@@ -186,7 +186,7 @@ package body Giza.Graphics is
    -- Set_Backend --
    -----------------
 
-   procedure Set_Backend (This : in out Context; Bck : Backend.Ref) is
+   procedure Set_Backend (This : in out Instance; Bck : Backend.Ref) is
    begin
       This.Bck := Bck;
       if Bck /= null then
@@ -198,7 +198,7 @@ package body Giza.Graphics is
    -- Translate --
    ---------------
 
-   procedure Translate (This : in out Context; Pt : Point_T) is
+   procedure Translate (This : in out Instance; Pt : Point_T) is
    begin
       This.Current_State.Transform :=
         This.Current_State.Transform * Translation_Matrix (Pt);
@@ -211,7 +211,7 @@ package body Giza.Graphics is
    -- Set_Line_Width --
    --------------------
 
-   procedure Set_Line_Width (This : in out Context; Width : Positive) is
+   procedure Set_Line_Width (This : in out Instance; Width : Positive) is
    begin
       This.Current_State.Line_Width := Width;
    end Set_Line_Width;
@@ -220,14 +220,14 @@ package body Giza.Graphics is
    -- Line_Width --
    ----------------
 
-   function Line_Width (This : Context) return Positive is
+   function Line_Width (This : Instance) return Positive is
      (This.Current_State.Line_Width);
 
    -------------
    -- Move_To --
    -------------
 
-   procedure Move_To (This : in out Context; Pt : Point_T) is
+   procedure Move_To (This : in out Instance; Pt : Point_T) is
    begin
       This.Current_State.Pos := Pt;
    end Move_To;
@@ -236,7 +236,7 @@ package body Giza.Graphics is
    -- Line_To --
    -------------
 
-   procedure Line_To (This : in out Context; Pt : Point_T) is
+   procedure Line_To (This : in out Instance; Pt : Point_T) is
    begin
       This.Line (This.Current_State.Pos, Pt);
       This.Move_To (Pt);
@@ -246,7 +246,7 @@ package body Giza.Graphics is
    -- Line --
    ----------
 
-   procedure Line (This : in out Context; Start, Stop : Point_T) is
+   procedure Line (This : in out Instance; Start, Stop : Point_T) is
    begin
       if This.Bck /= null
         and then
@@ -263,7 +263,7 @@ package body Giza.Graphics is
    -- Rectangle --
    ---------------
 
-   procedure Rectangle (This : in out Context; Rect : Rect_T) is
+   procedure Rectangle (This : in out Instance; Rect : Rect_T) is
       Start : constant Point_T := Rect.Org;
       Stop  : constant Point_T := Rect.Org + Rect.Size;
    begin
@@ -282,7 +282,7 @@ package body Giza.Graphics is
    -- Rounded_Rectangle --
    -----------------------
 
-   procedure Rounded_Rectangle (This   : in out Context;
+   procedure Rounded_Rectangle (This   : in out Instance;
                                 Rect   : Rect_T;
                                 Radius : Dim)
    is
@@ -353,7 +353,7 @@ package body Giza.Graphics is
    -- Fill_Rectangle --
    --------------------
 
-   procedure Fill_Rectangle (This : in out Context; Rect : Rect_T) is
+   procedure Fill_Rectangle (This : in out Instance; Rect : Rect_T) is
       Inter : constant Rect_T := Intersection (Rect, This.Bounds);
       Start : constant Point_T := Transform (This, Inter.Org);
       Stop  : constant Point_T := Transform (This, Inter.Org + Inter.Size);
@@ -367,7 +367,7 @@ package body Giza.Graphics is
    -- Fill_Rounded_Rectangle --
    ----------------------------
 
-   procedure Fill_Rounded_Rectangle (This   : in out Context;
+   procedure Fill_Rounded_Rectangle (This   : in out Instance;
                                      Rect   : Rect_T;
                                      Radius : Dim)
    is
@@ -423,7 +423,7 @@ package body Giza.Graphics is
    ------------------
 
    procedure Cubic_Bezier
-     (This : in out Context;
+     (This : in out Instance;
       P1, P2, P3, P4 : Point_T;
       N              : Positive := 20)
    is
@@ -457,7 +457,7 @@ package body Giza.Graphics is
    ------------
 
    procedure Circle
-     (This : in out Context;
+     (This : in out Instance;
       Center : Point_T;
       Radius : Dim)
    is
@@ -497,7 +497,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Fill_Circle
-     (This : in out Context;
+     (This : in out Instance;
       Center : Point_T;
       Radius : Dim)
    is
@@ -544,7 +544,7 @@ package body Giza.Graphics is
    --------------
 
    procedure Fill_Arc
-     (This     : in out Context;
+     (This     : in out Instance;
       Center   : Point_T;
       Radius   : Dim;
       From, To : Float)
@@ -576,7 +576,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Bitmap;
       Pt     : Point_T)
    is
@@ -595,7 +595,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_1bit.Bitmap_Indexed;
       Pt     : Point_T)
    is
@@ -614,7 +614,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_2bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
@@ -633,7 +633,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_4bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
@@ -652,7 +652,7 @@ package body Giza.Graphics is
    -----------------
 
    procedure Copy_Bitmap
-     (This   : in out Context;
+     (This   : in out Instance;
       Bmp    : Indexed_8bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
@@ -670,7 +670,7 @@ package body Giza.Graphics is
    -- Set_Font --
    --------------
 
-   procedure Set_Font (This : in out Context; Font : Giza.Font.Ref_Const) is
+   procedure Set_Font (This : in out Instance; Font : Giza.Font.Ref_Const) is
    begin
       This.Current_State.Font := Font;
    end Set_Font;
@@ -679,14 +679,14 @@ package body Giza.Graphics is
    -- Get_Font --
    --------------
 
-   function Get_Font (This : Context) return Giza.Font.Ref_Const is
+   function Get_Font (This : Instance) return Giza.Font.Ref_Const is
      (This.Current_State.Font);
 
    -----------
    -- Print --
    -----------
 
-   procedure Print (This : in out Context; C : Character) is
+   procedure Print (This : in out Instance; C : Character) is
    begin
       if This.Get_Font /= null then
          null;
@@ -698,7 +698,7 @@ package body Giza.Graphics is
    -- Print --
    -----------
 
-   procedure Print (This : in out Context; Str : String) is
+   procedure Print (This : in out Instance; Str : String) is
       Org : constant Point_T := This.Position;
       Font : constant Giza.Font.Ref_Const := This.Get_Font;
    begin
@@ -717,7 +717,7 @@ package body Giza.Graphics is
    -- Find_Line --
    ---------------
 
-   procedure Find_Line (This       : Context;
+   procedure Find_Line (This       : Instance;
                         Str        : String;
                         Start      : Integer;
                         EOL        : out Integer;
@@ -779,7 +779,7 @@ package body Giza.Graphics is
    -- Number_Of_Lines --
    ---------------------
 
-   function Number_Of_Lines (This : in out Context;
+   function Number_Of_Lines (This : in out Instance;
                              Str : String;
                              Box : Rect_T) return Natural
    is
@@ -802,7 +802,7 @@ package body Giza.Graphics is
    -- Print_In_Rect --
    -------------------
 
-   procedure Print_In_Rect (This : in out Context;
+   procedure Print_In_Rect (This : in out Instance;
                             Str : String;
                             Box : Rect_T)
    is
@@ -839,7 +839,7 @@ package body Giza.Graphics is
    -- Box --
    ---------
 
-   procedure Box (This : Context;
+   procedure Box (This : Instance;
                   Str : String;
                   Rect : out Rect_T;
                   Max_Width : Natural := 0)
@@ -895,4 +895,4 @@ package body Giza.Graphics is
       Rect.Size := (Right - Left, Bottom - Top);
    end Box;
 
-end Giza.Graphics;
+end Giza.Context;

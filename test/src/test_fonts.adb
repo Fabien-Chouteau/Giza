@@ -325,8 +325,8 @@ package body Test_Fonts is
    ----------
 
    overriding procedure Draw
-     (This : in out Test_Fonts_Window;
-      Ctx : in out Context'Class;
+     (This  : in out Test_Fonts_Window;
+      Ctx   : in out Giza.Context.Class;
       Force : Boolean := True)
    is
       pragma Unreferenced (Force);

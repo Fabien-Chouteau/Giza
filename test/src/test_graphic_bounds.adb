@@ -51,8 +51,8 @@ package body Test_Graphic_Bounds is
    ----------
 
    overriding procedure Draw
-     (This : in out Graphic_Bounds_Window;
-      Ctx : in out Context'Class;
+     (This  : in out Graphic_Bounds_Window;
+      Ctx   : in out Context.Class;
       Force : Boolean := True)
    is
       R1, R2 : Rect_T;

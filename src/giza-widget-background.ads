@@ -31,7 +31,7 @@ package Giza.Widget.Background is
 
    overriding
    procedure Draw (This  : in out Instance;
-                   Ctx   : in out Context'Class;
+                   Ctx   : in out Context.Class;
                    Force : Boolean := True);
 
    procedure Set_Background (This : in out Instance; BG : Color);

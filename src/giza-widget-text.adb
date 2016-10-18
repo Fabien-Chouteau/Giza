@@ -32,7 +32,7 @@ package body Giza.Widget.Text is
 
    overriding
    procedure Draw (This : in out Instance;
-                   Ctx : in out Context'Class;
+                   Ctx : in out Context.Class;
                    Force : Boolean := True)
    is
       Margin_H : constant Dim := This.Get_Size.H / 30;

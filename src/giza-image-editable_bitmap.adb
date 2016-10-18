@@ -28,7 +28,7 @@ package body Giza.Image.Editable_Bitmap is
 
    overriding procedure Draw
      (This : in out Instance;
-      Ctx  : in out Context'Class)
+      Ctx  : in out Context.Class)
    is
    begin
       Ctx.Copy_Bitmap (Bmp => This.Data.Data,
@@ -66,7 +66,7 @@ package body Giza.Image.Editable_Bitmap is
 
    function Get_Context
      (This : in out Instance)
-      return not null Context_Ref
+      return not null Context.Ref
    is
    begin
       This.Ctx.Set_Backend (This.Data'Unchecked_Access);

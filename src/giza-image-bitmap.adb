@@ -28,7 +28,7 @@ package body Giza.Image.Bitmap is
 
    overriding procedure Draw
      (This : in out Instance;
-      Ctx  : in out Context'Class)
+      Ctx  : in out Context.Class)
    is
    begin
       Ctx.Copy_Bitmap (Bmp => This.Data.all,
@@ -59,7 +59,7 @@ package body Giza.Image.Bitmap is
 
       overriding
       procedure Draw (This : in out Instance;
-                      Ctx  : in out Context'Class)
+                      Ctx  : in out Context.Class)
       is
       begin
          Ctx.Set_Position ((0, 0));

@@ -28,7 +28,7 @@ package body Giza.Widget.Background is
 
    overriding procedure Draw
      (This : in out Instance;
-      Ctx : in out Context'Class;
+      Ctx : in out Context.Class;
       Force : Boolean := True)
    is
    begin

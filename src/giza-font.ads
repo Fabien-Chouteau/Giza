@@ -20,7 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-limited with Giza.Graphics;
+limited with Giza.Context;
 
 package Giza.Font is
 
@@ -35,7 +35,7 @@ package Giza.Font is
                         X_Offset, Y_Offset : out Integer) is abstract;
 
    procedure Print_Glyph (This : Instance;
-                          Ctx  : in out Giza.Graphics.Context'Class;
+                          Ctx  : in out Giza.Context.Instance'Class;
                           C    : Character) is abstract;
 
    function Y_Advance (This : Instance) return Integer is abstract;

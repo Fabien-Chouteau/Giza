@@ -39,7 +39,7 @@ package body Giza.GUI is
    procedure Free is new Ada.Unchecked_Deallocation (Wrapper, Wrapper_Ref);
    procedure Redraw;
 
-   Drawing_Context : Context_Ref := null;
+   Drawing_Context : Context.Ref := null;
    Drawing_Backend : Backend.Ref := null;
 
    --  Window stack
@@ -108,7 +108,7 @@ package body Giza.GUI is
    -- Set_Context --
    -----------------
 
-   procedure Set_Context (Ctx : Context_Ref) is
+   procedure Set_Context (Ctx : Context.Ref) is
    begin
       Drawing_Context := Ctx;
       if Drawing_Context /= null then

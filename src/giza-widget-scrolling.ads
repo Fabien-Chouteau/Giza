@@ -50,7 +50,7 @@ package Giza.Widget.Scrolling is
 
    overriding
    procedure Draw (This  : in out Instance;
-                   Ctx   : in out Context'Class;
+                   Ctx   : in out Context.Class;
                    Force : Boolean := True);
 
    procedure Set_Child (This  : in out Instance;

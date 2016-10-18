@@ -56,7 +56,7 @@ package body Giza.Bitmap_Fonts is
    -----------------
 
    overriding procedure Print_Glyph (This : Bitmap_Font;
-                                     Ctx  : in out Context'Class;
+                                     Ctx  : in out Context.Class;
                                      C    : Character)
    is
       Index : constant Integer := Character'Pos (C);

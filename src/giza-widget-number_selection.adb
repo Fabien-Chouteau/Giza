@@ -48,7 +48,7 @@ package body Giza.Widget.Number_Selection is
 
    overriding procedure Draw
      (This : in out Instance;
-      Ctx : in out Context'Class;
+      Ctx : in out Context.Class;
       Force : Boolean := True)
    is
       W1, W2, H1 : Integer;

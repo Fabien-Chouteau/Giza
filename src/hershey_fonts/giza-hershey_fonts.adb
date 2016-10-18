@@ -75,7 +75,7 @@ package body Giza.Hershey_Fonts is
 
    overriding procedure Print_Glyph
      (This : Hershey_Font;
-      Ctx : in out Context'Class;
+      Ctx : in out Context.Class;
       C : Character)
    is
       Index : constant Glyph_Index := Char_To_Glyph_Index (C);

@@ -21,7 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Giza.Events; use Giza.Events;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Context; use Giza.Context;
 with Giza.Types; use Giza.Types;
 
 package Giza.Widget is
@@ -35,7 +35,7 @@ package Giza.Widget is
    function Dirty (This : Instance) return Boolean;
    procedure Set_Dirty (This : in out Instance; Dirty : Boolean := True);
    procedure Draw (This : in out Instance;
-                   Ctx : in out Context'Class;
+                   Ctx : in out Context.Class;
                    Force : Boolean := True) is null;
 
    procedure Set_Disabled (This : in out Instance; Disabled : Boolean := True);

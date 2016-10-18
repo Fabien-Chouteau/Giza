@@ -1,5 +1,5 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Context; use Giza.Context;
 with Giza.Events; use Giza.Events;
 with Giza.Types; use Giza.Types;
 with Giza.Widget.Button;
@@ -23,7 +23,7 @@ package Test_Fonts is
 
    overriding
    procedure Draw (This : in out Test_Fonts_Window;
-                   Ctx : in out Context'Class;
+                   Ctx : in out Giza.Context.Class;
                    Force : Boolean := True);
 
    overriding

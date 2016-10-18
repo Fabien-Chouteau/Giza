@@ -1,5 +1,5 @@
 with Basic_Test_Window; use Basic_Test_Window;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Context; use Giza.Context;
 with Giza.Events; use Giza.Events;
 with Giza.Widget.Button;
 use Giza.Widget;
@@ -17,8 +17,8 @@ package Test_Graphic_Bounds is
    procedure On_Hidden (This : in out Graphic_Bounds_Window);
 
    overriding
-   procedure Draw (This : in out Graphic_Bounds_Window;
-                   Ctx : in out Context'Class;
+   procedure Draw (This  : in out Graphic_Bounds_Window;
+                   Ctx   : in out Giza.Context.Class;
                    Force : Boolean := True);
 
 private

@@ -32,7 +32,7 @@ package Giza.Image.Bitmap is
 
    overriding
    procedure Draw (This : in out Instance;
-                   Ctx  : in out Context'Class);
+                   Ctx  : in out Context.Class);
 
    overriding
    function Size (This : Instance) return Size_T;
@@ -49,7 +49,7 @@ package Giza.Image.Bitmap is
 
       overriding
       procedure Draw (This : in out Instance;
-                      Ctx  : in out Context'Class);
+                      Ctx  : in out Context.Class);
 
       overriding
       function Size (This : Instance) return Size_T;

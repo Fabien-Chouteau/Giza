@@ -22,7 +22,7 @@
 
 with Giza.Events; use Giza.Events;
 with Giza.Window; use Giza.Window;
-with Giza.Graphics; use Giza.Graphics;
+with Giza.Context; use Giza.Context;
 with Giza.Backend; use Giza.Backend;
 
 package Giza.GUI is
@@ -33,7 +33,7 @@ package Giza.GUI is
    procedure Event_Loop with No_Return;
    --  Non returning loop that will process GUI events
 
-   procedure Set_Context (Ctx : Context_Ref);
+   procedure Set_Context (Ctx : Context.Ref);
    --  Set the context that will be used for widgets rendering
 
    procedure Set_Backend (Bck : Backend.Ref);
