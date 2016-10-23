@@ -55,6 +55,7 @@ package body Giza.Widget.Composite is
    is
       Ref : Wrapper_Ref := This.List;
    begin
+      Draw (Parent (This), Ctx, Force);
       while Ref /= null loop
          Ctx.Save;
          Ctx.Translate (Ref.Pos);
