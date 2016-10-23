@@ -31,6 +31,7 @@ package body Giza.Widget.Tabs is
                         Dirty : Boolean := True)
    is
    begin
+      Set_Dirty (Parent (This), Dirty);
       This.Root.Set_Dirty (Dirty);
    end Set_Dirty;
 

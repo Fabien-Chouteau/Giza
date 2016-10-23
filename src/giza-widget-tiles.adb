@@ -31,6 +31,7 @@ package body Giza.Widget.Tiles is
                         Dirty : Boolean := True)
    is
    begin
+      Set_Dirty (Parent (This), Dirty);
       for Index in This.Widgs'Range loop
          if This.Widgs (Index) /= null then
             This.Widgs (Index).Set_Dirty (Dirty);

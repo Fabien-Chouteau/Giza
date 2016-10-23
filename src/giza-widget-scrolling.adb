@@ -62,6 +62,7 @@ package body Giza.Widget.Scrolling is
                         Dirty : Boolean := True)
    is
    begin
+      Set_Dirty (Parent (This), Dirty);
       This.Up.Set_Dirty (Dirty);
       This.Down.Set_Dirty (Dirty);
       if This.Child /= null then

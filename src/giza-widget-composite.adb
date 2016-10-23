@@ -21,6 +21,7 @@
 -------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+with Giza.Widget.Background; use Giza.Widget.Background;
 
 package body Giza.Widget.Composite is
 
@@ -36,6 +37,7 @@ package body Giza.Widget.Composite is
    is
       Ref : Wrapper_Ref := This.List;
    begin
+      Set_Dirty (Parent (This), Dirty);
       while Ref /= null loop
          Ref.Widg.Set_Dirty (Dirty);
          Ref := Ref.Next;
