@@ -31,7 +31,12 @@ package body Giza.Bitmaps is
       Pt : Point_T)
    is
    begin
-      This.Data.Data (Pt.X, Pt.Y) := This.Current_Color;
+      if Pt.X + 1 in This.Data.Data'Range (1)
+        and then
+         Pt.Y + 1 in This.Data.Data'Range (2)
+      then
+         This.Data.Data (Pt.X + 1, Pt.Y + 1) := This.Current_Color;
+      end if;
    end Set_Pixel;
 
    ---------------
