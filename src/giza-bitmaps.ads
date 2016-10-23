@@ -41,7 +41,7 @@ package Giza.Bitmaps is
    --  Used with a Gcontext, this backend allows to draw on bitmap as if it was
    --  a screen.
 
-   type Bitmap_Backend (W, H : Integer) is new Backend.Instance with record
+   type Bitmap_Backend (W, H : Natural) is new Backend.Instance with record
       Data          : Bitmap (W, H);
       Current_Color : Color;
    end record;
@@ -71,7 +71,7 @@ package Giza.Bitmaps is
         of Index_Type;
       type Color_Palette is array (Index_Type) of Color;
 
-      type Bitmap_Indexed (W, H : Integer) is record
+      type Bitmap_Indexed (W, H : Natural) is record
          Palette : Color_Palette;
          Data : Bitmap_Indexed_Data (1 .. H, 1 .. W);
       end record;
