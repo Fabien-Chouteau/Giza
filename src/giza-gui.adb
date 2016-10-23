@@ -78,6 +78,8 @@ package body Giza.GUI is
 
       Win.Set_Size (Drawing_Backend.Size);
 
+      Win.Set_Dirty;
+
       Win.On_Pushed;
 
       if Drawing_Context /= null then
