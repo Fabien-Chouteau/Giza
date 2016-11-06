@@ -20,7 +20,5 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Bitmaps.Indexed_2bits;
-
-package Giza.Image.Bitmap.Indexed_2bits is
-  new Indexed_Bitmaps (Giza.Bitmaps.Indexed_2bits);
+package Giza.Bitmaps.Indexed_2bits is
+  new Giza.Bitmaps.Indexed_Bitmaps (Unsigned_2);

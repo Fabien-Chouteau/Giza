@@ -20,7 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Bitmaps;
+with Giza.Bitmaps.Indexed_1bit;
 
 package Giza.Image.Bitmap.Indexed_1bit is
   new Indexed_Bitmaps (Giza.Bitmaps.Indexed_1bit);

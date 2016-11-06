@@ -23,44 +23,69 @@
 package body Giza.Bitmaps is
 
    ---------------
-   -- Set_Pixel --
+   -- Get_Pixel --
    ---------------
 
-   overriding procedure Set_Pixel
-     (This : in out Bitmap_Backend;
-      Pt : Point_T)
-   is
+   function Get_Pixel (Bmp : Bitmap; Pt : Point_T) return Color is
    begin
-      if Pt.X + 1 in This.Data.Data'Range (1)
-        and then
-         Pt.Y + 1 in This.Data.Data'Range (2)
-      then
-         This.Data.Data (Pt.X + 1, Pt.Y + 1) := This.Current_Color;
-      end if;
-   end Set_Pixel;
+      return Bmp.Data ((Pt.X + Bmp.Data'First) + (Pt.Y * (Bmp.W)));
+   end Get_Pixel;
 
-   ---------------
-   -- Set_Color --
-   ---------------
+   package body Indexed_Bitmaps is
 
-   overriding procedure Set_Color
-     (This : in out Bitmap_Backend;
-      C : Color)
-   is
-   begin
-      This.Current_Color := C;
-   end Set_Color;
+      type Raw_Array is array (Integer range <>) of Index_Type with Pack;
 
-   ----------
-   -- Size --
-   ----------
+      ---------------
+      -- Get_Pixel --
+      ---------------
 
-   overriding function Size
-     (This : Bitmap_Backend)
-      return Size_T
-   is
-   begin
-      return (This.W, This.H);
-   end Size;
+      function Get_Pixel (Bmp : Bitmap_Indexed; Pt : Point_T) return Color is
+         Map : Raw_Array (1 .. (Bmp.H * Bmp.W));
+         for Map'Address use Bmp.Data'Address;
+      begin
+         return Bmp.Palette (Map ((Pt.X + 1) + (Pt.Y * (Bmp.W))));
+      end Get_Pixel;
+   end Indexed_Bitmaps;
+
+--     ---------------
+--     -- Set_Pixel --
+--     ---------------
+--
+--     overriding procedure Set_Pixel
+--       (This : in out Bitmap_Backend;
+--        Pt : Point_T)
+--     is
+--     begin
+--        if Pt.X + 1 in This.Data.Data'Range (1)
+--          and then
+--           Pt.Y + 1 in This.Data.Data'Range (2)
+--        then
+--           This.Data.Data (Pt.X + 1, Pt.Y + 1) := This.Current_Color;
+--        end if;
+--     end Set_Pixel;
+--
+--     ---------------
+--     -- Set_Color --
+--     ---------------
+--
+--     overriding procedure Set_Color
+--       (This : in out Bitmap_Backend;
+--        C : Color)
+--     is
+--     begin
+--        This.Current_Color := C;
+--     end Set_Color;
+--
+--     ----------
+--     -- Size --
+--     ----------
+--
+--     overriding function Size
+--       (This : Bitmap_Backend)
+--        return Size_T
+--     is
+--     begin
+--        return (This.W, This.H);
+--     end Size;
 
 end Giza.Bitmaps;

@@ -23,6 +23,7 @@
 with Ada.Unchecked_Deallocation;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
+with Giza.Image.Procedural;
 
 package body Giza.Context is
 
@@ -571,6 +572,34 @@ package body Giza.Context is
       This.Set_Line_Width (Line_Width);
    end Fill_Arc;
 
+   ----------------
+   -- Draw_Image --
+   ----------------
+
+   procedure Draw_Image
+     (This : in out Instance;
+      Img  : Giza.Image.Class;
+      Pt   : Point_T)
+   is
+      Target : constant Point_T := Transform (This, Pt);
+      package Proc renames Giza.Image.Procedural;
+   begin
+      if Img in Giza.Image.Procedural.Class then
+         declare
+            Proc_Img : constant Proc.Instance := Proc.Instance (Img);
+         begin
+            This.Save;
+            This.Translate (Pt);
+            This.Set_Bounds (((0, 0), Proc_Img.Size));
+            This.Set_Position ((0, 0));
+            Proc_Img.Proc (This, Proc_Img.Size);
+            This.Restore;
+         end;
+      else
+         This.Bck.Draw_Image (Img, Target);
+      end if;
+   end Draw_Image;
+
    -----------------
    -- Copy_Bitmap --
    -----------------
@@ -580,14 +609,9 @@ package body Giza.Context is
       Bmp    : Bitmap;
       Pt     : Point_T)
    is
+      Target : constant Point_T := Transform (This, Pt);
    begin
-      This.Set_Position (Pt);
-      for W in 1 .. Bmp.W loop
-         for H in 1 .. Bmp.H loop
-            This.Set_Color (Bmp.Data (H, W));
-            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
-         end loop;
-      end loop;
+      This.Bck.Copy_Bitmap (Bmp, Target);
    end Copy_Bitmap;
 
    -----------------
@@ -599,14 +623,9 @@ package body Giza.Context is
       Bmp    : Indexed_1bit.Bitmap_Indexed;
       Pt     : Point_T)
    is
+      Target : constant Point_T := Transform (This, Pt);
    begin
-      This.Set_Position (Pt);
-      for W in 1 .. Bmp.W loop
-         for H in 1 .. Bmp.H loop
-            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
-         end loop;
-      end loop;
+      This.Bck.Copy_Bitmap (Bmp, Target);
    end Copy_Bitmap;
 
    -----------------
@@ -618,14 +637,9 @@ package body Giza.Context is
       Bmp    : Indexed_2bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
+      Target : constant Point_T := Transform (This, Pt);
    begin
-      This.Set_Position (Pt);
-      for W in 1 .. Bmp.W loop
-         for H in 1 .. Bmp.H loop
-            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
-         end loop;
-      end loop;
+      This.Bck.Copy_Bitmap (Bmp, Target);
    end Copy_Bitmap;
 
    -----------------
@@ -637,14 +651,9 @@ package body Giza.Context is
       Bmp    : Indexed_4bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
+      Target : constant Point_T := Transform (This, Pt);
    begin
-      This.Set_Position (Pt);
-      for W in 1 .. Bmp.W loop
-         for H in 1 .. Bmp.H loop
-            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
-         end loop;
-      end loop;
+      This.Bck.Copy_Bitmap (Bmp, Target);
    end Copy_Bitmap;
 
    -----------------
@@ -656,14 +665,9 @@ package body Giza.Context is
       Bmp    : Indexed_8bits.Bitmap_Indexed;
       Pt     : Point_T)
    is
+      Target : constant Point_T := Transform (This, Pt);
    begin
-      This.Set_Position (Pt);
-      for W in 1 .. Bmp.W loop
-         for H in 1 .. Bmp.H loop
-            This.Set_Color (Bmp.Palette (Bmp.Data (H, W)));
-            This.Set_Pixel (Pt + Point_T'(W - 1, H - 1));
-         end loop;
-      end loop;
+      This.Bck.Copy_Bitmap (Bmp, Target);
    end Copy_Bitmap;
 
    --------------

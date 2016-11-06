@@ -20,44 +20,52 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with Giza.Colors;   use Giza.Colors;
-with Giza.Backend; use Giza.Backend;
-with Giza.Types;    use Giza.Types;
+with Giza.Types; use Giza.Types;
+--  with Giza.Backend; use Giza.Backend;
+--  with Giza.Types;    use Giza.Types;
 
 package Giza.Bitmaps is
 
-   type Bitmap_Data is array (Integer range <>, Integer range <>) of Color;
+   type Bitmap_Data is array (Integer range <>) of Color with Pack;
 
-   type Bitmap (W, H : Integer) is record
-      Data : Bitmap_Data (1 .. H, 1 .. W) := (others => (others => Violet));
+   type Bitmap (W, H, Length : Natural) is record
+      Data : Bitmap_Data (1 .. Length) := (others => White);
    end record;
 
    type Bitmap_Ref is access all Bitmap;
+   type Bitmap_Const_Ref is access constant Bitmap;
 
-   --------------------
-   -- Bitmap_Backend --
-   --------------------
+   function Get_Pixel (Bmp : Bitmap; Pt : Point_T) return Color
+     with Pre => Pt.X in 0 .. (Bmp.W - 1) and then Pt.Y in 0 .. (Bmp.W - 1);
 
-   --  Used with a Gcontext, this backend allows to draw on bitmap as if it was
-   --  a screen.
-
-   type Bitmap_Backend (W, H : Natural) is new Backend.Instance with record
-      Data          : Bitmap (W, H);
-      Current_Color : Color;
-   end record;
-
-   overriding
-   procedure Set_Pixel (This : in out Bitmap_Backend; Pt : Point_T);
-
-   overriding
-   procedure Set_Color (This : in out Bitmap_Backend; C : Color);
-
-   overriding
-   function Size (This : Bitmap_Backend) return Size_T;
-
-   overriding
-   function Has_Double_Buffring (This : Bitmap_Backend) return Boolean is
-      (False);
+   --     --------------------
+--     -- Bitmap_Backend --
+--     --------------------
+--
+--     --  Used with a Gcontext, this backend allows to draw on bitmap as if
+   --  it was
+--     --  a screen.
+--
+--     type Bitmap_Backend (W, H : Natural) is new Backend.Instance with record
+--        Data          : Bitmap (W, H);
+--        Current_Color : Color;
+--     end record;
+--
+--     overriding
+--     procedure Set_Pixel (This : in out Bitmap_Backend; Pt : Point_T);
+--
+--     overriding
+--     procedure Set_Color (This : in out Bitmap_Backend; C : Color);
+--
+--     overriding
+--     function Size (This : Bitmap_Backend) return Size_T;
+--
+--     overriding
+--     function Has_Double_Buffring (This : Bitmap_Backend) return Boolean is
+--        (False);
 
    type Unsigned_1 is mod 2**1 with Size => 1;
    type Unsigned_2 is mod 2**2 with Size => 2;
@@ -67,20 +75,22 @@ package Giza.Bitmaps is
    generic
       type Index_Type is mod <>;
    package Indexed_Bitmaps is
-      type Bitmap_Indexed_Data is array (Integer range <>, Integer range <>)
-        of Index_Type;
-      type Color_Palette is array (Index_Type) of Color;
 
-      type Bitmap_Indexed (W, H : Natural) is record
-         Palette : Color_Palette;
-         Data : Bitmap_Indexed_Data (1 .. H, 1 .. W);
+      type Bitmap_Indexed_Data is array (Integer range <>)
+        of Unsigned_8 with Pack;
+
+      type Color_Palette is array (Index_Type) of Color with Pack;
+
+      type Bitmap_Indexed (W, H, Length_Byte : Natural) is
+         record
+            Palette : Color_Palette;
+            Data : Bitmap_Indexed_Data (1 .. Length_Byte);
       end record;
 
       type Bitmap_Indexed_Ref is access all Bitmap_Indexed;
-   end Indexed_Bitmaps;
+      type Bitmap_Indexed_Const_Ref is access constant Bitmap_Indexed;
 
-   package Indexed_1bit  is new Indexed_Bitmaps (Unsigned_1);
-   package Indexed_2bits is new Indexed_Bitmaps (Unsigned_2);
-   package Indexed_4bits is new Indexed_Bitmaps (Unsigned_4);
-   package Indexed_8bits is new Indexed_Bitmaps (Unsigned_8);
+      function Get_Pixel (Bmp : Bitmap_Indexed; Pt : Point_T) return Color
+        with Pre => Pt.X in 0 .. (Bmp.W - 1) and then Pt.Y in 0 .. (Bmp.W - 1);
+   end Indexed_Bitmaps;
 end Giza.Bitmaps;

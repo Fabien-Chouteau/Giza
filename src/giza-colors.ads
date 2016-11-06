@@ -26,7 +26,7 @@ package Giza.Colors is
 
    type Color is record
       R, G, B : RGB_Component := 0;
-   end record;
+   end record with Pack;
 
    function Dark_Red            return Color is ((139, 000, 000));
    function Brown               return Color is ((165, 042, 042));

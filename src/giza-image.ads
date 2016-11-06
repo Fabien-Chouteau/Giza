@@ -20,7 +20,6 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Context; use Giza.Context;
 with Giza.Types;    use Giza.Types;
 
 package Giza.Image is
@@ -28,9 +27,6 @@ package Giza.Image is
    type Instance is interface;
    subtype Class is Instance'Class;
    type Ref is access all Class;
-
-   procedure Draw (This : in out Instance;
-                   Ctx  : in out Context.Class) is abstract;
 
    function Size (This : Instance) return Size_T is abstract;
 

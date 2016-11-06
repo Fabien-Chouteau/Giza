@@ -25,14 +25,10 @@ with Giza.Bitmaps;
 package Giza.Image.Bitmap is
 
    subtype Parent is Image.Instance;
-   type Instance (Data : not null Giza.Bitmaps.Bitmap_Ref) is
+   type Instance (Data : not null Giza.Bitmaps.Bitmap_Const_Ref) is
      new Parent with private;
    subtype Class is Instance'Class;
    type Ref is access all Class;
-
-   overriding
-   procedure Draw (This : in out Instance;
-                   Ctx  : in out Context.Class);
 
    overriding
    function Size (This : Instance) return Size_T;
@@ -42,26 +38,22 @@ package Giza.Image.Bitmap is
    package Indexed_Bitmaps is
 
       subtype Parent is Image.Instance;
-      type Instance (Data : not null Bitmaps_Pck.Bitmap_Indexed_Ref) is
+      type Instance (Data : not null Bitmaps_Pck.Bitmap_Indexed_Const_Ref) is
         new Parent with private;
       subtype Class is Instance'Class;
       type Ref is access all Class;
 
       overriding
-      procedure Draw (This : in out Instance;
-                      Ctx  : in out Context.Class);
-
-      overriding
       function Size (This : Instance) return Size_T;
 
    private
-      type Instance (Data : not null Bitmaps_Pck.Bitmap_Indexed_Ref) is
+      type Instance (Data : not null Bitmaps_Pck.Bitmap_Indexed_Const_Ref) is
         new Parent with null record;
    end Indexed_Bitmaps;
 
 private
 
-   type Instance (Data : not null Giza.Bitmaps.Bitmap_Ref) is
+   type Instance (Data : not null Giza.Bitmaps.Bitmap_Const_Ref) is
      new Parent with null record;
 
 end Giza.Image.Bitmap;

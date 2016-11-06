@@ -342,6 +342,7 @@ package body Screen_Interface is
    -- Set_Pixel --
    ---------------
 
+   overriding
    procedure Set_Pixel (This : in out GTKada_Backend; Pt : Point_T)
    is
    begin
@@ -354,6 +355,7 @@ package body Screen_Interface is
    -- Set_Color --
    ---------------
 
+   overriding
    procedure Set_Color
      (This : in out GTKada_Backend;
       C : Giza.Colors.Color) is
@@ -368,6 +370,7 @@ package body Screen_Interface is
    -- Size --
    ----------
 
+   overriding
    function Size (This : GTKada_Backend) return Size_T is
       pragma Unreferenced (This);
    begin

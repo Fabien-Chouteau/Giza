@@ -23,19 +23,6 @@
 package body Giza.Image.Editable_Bitmap is
 
    ----------
-   -- Draw --
-   ----------
-
-   overriding procedure Draw
-     (This : in out Instance;
-      Ctx  : in out Context.Class)
-   is
-   begin
-      Ctx.Copy_Bitmap (Bmp => This.Data.Data,
-                       Pt  => (0, 0));
-   end Draw;
-
-   ----------
    -- Size --
    ----------
 
@@ -56,7 +43,7 @@ package body Giza.Image.Editable_Bitmap is
       Bmp  : Giza.Bitmaps.Bitmap)
    is
    begin
-      This.Ctx.Set_Backend (This.Data'Unchecked_Access);
+--        This.Ctx.Set_Backend (This.Data'Unchecked_Access);
       This.Ctx.Copy_Bitmap (Bmp, (0, 0));
    end Set;
 
@@ -69,8 +56,17 @@ package body Giza.Image.Editable_Bitmap is
       return not null Context.Ref
    is
    begin
-      This.Ctx.Set_Backend (This.Data'Unchecked_Access);
+--        This.Ctx.Set_Backend (This.Data'Unchecked_Access);
       return This.Ctx'Unchecked_Access;
    end Get_Context;
+
+   ----------
+   -- Data --
+   ----------
+
+   function Data (This : Instance) return Giza.Bitmaps.Bitmap is
+   begin
+      return This.Data;
+   end Data;
 
 end Giza.Image.Editable_Bitmap;

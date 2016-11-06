@@ -20,8 +20,14 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Types; use Giza.Types;
-with Giza.Colors; use Giza.Colors;
+with Giza.Types;   use Giza.Types;
+with Giza.Colors;  use Giza.Colors;
+with Giza.Image;
+with Giza.Bitmaps;
+with Giza.Bitmaps.Indexed_1bit;
+with Giza.Bitmaps.Indexed_2bits;
+with Giza.Bitmaps.Indexed_4bits;
+with Giza.Bitmaps.Indexed_8bits;
 
 package Giza.Backend is
 
@@ -38,6 +44,36 @@ package Giza.Backend is
    procedure Line (This : in out Instance; Start, Stop : Point_T);
    procedure Rectangle (This : in out Instance; Start, Stop : Point_T);
    procedure Fill_Rectangle (This : in out Instance; Start, Stop : Point_T);
+
+   procedure Draw_Image
+     (This : in out Instance;
+      Img  : Giza.Image.Class;
+      Pt   : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Instance;
+      Bmp    : Giza.Bitmaps.Bitmap;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Instance;
+      Bmp    : Giza.Bitmaps.Indexed_1bit.Bitmap_Indexed;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Instance;
+      Bmp    : Giza.Bitmaps.Indexed_2bits.Bitmap_Indexed;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Instance;
+      Bmp    : Giza.Bitmaps.Indexed_4bits.Bitmap_Indexed;
+      Pt     : Point_T);
+
+   procedure Copy_Bitmap
+     (This   : in out Instance;
+      Bmp    : Giza.Bitmaps.Indexed_8bits.Bitmap_Indexed;
+      Pt     : Point_T);
 
 private
 

@@ -23,19 +23,6 @@
 package body Giza.Image.Bitmap is
 
    ----------
-   -- Draw --
-   ----------
-
-   overriding procedure Draw
-     (This : in out Instance;
-      Ctx  : in out Context.Class)
-   is
-   begin
-      Ctx.Copy_Bitmap (Bmp => This.Data.all,
-                       Pt  => (0, 0));
-   end Draw;
-
-   ----------
    -- Size --
    ----------
 
@@ -52,24 +39,6 @@ package body Giza.Image.Bitmap is
    ---------------------
 
    package body Indexed_Bitmaps is
-
-      ----------
-      -- Draw --
-      ----------
-
-      overriding
-      procedure Draw (This : in out Instance;
-                      Ctx  : in out Context.Class)
-      is
-      begin
-         Ctx.Set_Position ((0, 0));
-         for W in 1 .. This.Data.W loop
-            for H in 1 .. This.Data.H loop
-               Ctx.Set_Color (This.Data.Palette (This.Data.Data (H, W)));
-               Ctx.Set_Pixel (Point_T'(W - 1, H - 1));
-            end loop;
-         end loop;
-      end Draw;
 
       ----------
       -- Size --

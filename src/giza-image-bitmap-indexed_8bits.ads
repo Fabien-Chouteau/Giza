@@ -20,7 +20,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Bitmaps;
+with Giza.Bitmaps.Indexed_8bits;
 
 package Giza.Image.Bitmap.Indexed_8bits is
   new Indexed_Bitmaps (Giza.Bitmaps.Indexed_8bits);

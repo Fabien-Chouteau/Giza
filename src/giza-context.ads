@@ -20,11 +20,16 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Giza.Colors;   use Giza.Colors;
-with Giza.Bitmaps;  use Giza.Bitmaps;
-with Giza.Types;    use Giza.Types;
+with Giza.Colors;  use Giza.Colors;
+with Giza.Types;   use Giza.Types;
 with Giza.Font;    use Giza.Font;
 with Giza.Backend; use Giza.Backend;
+with Giza.Image;
+with Giza.Bitmaps; use Giza.Bitmaps;
+with Giza.Bitmaps.Indexed_1bit;
+with Giza.Bitmaps.Indexed_2bits;
+with Giza.Bitmaps.Indexed_4bits;
+with Giza.Bitmaps.Indexed_8bits;
 
 package Giza.Context is
 
@@ -89,6 +94,11 @@ package Giza.Context is
       Center   : Point_T;
       Radius   : Dim;
       From, To : Float);
+
+   procedure Draw_Image
+     (This : in out Instance;
+      Img  : Giza.Image.Class;
+      Pt   : Point_T);
 
    procedure Copy_Bitmap
      (This   : in out Instance;

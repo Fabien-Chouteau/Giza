@@ -21,18 +21,15 @@
 -------------------------------------------------------------------------------
 
 with Giza.Bitmaps;
+with Giza.Context;
 
 package Giza.Image.Editable_Bitmap is
 
    subtype Parent is Image.Instance;
-   type Instance (Width, Height : Natural) is
+   type Instance (Width, Height, Length : Natural) is
      new Parent with private;
    subtype Class is Instance'Class;
    type Ref is access all Class;
-
-   overriding
-   procedure Draw (This : in out Instance;
-                   Ctx  : in out Context.Class);
 
    overriding
    function Size (This : Instance) return Size_T;
@@ -42,13 +39,15 @@ package Giza.Image.Editable_Bitmap is
      with Pre => This.Width > Bmp.W and then This.Height > Bmp.H;
 
    function Get_Context (This : in out Instance)
-                         return not null Context.Ref;
+                         return not null Giza.Context.Ref;
+
+   function Data (This : Instance) return Giza.Bitmaps.Bitmap;
 
 private
 
-   type Instance (Width, Height : Natural) is
+   type Instance (Width, Height, Length : Natural) is
      new Parent with record
-      Data : aliased Giza.Bitmaps.Bitmap_Backend (Width, Height);
+      Data : aliased Giza.Bitmaps.Bitmap (Width, Height, Length);
       Ctx  : aliased Context.Instance;
    end record;
 
