@@ -59,6 +59,15 @@ package BMP is
 
    type Palette is array (Unsigned_8 range <>) of Color_Definition with Pack;
 
+   procedure Standard
+     (File_In : Stream_IO.File_Type;
+      Input    : Stream_IO.Stream_Access;
+      File_Out : Ada.Text_IO.File_Type;
+      Package_Name : String;
+      Header   : BMP.Header;
+      Info     : BMP.Info;
+      Row_Size : Integer);
+
    procedure Palettized
      (File_In : Stream_IO.File_Type;
       Input    : Stream_IO.Stream_Access;
@@ -68,5 +77,6 @@ package BMP is
       Info     : BMP.Info;
       Row_Size : Integer);
 
+   DMA2D_Format : Boolean := False;
    Verbose : Boolean := False;
 end BMP;
