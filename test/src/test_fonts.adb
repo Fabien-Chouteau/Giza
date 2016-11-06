@@ -390,6 +390,8 @@ package body Test_Fonts is
         "1234567890`~!@#$%^&*()-_=+[]{};:'""<>,.";
       Rect : Rect_T;
    begin
+      Draw (Test_Window (This), Ctx, Force => True);
+
       Ctx.Set_Color (White);
       Ctx.Fill_Rectangle (Bounds);
 
@@ -420,7 +422,6 @@ package body Test_Fonts is
       Ctx.Set_Font (The_Fonts (This.Font_Index));
       Ctx.Print_In_Rect (Str3, Bounds);
 
-      Draw (Test_Window (This), Ctx, Force => True);
    end Draw;
 
    -----------------------

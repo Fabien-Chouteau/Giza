@@ -5,7 +5,6 @@ with Giza.Widget.Button; use Giza.Widget.Button;
 with Giza.Types; use Giza.Types;
 with Ada.Numerics; use Ada.Numerics;
 with bmp_test_data;
-with hand;
 
 package body Test_Graphic_Bounds is
 
@@ -110,11 +109,9 @@ package body Test_Graphic_Bounds is
       Ctx.Fill_Arc ((8 * Grid, 8 * Grid), 2 * Grid, (3.0 * Pi) / 2.0,
                     Pi * 2.0);
 
-      Ctx.Copy_Bitmap (hand.Data, (0, 0));
-
       Ctx.Save;
       Ctx.Translate ((4 * Grid, 5 * Grid));
-      Ctx.Copy_Bitmap (bmp_test_data.Data, (0, 0));
+      Ctx.Draw_Image (bmp_test_data.Image.all, (0, 0));
       Ctx.Restore;
 
       Ctx.Set_Color (Green);

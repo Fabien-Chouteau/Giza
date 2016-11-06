@@ -33,6 +33,6 @@ private
 
    type Main_Window is new Parent with record
       Btn_Tile    : Tiles.Ref;
-      Sub_Windows : Sub_Window_Array (1 .. 7);
+      Sub_Windows : Sub_Window_Array (1 .. 8);
    end record;
 end Test_Main_Window;

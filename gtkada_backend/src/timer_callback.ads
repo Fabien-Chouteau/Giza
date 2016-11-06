@@ -1,8 +1,8 @@
-with Giza.Graphics;
+with Giza.Context;
 with Giza.Events;         use Giza.Events;
-with Giza.Widgets.Text;
-with Giza.Widgets.Button;
-use Giza.Widgets;
+with Giza.Widget.Text;
+with Giza.Widget.Button;
+use Giza.Widget;
 
 with Screen_Interface; use Screen_Interface;
 with Test_Main_Window;
@@ -20,7 +20,7 @@ package Timer_Callback is
    My_Toggle : aliased Button.Instance;
 
    My_Backend : aliased Screen_Interface.GTKada_Backend;
-   My_Context : aliased Giza.Graphics.Context;
+   My_Context : aliased Giza.Context.Instance;
 
    function Callback return Boolean;
 

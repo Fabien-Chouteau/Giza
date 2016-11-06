@@ -1,4 +1,4 @@
-with Giza.Colors;         use Giza.Colors;
+with Giza.Colors;        use Giza.Colors;
 with Giza.Window;        use Giza.Window;
 with Giza.Widget.Button; use Giza.Widget.Button;
 with Giza.GUI;

@@ -1,8 +1,8 @@
 with Giza.Widget;
 use Giza;
-with hand;
-with hand_2;
 with Giza.Colors; use Giza.Colors;
+with bmp_test_indexed_8bits;
+with bmp_test_indexed_8bits_dma2d;
 
 package body Test_Button_Window is
 
@@ -34,8 +34,8 @@ package body Test_Button_Window is
       This.Button_3.Disable_Frame;
       This.Button_3.Set_Background (White);
       This.Button_3.Set_Foreground (White);
-      This.Button_3.Set_Image (hand.Image'Access);
-      This.Button_3.Set_Invert_Image (hand_2.Image'Access);
+      This.Button_3.Set_Image (bmp_test_indexed_8bits.Image'Access);
+      This.Button_3.Set_Invert_Image (bmp_test_indexed_8bits_dma2d.Image);
       This.Button_3.Set_Size ((This.Get_Size.W, This.Get_Size.H / 3));
 
       This.Add_Child (Widget.Reference (This.Button_3),
