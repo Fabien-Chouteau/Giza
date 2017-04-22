@@ -6,3 +6,5 @@
 *.bexch
 *.exe
 *.npp
+bmp2ada/obj/
+bmp2ada/bmp2ada
