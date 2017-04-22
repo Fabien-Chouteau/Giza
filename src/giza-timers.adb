@@ -1,9 +1,8 @@
-with Ada.Unchecked_Deallocatin;
 ------------------------------------------------------------------------------
 --                                                                          --
 --                                  Giza                                    --
 --                                                                          --
---         Copyright (C) 2015Fabien Chouteau (chouteau@adacore.com)         --
+--         Copyright (C) 2015 Fabien Chouteau (chouteau@adacore.com)        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,8 +30,8 @@ with Ada.Unchecked_Deallocatin;
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
 ------------------------------------------------------------------------------
--------------------------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
 with Ada.Real_Time.Timing_Events; use Ada.Real_Time.Timing_Events;
 with Giza.GUI; use Giza.GUI;
 with System;
